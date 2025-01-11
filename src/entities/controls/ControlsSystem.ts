@@ -30,10 +30,14 @@ export class ControlsSystem {
         this._phone = new ControlsPhone()
         this._phone.init(root)
 
-        this._currentWalkingControls = deviceData.device === 'desktop' 
-            ? this._pointer
-            : this._phone
-        this._currentWalkingControls.enable()
+        // this._currentWalkingControls = deviceData.device === 'desktop' 
+        //     ? this._pointer
+        //     : this._phone
+        // this._currentWalkingControls.enable()
+        ui.toggleVisibleLock(true) 
+        this._currentWalkingControls = this._phone
+        this._orbit.enable()
+
 
         // click on buttonPointerLock: enable pointerLock and hide phoneControls  
         ui.lockButton.onclick = () => {

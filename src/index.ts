@@ -11,7 +11,8 @@ import { DeviceData } from "./entities/DeviceData"
 import { Ui } from "./entities/Ui"
 import { Phisics } from "./entities/Phisics"
 import { EnergySystem } from './entities/EnergySystem'
-import { Lab } from './entities/labyrinth/Lab'
+//import { Lab } from './entities/labyrinth/Lab'
+import { Lab } from './entities/labyrinth02/Lab'
 import { AudioManager } from "./entities/AudioManager"
 
 import { pipelineInit } from "./pipelines/pipelineInit"
@@ -59,5 +60,5 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     await pipelineInit(root)
     await pipelinePlay(root)
-    await pipelineEnd(root)
+    //await pipelineEnd(root)
 })

@@ -90,30 +90,30 @@ export class Studio {
         this.containerDom.appendChild(this.renderer.domElement)
 
 
-        const renderScene = new RenderPass(this.scene, this.camera)
+        // const renderScene = new RenderPass(this.scene, this.camera)
 
-        const smaaPass = new SMAAPass( window.innerWidth * this.renderer.getPixelRatio(), window.innerHeight * this.renderer.getPixelRatio() );
+        // const smaaPass = new SMAAPass( window.innerWidth * this.renderer.getPixelRatio(), window.innerHeight * this.renderer.getPixelRatio() );
 
-        const bokehPass = new BokehPass(this.scene, this.camera, {
-            focus: 50,
-            aperture: 0.00002,
-            //maxblur: 0.015
-            maxblur: 0.01
-        } );
+        // const bokehPass = new BokehPass(this.scene, this.camera, {
+        //     focus: 50,
+        //     aperture: 0.00002,
+        //     //maxblur: 0.015
+        //     maxblur: 0.01
+        // } );
 
         //const bloomPass = new UnrealBloomPass( new THREE.Vector2(window.innerWidth, window.innerHeight),1.5,0.4,0.85)
         //bloomPass.threshold = params.threshold
         //bloomPass.strength = params.strength
         //bloomPass.radius = params.radius
 
-        const outputPass = new OutputPass();
+        //const outputPass = new OutputPass();
 
-        this.composer = new EffectComposer(this.renderer)
-        this.composer.addPass(renderScene)
-        this.composer.addPass(smaaPass)
-        this.composer.addPass(bokehPass)
+        // this.composer = new EffectComposer(this.renderer)
+        // this.composer.addPass(renderScene)
+        // this.composer.addPass(smaaPass)
+        // this.composer.addPass(bokehPass)
         //this.composer.addPass(bloomPass)
-        this.composer.addPass(outputPass)
+        //this.composer.addPass(outputPass)
 
         window.addEventListener( 'resize', this.onWindowResize.bind(this))
         this.onWindowResize()
@@ -150,8 +150,8 @@ export class Studio {
     }
 
     render () {
-        //this.renderer.render(this.scene, this.camera)
-        this.composer.render()
+        this.renderer.render(this.scene, this.camera)
+        //this.composer.render()
     }
 
     onWindowResize() {
@@ -159,7 +159,7 @@ export class Studio {
         this.camera.updateProjectionMatrix()
 
         this.renderer.setSize(window.innerWidth, window.innerHeight)
-        this.composer.setSize(window.innerWidth, window.innerHeight)
+        //this.composer.setSize(window.innerWidth, window.innerHeight)
     }
 
     add (m: Object3D) {

@@ -15,7 +15,7 @@ export const pipelineEnd = async (root: Root) => {
     controls.disable()
     setTimeout(() => {
         studio.showFinalView()
-        lab.init(root, CONSTANTS.LABS_CONF[0])
+        //lab.init(root, CONSTANTS.LABS_CONF[0])
         energySystem.init(root, [])
     }, 600)
     await ui.showFinalPage()
