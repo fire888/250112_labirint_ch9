@@ -12,6 +12,7 @@ import {
     Vector3,
     AxesHelper,
     Quaternion,
+    SpotLight,
 } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -47,6 +48,7 @@ export class Studio {
     envMap: Texture
     composer: EffectComposer
     _root: Root
+    spotLight: SpotLight
 
     init (root: Root) {
         this._root = root
@@ -55,7 +57,20 @@ export class Studio {
         this.camera.position.set(1, 30, 70)
         this.camera.lookAt(0, 1, 0)
 
+        this.spotLight = new SpotLight( 0xffffff, 1000 )
+        //spotLight.rotation.y = Math.PI
+        //spotLight.rotation.x = Math.PI
+        this.spotLight.intensity = 5000
+        this.spotLight.position.set( 40, 3, -5 );
+        this.spotLight.angle = Math.PI / 6;
+        this.spotLight.penumbra = .5;
+        this.spotLight.decay = 2;
+        this.spotLight.distance = 150;
+
+
         this.scene = new Scene()
+        this.scene.add(this.spotLight)
+
         //debugger
         //root.loader.assets.envMap.encoding = THREE.sRGBEncoding;
         root.loader.assets.mapEnv.mapping = EquirectangularReflectionMapping;
@@ -68,12 +83,12 @@ export class Studio {
         //this.fog = new THREE.Fog(0x00001a, 1, 50)
         //this.scene.fog = this.fog
 
-       this.hemiLight = new HemisphereLight(0x6767f3, 0xffffff, 5)
+       this.hemiLight = new HemisphereLight(0x48534a, 0xffffff, 2)
        this.hemiLight.position.set( 0, 20, 0 )
        this.scene.add(this.hemiLight)
 
-        this.dirLight = new DirectionalLight( 0xffffff, 10 )
-        this.dirLight.position.set(-3, 10, 2)
+        // this.dirLight = new DirectionalLight( 0xffffff, 10 )
+        // this.dirLight.position.set(-3, 10, 2)
         // this.dirLight.castShadow = true
         // this.dirLight.shadow.camera.top = 2
         // this.dirLight.shadow.camera.bottom = -2
@@ -81,7 +96,7 @@ export class Studio {
         // this.dirLight.shadow.camera.right = 2
         // this.dirLight.shadow.camera.near = 0.1
         // this.dirLight.shadow.camera.far = 40
-        this.scene.add(this.dirLight)
+        //this.scene.add(this.dirLight)
 
         this.renderer = new WebGLRenderer({ antialias: true })
         this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -150,6 +165,9 @@ export class Studio {
     }
 
     render () {
+        this.camera.getWorldQuaternion(this.spotLight.quaternion)
+        //this.spotLight.quaternion.invert()
+        this.camera.getWorldPosition(this.spotLight.position)
         this.renderer.render(this.scene, this.camera)
         //this.composer.render()
     }
