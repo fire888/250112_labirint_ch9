@@ -58,18 +58,22 @@ export class Studio {
         this.camera.lookAt(0, 1, 0)
 
         this.spotLight = new SpotLight( 0xffffff, 1000 )
-        //spotLight.rotation.y = Math.PI
-        //spotLight.rotation.x = Math.PI
-        this.spotLight.intensity = 5000
+        this.spotLight.intensity = 50
         this.spotLight.position.set( 40, 3, -5 );
-        this.spotLight.angle = Math.PI / 6;
-        this.spotLight.penumbra = .5;
-        this.spotLight.decay = 2;
-        this.spotLight.distance = 150;
+        this.spotLight.angle = Math.PI * .2;
+        this.spotLight.penumbra = 1
+        this.spotLight.decay = 1
+        this.spotLight.distance = 20
+        const target = new Object3D();
+        this.spotLight.target = target;
+
+        target.position.z = -50
+        this.camera.add(this.spotLight.target)
 
 
         this.scene = new Scene()
         this.scene.add(this.spotLight)
+        this.scene.add(this.camera)
 
         //debugger
         //root.loader.assets.envMap.encoding = THREE.sRGBEncoding;
@@ -83,7 +87,7 @@ export class Studio {
         //this.fog = new THREE.Fog(0x00001a, 1, 50)
         //this.scene.fog = this.fog
 
-       this.hemiLight = new HemisphereLight(0x48534a, 0xffffff, 2)
+       this.hemiLight = new HemisphereLight(0x48534a, 0xffffff, .5)
        this.hemiLight.position.set( 0, 20, 0 )
        this.scene.add(this.hemiLight)
 
@@ -165,11 +169,9 @@ export class Studio {
     }
 
     render () {
-        this.camera.getWorldQuaternion(this.spotLight.quaternion)
-        //this.spotLight.quaternion.invert()
         this.camera.getWorldPosition(this.spotLight.position)
+        this.spotLight.position.y -= 1
         this.renderer.render(this.scene, this.camera)
-        //this.composer.render()
     }
 
     onWindowResize() {
