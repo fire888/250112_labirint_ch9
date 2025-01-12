@@ -72,7 +72,7 @@ export class Studio {
        this.hemiLight.position.set( 0, 20, 0 )
        this.scene.add(this.hemiLight)
 
-        this.dirLight = new DirectionalLight( 0xffffff, 3 )
+        this.dirLight = new DirectionalLight( 0xffffff, 10 )
         this.dirLight.position.set(-3, 10, 2)
         // this.dirLight.castShadow = true
         // this.dirLight.shadow.camera.top = 2

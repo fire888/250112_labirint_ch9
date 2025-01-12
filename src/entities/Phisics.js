@@ -61,7 +61,7 @@ export class Phisics {
 
         this.ground = new Body({
             type: Body.STATIC,
-            shape: new Box(new Vec3(50, 0.1, 50)),
+            shape: new Box(new Vec3(500, 0.1, 500)),
         })
         //this.ground.scale.set(1000, 1, 1000)
         this.ground._myName = 'ground'

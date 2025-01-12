@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { 
     Matrix4, 
     Vector3,
@@ -11,6 +12,8 @@ import {
 } from "three";
 
 export type A3 = [number, number, number]
+
+let geomLabel: THREE.PlaneGeometry | null = null
 
 
 export const _M = {
@@ -51,23 +54,6 @@ export const _M = {
         rad = rad % (Math.PI * 2)
         return rad
     },
-    // mirrorZ: (arr) => {
-    //     const arr2 = []
-    //     for (let i = 0; i < arr.length; i += 18) {
-    //         //if (!arr[i + 1]) {
-    //         //    continue;
-    //         //}
-    //         arr2.push(
-    //             arr[i + 3], arr[i + 4], -arr[i + 5],
-    //             arr[i], arr[i + 1], -arr[i + 2],
-    //             arr[i + 15], arr[i + 16], -arr[i + 17],
-    //             arr[i + 3], arr[i + 4], -arr[i + 5],
-    //             arr[i + 15], arr[i + 16], -arr[i + 17],
-    //             arr[i + 12], arr[i + 13], -arr[i + 14],
-    //         )
-    //     }
-    //     arr.push(...arr2)
-    // },
     mirrorZ: (arr: number[]) => {
         const arr2 = []
 
@@ -325,6 +311,30 @@ export const _M = {
         }
         return new Mesh(geometry, material)
     },
+    createLabel(t: string, color = "#FFFF00", scale = 1) {
+        const canvas = document.createElement( 'canvas' );
+        const ctx = canvas.getContext( '2d' );
+        canvas.width = 128;
+        canvas.height = 128;
+
+        // ctx.fillStyle = bgColor;
+        // ctx.fillRect( 0, 0, 128, 128 );
+
+        ctx.fillStyle = color
+        ctx.font = 'bold 60pt arial'
+        ctx.textAlign = "center"
+        ctx.fillText(t, 64, 100)
+
+        const map = new THREE.CanvasTexture( canvas )
+        const material = new THREE.MeshBasicMaterial( { map: map, transparent: true } )
+        if (!geomLabel) {
+            geomLabel = new THREE.PlaneGeometry(.3, .3)
+        }
+        const mesh = new THREE.Mesh(geomLabel, material)
+        mesh.scale.set(scale, scale, scale)
+        return mesh
+    },
+
     
     // makeCreaterSquare: (data: { w: number }) => {
     //     const { w } = data 
@@ -342,5 +352,9 @@ export const _M = {
     //         return new Line(geometry, lineMaterial)
     //     }
     // }
+
+    dist (v1: [number, number], v2: [number, number]) {
+        return Math.sqrt((v1[0] - v2[0]) * (v1[0] - v2[0]) + (v1[1] - v2[1]) * (v1[1] - v2[1]))
+    },
 }
 

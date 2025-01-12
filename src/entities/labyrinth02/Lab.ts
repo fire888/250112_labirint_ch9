@@ -1,120 +1,53 @@
-import { Voronoi } from "./rhill-voronoi-core";
 import { Root } from "../../index";
 import * as THREE from "three";
+import { _M } from "../../geometry/_m";
+import { createScheme} from "./scheme"
+
 
 export class Lab {
+    _root: Root
     constructor() {}
     async init (root: Root, params = {}) {
-        const voronoi = new Voronoi();
-        const S = 200
-        const N = 20
-        const bbox = {xl: 0, xr: S, yt: 0, yb: S }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
-        const sites: { x: number, y: number }[] = []
-        for (let i = 0; i < N; ++i) {
-            sites.push({ x: Math.random() * S, y: Math.random() * S})
+        this._root = root
+
+        const scheme = createScheme(root)
+
+        for (let a = 0; a < scheme.arrOffsets.length; ++a) {
+            const offset = scheme.arrOffsets[a]
+            this.createHome(offset)
         }
-        
-        //const sites = [ {x: 50, y: 50}, {x: 80, y: 30}, {x: 120, y: 100} /* , ... */ ];
-        
-        // a 'vertex' is an object exhibiting 'x' and 'y' properties. The
-        // Voronoi object will add a unique 'voronoiId' property to all
-        // sites. The 'voronoiId' can be used as a key to lookup the associated cell
-        // in diagram.cells.
-        
-        const diagram = voronoi.compute(sites, bbox);
+    }
 
-        console.log('>>>>', diagram)
+    createHome (arr: [number, number][]) {
+        const verticies = []
 
-        //console.log(diagram.edges[0].va.x)
+        const H = Math.random() * 30 + 5
+        for (let i = 1; i < arr.length; ++i) {
+            const prev = arr[i - 1]
+            const cur =  arr[i]
 
-        // edges
-        //ctx.beginPath();
-        //ctx.strokeStyle = '#000';
+            const d = _M.dist(prev, cur)
 
-        const material = new THREE.LineBasicMaterial({
-            color: 0xffffff
-        });
-        
-        //const line = new THREE.Line( geometry, material );
-        //scene.add( line );
+            const v = this.createWall(d, 5)
+            const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
 
-        let 
-        edges = diagram.edges,
-        iEdge = edges.length
+            _M.rotateVerticesY(v, -angle)
+            _M.translateVertices(v, prev[0], 0, prev[1])
 
-        console.log('TTTTT', edges)
-        while (iEdge--) {
-            console.log(iEdge)
-            const edge = edges[iEdge]
-            const v1 = edge.va;
-            const v2 = edge.vb;
-
-            const points = [
-                new THREE.Vector3( v1.x, 0, v1.y ),
-                new THREE.Vector3( v2.x, 0, v2.y ),
-            ]
-            const geometry = new THREE.BufferGeometry().setFromPoints(points)
-            const line = new THREE.Line(geometry, material)
-            root.studio.add(line)
-            //ctx.moveTo(v.x,v.y);
-            //ctx.lineTo(v.x,v.y);
+            verticies.push(...v)
         }
-        // ctx.stroke();
-        // edges
+        const m = _M.createMesh({ v: verticies, material: new THREE.MeshPhongMaterial({ color: 0xaaaabb }) })
+        this._root.studio.add(m)
+    }
 
+    createWall (d: number, h: number) {
+        const vv = _M.createPolygon(
+            [0, 0, 0],
+            [d, 0, 0],  
+            [d, h, 0],  
+            [0, h, 0]
+        )
 
-
-
-
-
+        return vv
     }
 }
-
-/*
-        var ctx = this.canvas.getContext('2d');
-        // background
-        ctx.globalAlpha = 1;
-        ctx.beginPath();
-        ctx.rect(0,0,this.canvas.width,this.canvas.height);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-        ctx.strokeStyle = '#888';
-        ctx.stroke();
-        // voronoi
-        if (!this.diagram) {return;}
-        // edges
-        ctx.beginPath();
-        ctx.strokeStyle = '#000';
-        var edges = this.diagram.edges,
-            iEdge = edges.length,
-            edge, v;
-        while (iEdge--) {
-            edge = edges[iEdge];
-            v = edge.va;
-            ctx.moveTo(v.x,v.y);
-            v = edge.vb;
-            ctx.lineTo(v.x,v.y);
-            }
-        ctx.stroke();
-        // edges
-        ctx.beginPath();
-        ctx.fillStyle = 'red';
-        var vertices = this.diagram.vertices,
-            iVertex = vertices.length;
-        while (iVertex--) {
-            v = vertices[iVertex];
-            ctx.rect(v.x-1,v.y-1,3,3);
-            }
-        ctx.fill();
-        // sites
-        ctx.beginPath();
-        ctx.fillStyle = '#44f';
-        var sites = this.sites,
-            iSite = sites.length;
-        while (iSite--) {
-            v = sites[iSite];
-            ctx.rect(v.x-2/3,v.y-2/3,2,2);
-            }
-        ctx.fill();
-        },
-*/
