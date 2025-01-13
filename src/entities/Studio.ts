@@ -58,12 +58,12 @@ export class Studio {
         this.camera.lookAt(0, 1, 0)
 
         this.spotLight = new SpotLight( 0xffffff, 1000 )
-        this.spotLight.intensity = 50
+        this.spotLight.intensity = 10
         this.spotLight.position.set( 40, 3, -5 );
         this.spotLight.angle = Math.PI * .2;
         this.spotLight.penumbra = 1
         this.spotLight.decay = 1
-        this.spotLight.distance = 20
+        this.spotLight.distance = 30
         const target = new Object3D();
         this.spotLight.target = target;
 
@@ -91,8 +91,8 @@ export class Studio {
        this.hemiLight.position.set( 0, 20, 0 )
        this.scene.add(this.hemiLight)
 
-        // this.dirLight = new DirectionalLight( 0xffffff, 10 )
-        // this.dirLight.position.set(-3, 10, 2)
+        this.dirLight = new DirectionalLight( 0xffffff, 10 )
+        this.dirLight.position.set(-3, 10, 2)
         // this.dirLight.castShadow = true
         // this.dirLight.shadow.camera.top = 2
         // this.dirLight.shadow.camera.bottom = -2
@@ -100,7 +100,7 @@ export class Studio {
         // this.dirLight.shadow.camera.right = 2
         // this.dirLight.shadow.camera.near = 0.1
         // this.dirLight.shadow.camera.far = 40
-        //this.scene.add(this.dirLight)
+        this.scene.add(this.dirLight)
 
         this.renderer = new WebGLRenderer({ antialias: true })
         this.renderer.setPixelRatio(window.devicePixelRatio)

@@ -42,7 +42,7 @@ const path = [
 ]
 
 
-export const createWall_01 = (d: number, h: number) => {
+export const createWall_01 = (d: number) => {
     const v = []
     for (let i = 1; i < path.length; ++i) {
         const b = path[i - 1]

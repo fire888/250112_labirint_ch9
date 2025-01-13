@@ -19,29 +19,32 @@ export class Lab {
         }
     }
 
-    createHome (arr: [number, number][]) {
+    createHome (perimiter: [number, number][]) {
         const verticies = []
 
-        const H = Math.random() * 30 + 5
+        let saveStartPerimetrProfiles: number[][] | null = null
+        let saveProfiles: number[][] | null  = null
 
-        let prevProfiles: number[][] | null  = null
+        for (let i = 1; i < perimiter.length; ++i) {
+            const prev = perimiter[i - 1]
 
-        for (let i = 1; i < arr.length; ++i) {
-            const prev = arr[i - 1]
-            const cur =  arr[i]
+            const l = _M.createLabel(i - 1 + "", '#ffffff', 10)
+            l.position.set(prev[0], -2, prev[1])
+            this._root.studio.add(l)
 
+            const cur =  perimiter[i]
+
+            // create wall
             const d = _M.dist(prev, cur)
-
-            const { v, profiles } = createWall_01(d, H)
+            const { v, profiles } = createWall_01(d)
             const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
-
             _M.rotateVerticesY(v, -angle)
             _M.translateVertices(v, prev[0], 0, prev[1])
-
             verticies.push(...v)
 
-            const profileVS = []
-            const copyProfilesVS = []
+            // cap angles
+            const profileLeft = [] // current wall start profile
+            const profileRigth = [] // save current wall end profile
             for (let j = 0; j < profiles.length; ++j) {
                 const profilePath = profiles[j].path
                 const vPr = []
@@ -50,16 +53,24 @@ export class Lab {
                     vPr.push(0, profilePath[k][1], profilePath[k][0])
                 }
                 _M.rotateVerticesY(vPr, -angle)
-                copyProfilesVS.push([...vPr])
-                _M.translateVertices(vPr, prev[0], 0, prev[1])
 
-                profileVS.push(vPr)
+                const copyForRigth = [...vPr]
+                _M.translateVertices(copyForRigth, cur[0], 0, cur[1])
+                profileRigth.push(copyForRigth)
+
+                _M.translateVertices(vPr, prev[0], 0, prev[1])
+                profileLeft.push(vPr)
             }
 
-            if (prevProfiles !== null) {
-                for (let k = 0; k < prevProfiles.length; ++k) {
-                    const prevV = prevProfiles[k]
-                    const cur = profileVS[k]
+            if (i === 1) {
+                saveStartPerimetrProfiles = profileLeft
+            }
+
+            // fill left angle with previous wall 
+            if (saveProfiles !== null) {
+                for (let k = 0; k < saveProfiles.length; ++k) {
+                    const prevV = saveProfiles[k]
+                    const cur = profileLeft[k]
 
                     for (let j = 3; j < prevV.length; j += 3) {
                         verticies.push(
@@ -73,25 +84,27 @@ export class Lab {
                     }
                 }
             }
+            // save right profile for next
+            saveProfiles = profileRigth
 
-            for (let j = 0; j < profiles.length; ++j) {
-                const profilePath = profiles[j].path
+            // fill last angle with start wall 
+            if (i === perimiter.length - 1 && saveStartPerimetrProfiles !== null) {
+                for (let k = 0; k < saveStartPerimetrProfiles.length; ++k) {
+                    const prevV = profileRigth[k]
+                    const cur = saveStartPerimetrProfiles[k]
 
-                const vPr = []
-                for (let k = 0; k < profilePath.length; ++k) {
-                    vPr.push(0, profilePath[k][1], profilePath[k][0])
+                    for (let j = 3; j < prevV.length; j += 3) {
+                        verticies.push(
+                            ..._M.createPolygon(
+                                [prevV[j - 3], prevV[j - 2], prevV[j - 1]],
+                                [cur[j - 3], cur[j - 2], cur[j - 1]],
+                                [cur[j], cur[j + 1], cur[j + 2]],
+                                [prevV[j], prevV[j + 1], prevV[j + 2]],
+                            )
+                        )
+                    }
                 }
-                _M.rotateVerticesY(vPr, -angle)
-                _M.translateVertices(vPr, prev[0], 0, prev[1])
-
-                profileVS.push(vPr)
-            }
-
-
-            for (let j = 0; j < copyProfilesVS.length; ++j) {
-                _M.translateVertices(copyProfilesVS[j], cur[0], 0, cur[1])
-            }
-            prevProfiles = copyProfilesVS
+            }     
         }
         const m = _M.createMesh({ v: verticies, material: new THREE.MeshPhongMaterial({ color: 0xaaaabb }) })
         this._root.studio.add(m)
