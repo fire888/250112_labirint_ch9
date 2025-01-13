@@ -27,11 +27,6 @@ export class Lab {
 
         for (let i = 1; i < perimiter.length; ++i) {
             const prev = perimiter[i - 1]
-
-            const l = _M.createLabel(i - 1 + "", '#ffffff', 10)
-            l.position.set(prev[0], -2, prev[1])
-            this._root.studio.add(l)
-
             const cur =  perimiter[i]
 
             // create wall
