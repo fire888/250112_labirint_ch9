@@ -17,6 +17,8 @@ export class Lab {
             const offset = scheme.arrOffsets[a]
             this.createHome(offset)
         }
+
+        this.createRoads(scheme.arrAreas, scheme.arrOffsets)
     }
 
     createHome (perimiter: [number, number][]) {
@@ -102,6 +104,43 @@ export class Lab {
             }     
         }
         const m = _M.createMesh({ v: verticies, material: new THREE.MeshPhongMaterial({ color: 0xaaaabb }) })
+        this._root.studio.add(m)
+    }
+
+    createRoads (areas: { x: number, y: number }[][], areasOffsets: number[][][]) {
+        const v: number[] = []
+
+        for (let indx in areas) {
+            const area = areas[indx]
+            const offset = areasOffsets[indx]
+
+            if (!offset) {
+                return;
+            }
+
+            for (let i = 1; i < area.length; ++i) { 
+                const prevOuter = area[i - 1]
+                const curOuter =  area[i]
+
+                if (!offset[i - 1] || ! offset[i]) {
+                    continue
+                }
+
+                const prevInner = offset[i - 1]
+                const curInner =  offset[i]
+
+                v.push(
+                    ..._M.createPolygon(
+                        [prevInner[0], 0, prevInner[1]],
+                        [prevOuter.x, 0, prevOuter.y],
+                        [curOuter.x, 0, curOuter.y],
+                        [curInner[0], 0, curInner[1]],
+                    )
+                )
+            }
+        }
+
+        const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0x222288 }) })
         this._root.studio.add(m)
     }
 }
