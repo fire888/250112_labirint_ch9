@@ -17,6 +17,7 @@
     "dotenv": "^16.4.7",
     "eslint-webpack-plugin": "^4.2.0",
     "ftp-deploy": "^2.4.7",
+    "line-intersect": "^3.0.0",
     "polygon-offset": "^0.3.2",
     "three": "^0.165.0",
     "typescript-eslint-parser": "^21.0.2",

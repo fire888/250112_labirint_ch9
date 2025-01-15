@@ -16,6 +16,7 @@ export type A3 = [number, number, number]
 let geomLabel: THREE.PlaneGeometry | null = null
 
 
+
 export const _M = {
     createPolygon: function(v0: A3, v1: A3, v2: A3, v3: A3) { return  [...v0, ...v1, ...v2, ...v0, ...v2, ...v3] },
     fillColorFace: (c: A3) => [...c, ...c, ...c, ...c, ...c, ...c],
@@ -311,7 +312,7 @@ export const _M = {
         }
         return new Mesh(geometry, material)
     },
-    createLabel(t: string, color = "#FFFF00", scale = 1) {
+    createLabel(t: string, color = [1, 1, 1], scale = 1) {
         const canvas = document.createElement( 'canvas' );
         const ctx = canvas.getContext( '2d' );
         canvas.width = 128;
@@ -320,7 +321,13 @@ export const _M = {
         // ctx.fillStyle = bgColor;
         // ctx.fillRect( 0, 0, 128, 128 );
 
-        ctx.fillStyle = color
+        const r = this.componentToHex(color[0])
+        const g = this.componentToHex(color[1])
+        const b = this.componentToHex(color[2])
+
+        const c = '#' + r + g + b
+
+        ctx.fillStyle = c
         ctx.font = 'bold 60pt arial'
         ctx.textAlign = "center"
         ctx.fillText(t, 64, 100)
@@ -333,6 +340,17 @@ export const _M = {
         const mesh = new THREE.Mesh(geomLabel, material)
         mesh.scale.set(scale, scale, scale)
         return mesh
+    },
+
+    createLine (arr: [number, number][], color = [1, 1, 1]) {
+        const linePoints1 = []
+        for (let i = 0; i < arr.length; ++i) {
+            linePoints1.push(new THREE.Vector3(arr[i][0], 0, arr[i][1]))
+        }
+        const geometry1 = new THREE.BufferGeometry().setFromPoints(linePoints1)
+        const mat = new THREE.LineBasicMaterial({ color: new THREE.Color().setRGB(color[0], color[1], color[2]) })
+        const line1 = new THREE.Line(geometry1, mat)
+        return line1            
     },
 
     
@@ -356,5 +374,12 @@ export const _M = {
     dist (v1: [number, number], v2: [number, number]) {
         return Math.sqrt((v1[0] - v2[0]) * (v1[0] - v2[0]) + (v1[1] - v2[1]) * (v1[1] - v2[1]))
     },
+
+    componentToHex (c: number) {
+        c *= 256
+        c = Math.round(c)
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    }
 }
 

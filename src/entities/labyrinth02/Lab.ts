@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { _M } from "../../geometry/_m";
 import { createScheme} from "./scheme"
 import { createWall_01 } from "geometry/wall01";
-
+import { offset } from "./offset";
 
 export class Lab {
     _root: Root
@@ -18,7 +18,7 @@ export class Lab {
             this.createHome(offset)
         }
 
-        this.createRoads(scheme.arrAreas, scheme.arrOffsets)
+        this.createRoads(scheme.arrAreas)
     }
 
     createHome (perimiter: [number, number][]) {
@@ -107,34 +107,37 @@ export class Lab {
         this._root.studio.add(m)
     }
 
-    createRoads (areas: { x: number, y: number }[][], areasOffsets: number[][][]) {
+    createRoads (areas: [number, number][][]) {
         const v: number[] = []
 
-        for (let indx in areas) {
-            const area = areas[indx]
-            const offset = areasOffsets[indx]
+        for (let i = 0; i < areas.length; ++i) {
+            const area = areas[i]
+            const areaOffsets = offset(area, 1.5)
 
-            if (!offset) {
-                return;
-            }
+            for (let j = 0; j < areaOffsets.length; ++j) {
+                const outerNext = j === area.length - 1 ? area[0] : area[j + 1]
+                const outer = area[j] 
+                const offset = areaOffsets[j]
 
-            for (let i = 1; i < area.length; ++i) { 
-                const prevOuter = area[i - 1]
-                const curOuter =  area[i]
-
-                if (!offset[i - 1] || ! offset[i]) {
+                if (offset.length <= 2) {
                     continue
-                }
+                } 
 
-                const prevInner = offset[i - 1]
-                const curInner =  offset[i]
+                const l = _M.createLine(
+                    [
+                        [offset[0], offset[1]],
+                        [offset[2], offset[3]],
+                    ]
+                )
+                this._root.studio.add(l)
+                l.position.y = 11
 
                 v.push(
                     ..._M.createPolygon(
-                        [prevInner[0], 0, prevInner[1]],
-                        [prevOuter.x, 0, prevOuter.y],
-                        [curOuter.x, 0, curOuter.y],
-                        [curInner[0], 0, curInner[1]],
+                        [outer[0], 0, outer[1]],
+                        [outerNext[0], 0, outerNext[1]],
+                        [offset[2], 0, offset[3]],
+                        [offset[0], 0, offset[1]],
                     )
                 )
             }

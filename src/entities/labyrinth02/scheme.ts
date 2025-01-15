@@ -5,12 +5,6 @@ import { _M } from "../../geometry/_m";
 var Offset = require('polygon-offset');
 
 export const createScheme = (root: Root) => {
-
-    const materialLine = new THREE.LineBasicMaterial({
-        color: 0xffffff
-    });
-
-
     const voronoi = new Voronoi();
     const S = 100
     const N = 100
@@ -40,8 +34,8 @@ export const createScheme = (root: Root) => {
     //     root.studio.add(line)
     // }
 
-    const arrAreas = []
-    const arrOffsets = []
+    const arrAreas: [number, number][][] = []
+    const arrOffsets: [number, number][][] = []
 
     for (let i = 0; i < diagram.cells.length; ++i) {
         const cell = diagram.cells[i]
@@ -53,17 +47,16 @@ export const createScheme = (root: Root) => {
         }
 
         const v = halfedges[0].getStartpoint()
-        const pp = [{ x: v.x, y: v.y }] 
+        const points: [number, number][] = [[v.x, v.y]]
         for (let iHalfedge = 0; iHalfedge < nHalfedges; ++iHalfedge) {
             const v = halfedges[iHalfedge].getEndpoint()
-            pp.push({ x: v.x, y: v.y })
+            points.push([v.x, v.y])
         }
 
-        arrAreas.push(pp)
+        arrAreas.push(points)
 
-        const ppp = pp.map(p => [p.x, p.y ])
         const offset = new Offset()
-        var padding = offset.data(ppp).padding(1.5)
+        const padding = offset.data(points).padding(1.5)
 
         if (!padding[0]) {
             console.log(padding)
@@ -72,13 +65,39 @@ export const createScheme = (root: Root) => {
 
         arrOffsets.push(padding[0])
 
-        const linePoints1 = []
-        for (let i = 0; i < padding[0].length; ++i) {
-            linePoints1.push(new THREE.Vector3(padding[0][i][0], 0, padding[0][i][1]))
+        const c01 = [Math.random(), Math.random(), Math.random()]
+
+        const l = _M.createLine(points, c01)
+        l.position.y = .5
+        root.studio.add(l)
+
+        for (let i = 0; i < points.length; ++i) {
+            const label = _M.createLabel(i + '', c01, 5)
+            label.position.set(points[i][0], .5, points[i][1])
+            root.studio.add(label)
         }
-        const geometry1 = new THREE.BufferGeometry().setFromPoints(linePoints1)
-        const line1 = new THREE.Line(geometry1, materialLine)
-        root.studio.add(line1)
+
+        const c02 = [Math.random(), Math.random(), Math.random()]
+
+        const l1 = _M.createLine(padding[0], c01)
+        l1.position.y = 1
+        root.studio.add(l1)
+
+        for (let i = 0; i < padding[0].length; ++i) {
+            const label = _M.createLabel(i + '', c01, 5)
+            label.position.set(padding[0][i][0], 1 + Math.random(), padding[0][i][1])
+            root.studio.add(label)
+        }
+
+
+
+        // const linePoints1 = []
+        // for (let i = 0; i < padding[0].length; ++i) {
+        //     linePoints1.push(new THREE.Vector3(padding[0][i][0], 0, padding[0][i][1]))
+        // }
+        // const geometry1 = new THREE.BufferGeometry().setFromPoints(linePoints1)
+        // const line1 = new THREE.Line(geometry1, materialLine)
+        // root.studio.add(line1)
     }   
 
     return { arrAreas, arrOffsets }
