@@ -9,6 +9,7 @@ import {
 export const offset = (points: [number, number][], d: number): [number, number, number?, number?][] => {
     const lines: [number, number, number, number][] = []
 
+    // find center
     let cX = 0
     let cY = 0
     for (let i = 0; i < points.length; ++i) {
@@ -19,7 +20,7 @@ export const offset = (points: [number, number][], d: number): [number, number, 
     cY /= points.length
 
 
-
+    // create lines offset no trim
     for (let i = 1; i < points.length; ++i) {
         const pr = points[i - 1]
         const cr = points[i]
@@ -38,6 +39,7 @@ export const offset = (points: [number, number][], d: number): [number, number, 
         lines.push([xNewPR, yNewPR, xNewCR, yNewCR])
     }
 
+    
     const intercepts = []
     for (let i = 0; i < lines.length; ++i) {
         const prev = i === 0 
