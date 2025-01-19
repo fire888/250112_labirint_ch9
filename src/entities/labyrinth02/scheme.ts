@@ -64,40 +64,6 @@ export const createScheme = (root: Root) => {
         }
 
         arrOffsets.push(padding[0])
-
-        const c01 = [Math.random(), Math.random(), Math.random()]
-
-        const l = _M.createLine(points, c01)
-        l.position.y = .5
-        root.studio.add(l)
-
-        for (let i = 0; i < points.length; ++i) {
-            const label = _M.createLabel(i + '', c01, 5)
-            label.position.set(points[i][0], .5, points[i][1])
-            root.studio.add(label)
-        }
-
-        const c02 = [Math.random(), Math.random(), Math.random()]
-
-        const l1 = _M.createLine(padding[0], c01)
-        l1.position.y = 1
-        root.studio.add(l1)
-
-        for (let i = 0; i < padding[0].length; ++i) {
-            const label = _M.createLabel(i + '', c01, 5)
-            label.position.set(padding[0][i][0], 1 + Math.random(), padding[0][i][1])
-            root.studio.add(label)
-        }
-
-
-
-        // const linePoints1 = []
-        // for (let i = 0; i < padding[0].length; ++i) {
-        //     linePoints1.push(new THREE.Vector3(padding[0][i][0], 0, padding[0][i][1]))
-        // }
-        // const geometry1 = new THREE.BufferGeometry().setFromPoints(linePoints1)
-        // const line1 = new THREE.Line(geometry1, materialLine)
-        // root.studio.add(line1)
     }   
 
     return { arrAreas, arrOffsets }

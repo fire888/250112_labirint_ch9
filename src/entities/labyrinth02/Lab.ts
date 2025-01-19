@@ -110,37 +110,41 @@ export class Lab {
     createRoads (areas: [number, number][][]) {
         const v: number[] = []
 
+        const fillRoad = (inner: [number, number, number?, number?][], outer: [number, number, number, number][]) => {
+            if (!inner) {
+                return
+            }
+
+            for (let i = 0; i < outer.length; ++i) {
+                if (!inner[i]) {
+                    continue
+                }
+                if (inner[i].length === 2) {
+                    v.push(
+                        inner[i][0], 0, inner[i][1],       
+                        outer[i][0], 0, outer[i][1],
+                        outer[i][2], 0, outer[i][3],        
+                    )
+                }
+                if (inner[i].length == 4) {
+                    v.push(
+                        ..._M.createPolygon(
+                            [inner[i][2], 0, inner[i][3]], 
+                            [inner[i][0], 0, inner[i][1]], 
+                            [outer[i][0], 0, outer[i][1]],  
+                            [outer[i][2], 0, outer[i][3]],    
+                        )                     
+                    )    
+                 }
+            }
+        }
+
         for (let i = 0; i < areas.length; ++i) {
             const area = areas[i]
-            const areaOffsets = offset(area, 1.5)
+            const result = offset(area, 1.5, this._root)
+            const { offsetLines, existsLines, centerX, centerY } = result
 
-            for (let j = 0; j < areaOffsets.length; ++j) {
-                const outerNext = j === area.length - 1 ? area[0] : area[j + 1]
-                const outer = area[j] 
-                const offset = areaOffsets[j]
-
-                if (offset.length <= 2) {
-                    continue
-                } 
-
-                const l = _M.createLine(
-                    [
-                        [offset[0], offset[1]],
-                        [offset[2], offset[3]],
-                    ]
-                )
-                this._root.studio.add(l)
-                l.position.y = 11
-
-                v.push(
-                    ..._M.createPolygon(
-                        [outer[0], 0, outer[1]],
-                        [outerNext[0], 0, outerNext[1]],
-                        [offset[2], 0, offset[3]],
-                        [offset[0], 0, offset[1]],
-                    )
-                )
-            }
+            fillRoad(offsetLines, existsLines)
         }
 
         const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0x222288 }) })

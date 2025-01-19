@@ -312,14 +312,14 @@ export const _M = {
         }
         return new Mesh(geometry, material)
     },
-    createLabel(t: string, color = [1, 1, 1], scale = 1) {
+    createLabel(t: string, color: [number, number, number] = [1, 1, 1], scale = 1) {
         const canvas = document.createElement( 'canvas' );
         const ctx = canvas.getContext( '2d' );
-        canvas.width = 128;
+        canvas.width = 128 * (t.length * .5);
         canvas.height = 128;
 
-        // ctx.fillStyle = bgColor;
-        // ctx.fillRect( 0, 0, 128, 128 );
+        // ctx.fillStyle = '#000077';
+        // ctx.fillRect( 0, 0, 128 * (t.length * .5), 128 );
 
         const r = this.componentToHex(color[0])
         const g = this.componentToHex(color[1])
@@ -329,8 +329,8 @@ export const _M = {
 
         ctx.fillStyle = c
         ctx.font = 'bold 60pt arial'
-        ctx.textAlign = "center"
-        ctx.fillText(t, 64, 100)
+        ctx.textAlign = "left"
+        ctx.fillText(t, 0, 100)
 
         const map = new THREE.CanvasTexture( canvas )
         const material = new THREE.MeshBasicMaterial( { map: map, transparent: true } )
@@ -338,11 +338,19 @@ export const _M = {
             geomLabel = new THREE.PlaneGeometry(.3, .3)
         }
         const mesh = new THREE.Mesh(geomLabel, material)
-        mesh.scale.set(scale, scale, scale)
-        return mesh
+        mesh.scale.set((t.length * .5), 1, 1)
+        const box = new THREE.Mesh(
+            new THREE.BoxGeometry(.04, .04, .04),
+            new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(color[0], color[1], color[2]) })
+        )
+        mesh.position.set(0, .15, 0)
+        box.scale.set(scale, scale, scale)
+        box.add(mesh)
+
+        return box
     },
 
-    createLine (arr: [number, number][], color = [1, 1, 1]) {
+    createLine (arr: [number, number][], color: [number, number, number] = [1, 1, 1]) {
         const linePoints1 = []
         for (let i = 0; i < arr.length; ++i) {
             linePoints1.push(new THREE.Vector3(arr[i][0], 0, arr[i][1]))
@@ -377,7 +385,7 @@ export const _M = {
 
     componentToHex (c: number) {
         c *= 256
-        c = Math.round(c)
+        c = Math.floor(c) - 1
         var hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     }
