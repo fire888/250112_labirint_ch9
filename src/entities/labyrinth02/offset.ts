@@ -71,12 +71,9 @@ export const offset = (points: [number, number][], d: number, root: Root): {
             let offset = 2
             while (!isIntercept2 && offset < innerLines.length) {
                 let ind = i - offset
-                console.log(i, ind, innerLines.length)
                 if (ind < 0) {
                     ind = innerLines.length + ind
                 }
-                console.log(i, ind, innerLines.length)
-    
                 const prevPrev = innerLines[ind]
                 intersect2 = checkIntersection(...prevPrev, ...curr)
                 /* @ts-ignore */

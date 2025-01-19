@@ -1,6 +1,6 @@
 import { _M } from "./_m";
 
-const profileBottom = [
+const profileBottom: [number, number][] = [
     [0.25, 0],
     [0.25, .3],
     [0.15, .3],
@@ -12,7 +12,7 @@ const profileBottom = [
     [0, .5], 
 ]
 
-const profileCenter = [
+const profileCenter: [number, number][] = [
     [0, .95],
     [.1, .95],
     [.1, .97],
@@ -23,7 +23,7 @@ const profileCenter = [
     [0, 1.1],
 ]
 
-const profileTop = [
+const profileTop: [number, number][] = [
     [0, 5.8],
     [.1, 5.8],
     [.1, 6],
@@ -35,7 +35,7 @@ const profileTop = [
 ]
 
 
-const path = [
+const path: [number, number][] = [
     ...profileBottom,
     ...profileCenter,
     ...profileTop,
@@ -43,17 +43,10 @@ const path = [
 
 
 export const createWall_01 = (d: number) => {
-    const v = []
-    for (let i = 1; i < path.length; ++i) {
-        const b = path[i - 1]
-        const c = path[i]
-        v.push(..._M.createPolygon(
-            [0, b[1], b[0]],
-            [d, b[1], b[0]],
-            [d, c[1], c[0]],
-            [0, c[1], c[0]],
-        ))
-    }
+    const v: number[] = []
+
+    const minDSegments = 4
+    const n = d / minDSegments
 
     const profiles = [
         { path: profileBottom },
@@ -61,5 +54,19 @@ export const createWall_01 = (d: number) => {
         { path: profileTop },
     ]
 
+    const fillPoligons = (path: [number, number][], l: number) => {
+        for (let i = 1; i < path.length; ++i) {
+            const b = path[i - 1]
+            const c = path[i]
+            v.push(..._M.createPolygon(
+                [0, b[1], b[0]],
+                [l, b[1], b[0]],
+                [l, c[1], c[0]],
+                [0, c[1], c[0]],
+            ))
+        }
+    }
+    
+    fillPoligons(path, d)
     return { v, profiles }
 }
