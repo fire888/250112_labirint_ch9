@@ -388,6 +388,36 @@ export const _M = {
         c = Math.floor(c) - 1
         var hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
+    },
+
+    area (vertices: [number, number][]) {
+        var total = 0;
+    
+        for (var i = 0, l = vertices.length; i < l; i++) {
+            var addX = vertices[i][0];
+            var addY = vertices[i == vertices.length - 1 ? 0 : i + 1][1];
+            var subX = vertices[i == vertices.length - 1 ? 0 : i + 1][0];
+            var subY = vertices[i][1];
+    
+            total += (addX * addY * 0.5);
+            total -= (subX * subY * 0.5);
+        }
+    
+        return Math.abs(total)
+    },
+
+    center: (points: [number, number][]): [number, number] => {
+        // find center
+        let cX = 0
+        let cY = 0
+        for (let i = 0; i < points.length; ++i) {
+            cX += points[i][0]
+            cY += points[i][1]
+        }
+        cX /= points.length
+        cY /= points.length
+
+        return [cX, cY]
     }
 }
 

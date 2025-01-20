@@ -13,15 +13,80 @@ export class Lab {
 
         const scheme = createScheme(root)
 
+        const areasData = []
+
         for (let a = 0; a < scheme.arrOffsets.length; ++a) {
-            const offset = scheme.arrOffsets[a]
-            this.createHome(offset)
+            const area = _M.area(scheme.arrAreas[a])
+            const l = _M.createLabel(a + ':_' + area.toFixed(1), [1, 1, 1], 15)
+            
+            const center = _M.center(scheme.arrOffsets[a]) 
+            l.position.set(center[0], 5, center[1])
+            root.studio.add(l)
+
+            areasData.push({
+                center,
+                area,
+                perimeter: scheme.arrAreas[a],
+                perimeterInner: scheme.arrOffsets[a],
+            })
         }
 
-        this.createRoads(scheme.arrAreas)
+        {
+            const v: number[] = []
+            for (let i = 0; i < areasData.length; ++i) {
+                if (areasData[i].area < 60) continue;
+
+                const vert = this._createHome(areasData[i].perimeterInner)
+                v.push(...vert)
+            }
+            const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0xaaaabb }) })
+            this._root.studio.add(m)
+        }
+
+        {
+            const v: number[] = []
+
+            for (let i = 0; i < areasData.length; ++i) {
+                if (areasData[i].area < 60) continue;
+
+                const areaData = areasData[i]
+                const result = offset(areaData.perimeter, 2.1, this._root)
+                const { offsetLines, existsLines, centerX, centerY } = result
+
+                const vert = this._fillRoad(offsetLines, existsLines)
+                v.push(...vert)
+            }
+            const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0x222288 }) })
+            this._root.studio.add(m)
+        }
+
+        {
+            const v: number[] = []
+
+            for (let i = 0; i < areasData.length; ++i) {
+                console.log(areasData[i].area, 'UUUU')
+                if (areasData[i].area > 60) continue;
+
+                console.log('UUUUU')
+                const { perimeter, center } = areasData[i]
+
+                for (let j = 1; j < perimeter.length; ++j) {
+                    const prev = perimeter[j - 1]
+                    const cur =  perimeter[j]
+                    v.push(
+                        center[0], 0, center[1],
+                        prev[0], 0, prev[1],
+                        cur[0], 0, cur[1],
+                    )     
+                }
+            }
+            const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0x228888 }) })
+            this._root.studio.add(m)
+
+        }
     }
 
-    createHome (perimiter: [number, number][]) {
+    _createHome (perimiter: [number, number][]) {
         const verticies = []
 
         let saveStartPerimetrProfiles: number[][] | null = null
@@ -103,51 +168,41 @@ export class Lab {
                 }
             }     
         }
-        const m = _M.createMesh({ v: verticies, material: new THREE.MeshPhongMaterial({ color: 0xaaaabb }) })
-        this._root.studio.add(m)
+
+        return verticies
     }
 
-    createRoads (areas: [number, number][][]) {
-        const v: number[] = []
 
-        const fillRoad = (inner: [number, number, number?, number?][], outer: [number, number, number, number][]) => {
-            if (!inner) {
-                return
-            }
-
-            for (let i = 0; i < outer.length; ++i) {
-                if (!inner[i]) {
-                    continue
-                }
-                if (inner[i].length === 2) {
-                    v.push(
-                        inner[i][0], 0, inner[i][1],       
-                        outer[i][0], 0, outer[i][1],
-                        outer[i][2], 0, outer[i][3],        
-                    )
-                }
-                if (inner[i].length == 4) {
-                    v.push(
-                        ..._M.createPolygon(
-                            [inner[i][2], 0, inner[i][3]], 
-                            [inner[i][0], 0, inner[i][1]], 
-                            [outer[i][0], 0, outer[i][1]],  
-                            [outer[i][2], 0, outer[i][3]],    
-                        )                     
-                    )    
-                 }
-            }
+    _fillRoad (inner: [number, number, number?, number?][], outer: [number, number, number, number][]) {
+        if (!inner) {
+            return
         }
 
-        for (let i = 0; i < areas.length; ++i) {
-            const area = areas[i]
-            const result = offset(area, 1.9, this._root)
-            const { offsetLines, existsLines, centerX, centerY } = result
+        const v: number[] = [] 
 
-            fillRoad(offsetLines, existsLines)
+        for (let i = 0; i < outer.length; ++i) {
+            if (!inner[i]) {
+                continue
+            }
+            if (inner[i].length === 2) {
+                v.push(
+                    inner[i][0], 0, inner[i][1],       
+                    outer[i][0], 0, outer[i][1],
+                    outer[i][2], 0, outer[i][3],        
+                )
+            }
+            if (inner[i].length == 4) {
+                v.push(
+                    ..._M.createPolygon(
+                        [inner[i][2], 0, inner[i][3]], 
+                        [inner[i][0], 0, inner[i][1]], 
+                        [outer[i][0], 0, outer[i][1]],  
+                        [outer[i][2], 0, outer[i][3]],    
+                    )                     
+                )    
+             }
         }
 
-        const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0x222288 }) })
-        this._root.studio.add(m)
+        return v
     }
 }

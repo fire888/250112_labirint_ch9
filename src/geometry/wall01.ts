@@ -85,56 +85,65 @@ export const createWall_01 = (d: number) => {
 
     const min = 5
 
+    // fill full wall
     if (d < min) {
         fillPoligons(path, d)
         return { v, profiles }
     }
 
+    // count columns and holes
     const RL = 1
     const dd = d - RL - RL
-    const nnCol = Math.floor(dd / 2)
-    const nnnHol = nnCol + 1
+    const nCol = Math.floor(dd / 2)
+    const nHol = nCol + 1
     const wColl = .2 + Math.random() * .5
-    const wHoll = (dd - (wColl * nnCol)) / nnnHol
+    const wHoll = (dd - (wColl * nCol)) / nHol
+    const g = .01 + Math.random()
 
-    let currX = 0
+    // make path
     const path0 = []
     for (let i = 0; i < path.length; ++i) {
         path0.push(0, path[i][1], path[i][0])
     }
+    // make left and right pathes
     const pathL = [...path0] 
     const pathR = [...path0] 
     for (let i = 0; i < pathL.length; i += 3) {
         pathL[i] = -pathL[i + 2]
         pathR[i] = pathR[i + 2] 
     }
+
+    // fill left start
+    let currX = 0
     const r = fillPoligonsV3(path0, pathR, RL)
     v.push(...r)
+    currX = RL
 
+    // fill right end
     const rLast = fillPoligonsV3(pathL, path0, RL)
     _M.translateVertices(rLast, dd + RL, 0, 0)
     v.push(...rLast)
 
-    currX = 1
-
-    for (let i = 0; i < nnnHol; ++i) {
-        const r = fillPoligonsV3(pathL, pathL, .5)
+    for (let i = 0; i < nHol; ++i) {
+        // fill hole
+        const r = fillPoligonsV3(pathL, pathL, g)
         _M.rotateVerticesY(r, Math.PI / 2)
         _M.translateVertices(r, currX, 0, 0)
         v.push(...r)
 
         const r1 = fillPoligonsV3(pathR, pathL, wHoll)
-        _M.translateVertices(r1, currX, 0, -.5)
+        _M.translateVertices(r1, currX, 0, -g)
         v.push(...r1)
 
         currX += wHoll
 
-        const r2 = fillPoligonsV3(pathR, pathR, .5)
+        const r2 = fillPoligonsV3(pathR, pathR, g)
         _M.rotateVerticesY(r2, -Math.PI / 2)
-        _M.translateVertices(r2, currX, 0, -.5)
+        _M.translateVertices(r2, currX, 0, -g)
         v.push(...r2)
 
-        if (i < nnnHol - 1) {
+        // fill column (not fill in last itreration)
+        if (i < nHol - 1) {
             const r = fillPoligonsV3(pathL, pathR, wColl)
             _M.translateVertices(r, currX, 0, 0)
             v.push(...r)
