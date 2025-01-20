@@ -141,7 +141,7 @@ export class Lab {
 
         for (let i = 0; i < areas.length; ++i) {
             const area = areas[i]
-            const result = offset(area, 1.5, this._root)
+            const result = offset(area, 1.9, this._root)
             const { offsetLines, existsLines, centerX, centerY } = result
 
             fillRoad(offsetLines, existsLines)

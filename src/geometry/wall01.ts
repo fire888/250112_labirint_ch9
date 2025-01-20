@@ -34,19 +34,14 @@ const profileTop: [number, number][] = [
     [.62, 6.2],
 ]
 
-
 const path: [number, number][] = [
     ...profileBottom,
     ...profileCenter,
     ...profileTop,
 ]
 
-
 export const createWall_01 = (d: number) => {
     const v: number[] = []
-
-    const minDSegments = 4
-    const n = d / minDSegments
 
     const profiles = [
         { path: profileBottom },
@@ -66,7 +61,87 @@ export const createWall_01 = (d: number) => {
             ))
         }
     }
-    
-    fillPoligons(path, d)
+
+    const fillPoligonsV3 = (
+        path1: number[],
+        pathR: number[], 
+        l: number
+    ) => {
+        const v = []
+        const path2 = [...pathR]
+        _M.translateVertices(path2, l, 0, 0)
+
+        for (let i = 3; i < path1.length; i += 3) {
+            v.push(..._M.createPolygon(
+                [path1[i - 3], path1[i - 2], path1[i - 1]],
+                [path2[i - 3], path2[i - 2], path2[i - 1]],
+                [path2[i], path2[i + 1], path2[i + 2]],
+                [path1[i], path1[i + 1], path1[i + 2]],
+            ))
+        }
+
+        return v
+    }
+
+    const min = 5
+
+    if (d < min) {
+        fillPoligons(path, d)
+        return { v, profiles }
+    }
+
+    const RL = 1
+    const dd = d - RL - RL
+    const nnCol = Math.floor(dd / 2)
+    const nnnHol = nnCol + 1
+    const wColl = .2 + Math.random() * .5
+    const wHoll = (dd - (wColl * nnCol)) / nnnHol
+
+    let currX = 0
+    const path0 = []
+    for (let i = 0; i < path.length; ++i) {
+        path0.push(0, path[i][1], path[i][0])
+    }
+    const pathL = [...path0] 
+    const pathR = [...path0] 
+    for (let i = 0; i < pathL.length; i += 3) {
+        pathL[i] = -pathL[i + 2]
+        pathR[i] = pathR[i + 2] 
+    }
+    const r = fillPoligonsV3(path0, pathR, RL)
+    v.push(...r)
+
+    const rLast = fillPoligonsV3(pathL, path0, RL)
+    _M.translateVertices(rLast, dd + RL, 0, 0)
+    v.push(...rLast)
+
+    currX = 1
+
+    for (let i = 0; i < nnnHol; ++i) {
+        const r = fillPoligonsV3(pathL, pathL, .5)
+        _M.rotateVerticesY(r, Math.PI / 2)
+        _M.translateVertices(r, currX, 0, 0)
+        v.push(...r)
+
+        const r1 = fillPoligonsV3(pathR, pathL, wHoll)
+        _M.translateVertices(r1, currX, 0, -.5)
+        v.push(...r1)
+
+        currX += wHoll
+
+        const r2 = fillPoligonsV3(pathR, pathR, .5)
+        _M.rotateVerticesY(r2, -Math.PI / 2)
+        _M.translateVertices(r2, currX, 0, -.5)
+        v.push(...r2)
+
+        if (i < nnnHol - 1) {
+            const r = fillPoligonsV3(pathL, pathR, wColl)
+            _M.translateVertices(r, currX, 0, 0)
+            v.push(...r)
+        }
+
+        currX += wColl
+    }
+
     return { v, profiles }
 }
