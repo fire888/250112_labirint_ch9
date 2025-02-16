@@ -15,26 +15,28 @@ export class Lab {
 
         const areasData = []
 
-        for (let a = 0; a < scheme.arrOffsets.length; ++a) {
-            const area = _M.area(scheme.arrAreas[a])
-            const l = _M.createLabel(a + ':_' + area.toFixed(1), [1, 1, 1], 15)
+        for (let i = 0; i < scheme.length; ++i) {
+            const area = _M.area(scheme[i].area)
+            const center = _M.center(scheme[i].area) 
             
-            const center = _M.center(scheme.arrOffsets[a]) 
-            l.position.set(center[0], 5, center[1])
+            const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
+            l.position.set(center[0], 1, center[1])
             root.studio.add(l)
 
             areasData.push({
                 center,
                 area,
-                perimeter: scheme.arrAreas[a],
-                perimeterInner: scheme.arrOffsets[a],
+                perimeter: scheme[i].area,
+                perimeterInner: scheme[i].offset,
             })
         }
 
         {
             const v: number[] = []
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area < 60) continue;
+                if (areasData[i].area < 60) { 
+                    continue;
+                }
 
                 const vert = this._createHome(areasData[i].perimeterInner)
                 v.push(...vert)
@@ -47,7 +49,9 @@ export class Lab {
             const v: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area < 60) continue;
+                if (areasData[i].area < 60) { 
+                    continue;
+                }
 
                 const areaData = areasData[i]
                 const result = offset(areaData.perimeter, 2.1, this._root)
@@ -64,10 +68,10 @@ export class Lab {
             const v: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
-                console.log(areasData[i].area, 'UUUU')
-                if (areasData[i].area > 60) continue;
+                if (areasData[i].area >= 60) { 
+                    continue;
+                }
 
-                console.log('UUUUU')
                 const { perimeter, center } = areasData[i]
 
                 for (let j = 1; j < perimeter.length; ++j) {
@@ -202,7 +206,7 @@ export class Lab {
                 )    
              }
         }
-
         return v
     }
 }
+

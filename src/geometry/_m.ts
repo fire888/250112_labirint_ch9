@@ -407,17 +407,30 @@ export const _M = {
     },
 
     center: (points: [number, number][]): [number, number] => {
-        // find center
-        let cX = 0
-        let cY = 0
+        let minX = Infinity
+        let maxX = -Infinity
+        let minY = Infinity
+        let maxY = -Infinity
+        
         for (let i = 0; i < points.length; ++i) {
-            cX += points[i][0]
-            cY += points[i][1]
+            if (minX > points[i][0]) {
+                minX = points[i][0]
+            }
+            if (maxX < points[i][0]) {
+                maxX = points[i][0]
+            }
+            if (minY > points[i][1]) {
+                minY = points[i][1]
+            }
+            if (maxY < points[i][1]) {
+                maxY = points[i][1]
+            }
         }
-        cX /= points.length
-        cY /= points.length
 
-        return [cX, cY]
+        return [
+            minX + (maxX - minX) * .5,
+            minY + (maxY - minY) * .5,
+        ]
     }
 }
 

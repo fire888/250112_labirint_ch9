@@ -1,14 +1,14 @@
 import { Voronoi } from "./rhill-voronoi-core";
 import { Root } from "../../index";
 import * as THREE from "three";
-import { _M } from "../../geometry/_m";
+import { _M } from "../../geometry/_m"; 
 var Offset = require('polygon-offset');
 
 export const createScheme = (root: Root) => {
     const voronoi = new Voronoi();
     const S = 100
     const N = 100
-    const bbox = {xl: 0, xr: S, yt: 0, yb: S }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
+    const bbox = { xl: 0, xr: S, yt: 0, yb: S }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
     const sites: { x: number, y: number }[] = []
     for (let i = 0; i < N; ++i) {
         sites.push({ x: Math.random() * S, y: Math.random() * S})
@@ -16,31 +16,46 @@ export const createScheme = (root: Root) => {
     const diagram = voronoi.compute(sites, bbox);
 
     // draw edges
-    //let 
-    //edges = diagram.edges,
-    //iEdge = edges.length
+    let 
+    edges = diagram.edges,
+    iEdge = edges.length
 
-    // while (iEdge--) {
-    //     const edge = edges[iEdge]
-    //     const v1 = edge.va;
-    //     const v2 = edge.vb;
+    const matLine = new THREE.LineBasicMaterial( {
+        color: 0xffffff,
+        alphaToCoverage: true,
+    } );
 
-    //     const points = [
-    //         new THREE.Vector3( v1.x, 0, v1.y ),
-    //         new THREE.Vector3( v2.x, 0, v2.y ),
-    //     ]
-    //     const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    //     const line = new THREE.Line(geometry, materialLine)
-    //     root.studio.add(line)
-    // }
+    while (iEdge--) {
+        const edge = edges[iEdge]
+        const v1 = edge.va;
+        const v2 = edge.vb;
 
-    const arrAreas: [number, number][][] = []
-    const arrOffsets: [number, number][][] = []
+        const points = [
+            new THREE.Vector3( v1.x, 0, v1.y ),
+            new THREE.Vector3( v2.x, 0, v2.y ),
+        ]
+        const geometry = new THREE.BufferGeometry().setFromPoints(points)
+        const line = new THREE.Line(geometry, matLine)
+        line.position.y = .05
+        root.studio.add(line)
+    }
+
+    const arr: {
+        area: [number, number][],
+        offset: [number, number][]
+    }[] = []
 
     for (let i = 0; i < diagram.cells.length; ++i) {
         const cell = diagram.cells[i]
         const halfedges = cell.halfedges
         const nHalfedges = halfedges.length
+
+        if (nHalfedges <= 2) { 
+            console.log('not Show: ')
+            console.log('!!!', cell)
+            continue;
+        }
+
 
         if (nHalfedges <= 2) { 
             continue
@@ -53,18 +68,14 @@ export const createScheme = (root: Root) => {
             points.push([v.x, v.y])
         }
 
-        arrAreas.push(points)
-
         const offset = new Offset()
         const padding = offset.data(points).padding(1.5)
 
-        if (!padding[0]) {
-            console.log(padding)
-            continue
-        }
-
-        arrOffsets.push(padding[0])
+        arr.push({
+            area: points,
+            offset: padding[0] || null
+        })
     }   
 
-    return { arrAreas, arrOffsets }
+    return arr
 }
