@@ -470,5 +470,49 @@ export const _M = {
         }
         return path0
     },
+
+    
+    isEqualsV3: (v1_1: any, v1_2: any, v1_3: any, v2_1: any, v2_2: any , v2_3: any): boolean => {
+        return (v1_1 === v2_1 && v1_2 === v2_2 && v1_3 === v2_3)
+    }, 
+
+    fillPoligonsV3: (
+        path1: number[],
+        pathR: number[], 
+        l: number,
+        uvData: number[], 
+        color: A3,
+        maxH: number = 1.5
+    ) => {
+        const v = []
+        const uv = []
+        const c = []
+        const path2 = [...pathR]
+        _M.translateVertices(path2, l, 0, 0)
+    
+        for (let i = 3; i < path1.length; i += 3) {
+
+            const isEqualsBottom = _M.isEqualsV3(path1[i - 3], path1[i - 2], path1[i - 1], path2[i - 3], path2[i - 2], path2[i - 1])
+            const isEqualsTop = _M.isEqualsV3(path1[i], path1[i + 1], path1[i + 2], path2[i], path2[i + 1], path2[i + 2])
+            if (isEqualsBottom && isEqualsTop) {
+                continue;
+            }
+
+            const n = Math.floor((path1[i + 1] - path2[i - 2]) / maxH) + 1 // делим в высоту чтобы текстура не была вытянута
+            const d = (path1[i + 1] - path1[i - 2]) / n
+            for (let j = 0; j < n; ++j) {
+                v.push(..._M.createPolygon(
+                    [path1[i - 3], path1[i - 2] + j * d, path1[i - 1]],
+                    [path2[i - 3], path2[i - 2] + j * d, path2[i - 1]],
+                    [path2[i], path2[i - 2] + (j + 1) * d, path2[i + 2]],
+                    [path1[i], path1[i - 2] + (j + 1) * d, path1[i + 2]],
+                ))
+                uv.push(...uvData)
+                c.push(..._M.fillColorFace(color))
+            }
+        }
+    
+        return { v, uv, c }
+    },
 }
 

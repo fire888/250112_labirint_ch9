@@ -2,7 +2,7 @@ import { Root } from "../../index";
 import * as THREE from "three";
 import { _M } from "../../geometry/_m";
 import { createScheme} from "./scheme"
-import { createWall_01 } from "geometry/wall01";
+import { createWall_01, createAngleWall_01 } from "geometry/wall01";
 import { offset } from "./offset";
 import { tyleLightMap } from '../../geometry/tyleLightMap'
 import { tileMapWall } from "geometry/tileMapWall";
@@ -54,14 +54,11 @@ export class Lab {
                 material: new THREE.MeshPhongMaterial({ 
                     color: 0xffffff,
                     map: this._root.loader.assets.mapWall_01,
-                    //map: this._root.loader.assets.lightMap,
                     bumpMap: this._root.loader.assets.mapWall_01,
                     bumpScale: 3,
                     shininess: 5,
                     specular: 0x5c7974,
                     vertexColors: true,
-                    //aoMap: this._root.loader.assets.roadImg,
-                    //aoMapIntensity: 100,
                 }) 
             })
             this._root.studio.add(m)
@@ -93,7 +90,6 @@ export class Lab {
                 uv2,
                 material: new THREE.MeshPhongMaterial({ 
                     color: 0x333377,
-                    //color: 0x333333,
                     map: this._root.loader.assets.roadImg,
                     //map: this._root.loader.assets.lightMap,
                     bumpMap: this._root.loader.assets.roadImg,
@@ -139,8 +135,10 @@ export class Lab {
         const uv = []
         const c = []
 
-        let saveStartPerimetrProfiles: number[][] | null = null
-        let saveProfiles: number[][] | null  = null
+        let savedAngle = null
+        let savedStartAngle = null 
+
+        const H = Math.random() * 10
 
         for (let i = 1; i < perimiter.length; ++i) {
             const prev = perimiter[i - 1]
@@ -148,8 +146,11 @@ export class Lab {
 
             // create wall
             const d = _M.dist(prev, cur)
-            const r = createWall_01(d)
+            const r = createWall_01(d, H)
             const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
+            if (i === 1) {
+                savedStartAngle = angle
+            }
             _M.rotateVerticesY(r.v, -angle)
             _M.translateVertices(r.v, prev[0], 0, prev[1])
             v.push(...r.v)
@@ -157,72 +158,21 @@ export class Lab {
             c.push(...r.c)
 
             /** cap angles */
-            // const profileLeft = [] // current wall start profile
-            // const profileRigth = [] // save current wall end profile
-            // for (let j = 0; j < r.profiles.length; ++j) {
-            //     const profilePath = r.profiles[j].path
-            //     const vPr = []
+            if (savedAngle !== null) {
+                const r = createAngleWall_01([prev[0], 0, prev[1]], -savedAngle, -angle, H)
+                v.push(...r.v)
+                c.push(...r.c)
+                uv.push(...r.uv)
+            }
 
-            //     for (let k = 0; k < profilePath.length; ++k) {
-            //         vPr.push(0, profilePath[k][1], profilePath[k][0])
-            //     }
-            //     _M.rotateVerticesY(vPr, -angle)
-
-            //     const copyForRigth = [...vPr]
-            //     _M.translateVertices(copyForRigth, cur[0], 0, cur[1])
-            //     profileRigth.push(copyForRigth)
-
-            //     _M.translateVertices(vPr, prev[0], 0, prev[1])
-            //     profileLeft.push(vPr)
-            // }
-
-            // if (i === 1) {
-            //     saveStartPerimetrProfiles = profileLeft
-            // }
-
-            /** fill left angle with previous wall */ 
-            // if (saveProfiles !== null) {
-            //     for (let k = 0; k < saveProfiles.length; ++k) {
-            //         const prevV = saveProfiles[k]
-            //         const cur = profileLeft[k]
-
-            //         for (let j = 3; j < prevV.length; j += 3) {
-            //             v.push(
-            //                 ..._M.createPolygon(
-            //                     [prevV[j - 3], prevV[j - 2], prevV[j - 1]],
-            //                     [cur[j - 3], cur[j - 2], cur[j - 1]],
-            //                     [cur[j], cur[j + 1], cur[j + 2]],
-            //                     [prevV[j], prevV[j + 1], prevV[j + 2]],
-            //                 )
-            //             )
-            //             uv.push(..._M.createUv([0, 0], [1, 0], [1, 1], [0, 1]))
-            //             c.push(..._M.fillColorFace([0, 0, 0]))
-            //         }
-            //     }
-            // }
-            // save right profile for next
-            //saveProfiles = profileRigth
-
-            /** fill last angle with start wall */ 
-            // if (i === perimiter.length - 1 && saveStartPerimetrProfiles !== null) {
-            //     for (let k = 0; k < saveStartPerimetrProfiles.length; ++k) {
-            //         const prevV = profileRigth[k]
-            //         const cur = saveStartPerimetrProfiles[k]
-
-            //         for (let j = 3; j < prevV.length; j += 3) {
-            //             v.push(
-            //                 ..._M.createPolygon(
-            //                     [prevV[j - 3], prevV[j - 2], prevV[j - 1]],
-            //                     [cur[j - 3], cur[j - 2], cur[j - 1]],
-            //                     [cur[j], cur[j + 1], cur[j + 2]],
-            //                     [prevV[j], prevV[j + 1], prevV[j + 2]],
-            //                 )
-            //             )
-            //             uv.push(...tileMapWall.noise)
-            //             c.push(..._M.fillColorFace([0, 0, 0]))
-            //         }
-            //     }
-            // }     
+            if (i === perimiter.length - 1 && savedStartAngle !== null) {
+                const r = createAngleWall_01([cur[0], 0, cur[1]], -angle, -savedStartAngle, H)
+                v.push(...r.v)
+                c.push(...r.c)
+                uv.push(...r.uv)
+            }
+        
+            savedAngle = angle    
         }
 
         return { v, uv, c }
