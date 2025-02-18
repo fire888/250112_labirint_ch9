@@ -22,7 +22,7 @@ type Assets = {
     soundFly: any,
     roadImg: Texture,
     lightMap: Texture,
-    wallMap: Texture,
+    mapWall_01: Texture,
 }
 type ResultLoad = {
     key: keyof Assets,
@@ -42,7 +42,7 @@ export class LoaderAssets {
         soundFly: null,
         roadImg: null,
         lightMap: null,
-        wallMap: null,
+        mapWall_01: null,
     }
 
     init () {}
@@ -80,7 +80,7 @@ export class LoaderAssets {
                 
                 loadTexture('roadImg', roadImg),
                 loadTexture('lightMap', lightMap),
-                loadTexture('wallMap', wallTile),
+                loadTexture('mapWall_01', wallTile),
             ]
 
             Promise.all(promises).then(result => {

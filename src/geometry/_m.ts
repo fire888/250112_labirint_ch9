@@ -397,6 +397,18 @@ export const _M = {
         return hex.length == 1 ? "0" + hex : hex;
     },
 
+    hexToNormalizedRGB(hex: string): [number, number, number] {
+        // Remove any leading # if present
+        const sanitizedHex = hex.replace(/^#/, '');
+        
+        // Parse the r, g, b values from the hex string
+        const r = parseInt(sanitizedHex.substring(0, 2), 16) / 255;
+        const g = parseInt(sanitizedHex.substring(2, 4), 16) / 255;
+        const b = parseInt(sanitizedHex.substring(4, 6), 16) / 255;
+      
+        return [r, g, b];
+    },
+
     area (vertices: [number, number][]) {
         var total = 0;
     
@@ -438,6 +450,25 @@ export const _M = {
             minX + (maxX - minX) * .5,
             minY + (maxY - minY) * .5,
         ]
-    }
+    },
+
+    getLastAndFirstCoordsPath: (p1: number[], p2: number[]): number[] => {
+        return [
+            p1[p1.length - 3],
+            p1[p1.length - 2],
+            p1[p1.length - 1],
+            p2[0],
+            p2[1],
+            p2[2],
+        ]
+    },
+
+    convertSimpleProfileToV3: (path: number[][]): number[] => {
+        const path0 = []
+        for (let i = 0; i < path.length; ++i) {
+            path0.push(0, path[i][1], path[i][0])
+        }
+        return path0
+    },
 }
 

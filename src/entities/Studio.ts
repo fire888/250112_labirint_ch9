@@ -14,6 +14,7 @@ import {
     Quaternion,
     SpotLight,
 } from 'three'
+import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 // import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -49,6 +50,7 @@ export class Studio {
     composer: EffectComposer
     _root: Root
     spotLight: SpotLight
+    amb: THREE.AmbientLight 
 
     init (root: Root) {
         this._root = root
@@ -58,8 +60,8 @@ export class Studio {
         this.camera.lookAt(0, 1, 0)
 
         this.spotLight = new SpotLight( 0xffffff, 1000 )
-        //this.spotLight.intensity = 10
-        this.spotLight.intensity = 30
+        //this.spotLight.intensity = 100
+        this.spotLight.intensity = 1
         this.spotLight.position.set(0, 3, 5);
         this.spotLight.angle = Math.PI * .2;
         this.spotLight.penumbra = 1
@@ -88,12 +90,14 @@ export class Studio {
         //this.fog = new THREE.Fog(0x00001a, 1, 50)
         //this.scene.fog = this.fog
 
-       this.hemiLight = new HemisphereLight(0x48534a, 0xffffff, 50)
-       this.hemiLight.position.set( 0, 20, 0 )
-       this.scene.add(this.hemiLight)
+        this.amb = new THREE.AmbientLight(0xFFFFFF, 2)
+        this.scene.add(this.amb)
+       //this.hemiLight = new HemisphereLight(0x48534a, 0xffffff, 50)
+       //this.hemiLight.position.set( 0, 20, 0 )
+       //this.scene.add(this.hemiLight)
 
-        //this.dirLight = new DirectionalLight( 0xffffff, 10 )
-        //this.dirLight.position.set(-3, 10, 2)
+        this.dirLight = new DirectionalLight( 0xffffff, 10 )
+        this.dirLight.position.set(-3, 10, 2)
         
         // this.dirLight.castShadow = true
         // this.dirLight.shadow.camera.top = 2
@@ -102,7 +106,7 @@ export class Studio {
         // this.dirLight.shadow.camera.right = 2
         // this.dirLight.shadow.camera.near = 0.1
         // this.dirLight.shadow.camera.far = 40
-        //this.scene.add(this.dirLight)
+        this.scene.add(this.dirLight)
 
         this.renderer = new WebGLRenderer({ antialias: true })
         this.renderer.setPixelRatio(window.devicePixelRatio)

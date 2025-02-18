@@ -37,44 +37,31 @@ export class Lab {
         {
             const v: number[] = []
             const uv: number[] = []
+            const c: number[] = []
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].area < 60) { 
                     continue;
                 }
-
                 const r = this._createHome(areasData[i].perimeterInner)
-                v.push(...r.verticies)
+                v.push(...r.v)
                 uv.push(...r.uv)
+                c.push(...r.c)
             }
             const m = _M.createMesh({ 
                 v, 
                 uv,
+                c,
                 material: new THREE.MeshPhongMaterial({ 
-                    // //color: 0xaaaabb,
-                    // //map: this._root.loader.assets.wallMap,
-
-                    // color: 0x333333,
-                    // map: this._root.loader.assets.roadImg,
-                    // //map: this._root.loader.assets.lightMap,
-                    // bumpMap: this._root.loader.assets.roadImg,
-                    // bumpScale: 3,
-                    // shininess: 10,
-                    // specular: 0x5c7974,
-                    // //aoMap: this._root.loader.assets.roadImg,
-                    // //aoMapIntensity: 100,
-
-                    
-                    color: 0x333377,
-                    //color: 0x333333,
-                    map: this._root.loader.assets.roadImg,
+                    color: 0xffffff,
+                    map: this._root.loader.assets.mapWall_01,
                     //map: this._root.loader.assets.lightMap,
-                    bumpMap: this._root.loader.assets.roadImg,
+                    bumpMap: this._root.loader.assets.mapWall_01,
                     bumpScale: 3,
-                    shininess: 10,
+                    shininess: 5,
                     specular: 0x5c7974,
+                    vertexColors: true,
                     //aoMap: this._root.loader.assets.roadImg,
                     //aoMapIntensity: 100,
-
                 }) 
             })
             this._root.studio.add(m)
@@ -148,8 +135,9 @@ export class Lab {
     }
 
     _createHome (perimiter: [number, number][]) {
-        const verticies = []
-        const _uv = []
+        const v = []
+        const uv = []
+        const c = []
 
         let saveStartPerimetrProfiles: number[][] | null = null
         let saveProfiles: number[][] | null  = null
@@ -160,80 +148,84 @@ export class Lab {
 
             // create wall
             const d = _M.dist(prev, cur)
-            const { v, profiles, uv } = createWall_01(d)
+            const r = createWall_01(d)
             const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
-            _M.rotateVerticesY(v, -angle)
-            _M.translateVertices(v, prev[0], 0, prev[1])
-            verticies.push(...v)
-            _uv.push(...uv)
+            _M.rotateVerticesY(r.v, -angle)
+            _M.translateVertices(r.v, prev[0], 0, prev[1])
+            v.push(...r.v)
+            uv.push(...r.uv)
+            c.push(...r.c)
 
-            // cap angles
-            const profileLeft = [] // current wall start profile
-            const profileRigth = [] // save current wall end profile
-            for (let j = 0; j < profiles.length; ++j) {
-                const profilePath = profiles[j].path
-                const vPr = []
+            /** cap angles */
+            // const profileLeft = [] // current wall start profile
+            // const profileRigth = [] // save current wall end profile
+            // for (let j = 0; j < r.profiles.length; ++j) {
+            //     const profilePath = r.profiles[j].path
+            //     const vPr = []
 
-                for (let k = 0; k < profilePath.length; ++k) {
-                    vPr.push(0, profilePath[k][1], profilePath[k][0])
-                }
-                _M.rotateVerticesY(vPr, -angle)
+            //     for (let k = 0; k < profilePath.length; ++k) {
+            //         vPr.push(0, profilePath[k][1], profilePath[k][0])
+            //     }
+            //     _M.rotateVerticesY(vPr, -angle)
 
-                const copyForRigth = [...vPr]
-                _M.translateVertices(copyForRigth, cur[0], 0, cur[1])
-                profileRigth.push(copyForRigth)
+            //     const copyForRigth = [...vPr]
+            //     _M.translateVertices(copyForRigth, cur[0], 0, cur[1])
+            //     profileRigth.push(copyForRigth)
 
-                _M.translateVertices(vPr, prev[0], 0, prev[1])
-                profileLeft.push(vPr)
-            }
+            //     _M.translateVertices(vPr, prev[0], 0, prev[1])
+            //     profileLeft.push(vPr)
+            // }
 
-            if (i === 1) {
-                saveStartPerimetrProfiles = profileLeft
-            }
+            // if (i === 1) {
+            //     saveStartPerimetrProfiles = profileLeft
+            // }
 
-            // fill left angle with previous wall 
-            if (saveProfiles !== null) {
-                for (let k = 0; k < saveProfiles.length; ++k) {
-                    const prevV = saveProfiles[k]
-                    const cur = profileLeft[k]
+            /** fill left angle with previous wall */ 
+            // if (saveProfiles !== null) {
+            //     for (let k = 0; k < saveProfiles.length; ++k) {
+            //         const prevV = saveProfiles[k]
+            //         const cur = profileLeft[k]
 
-                    for (let j = 3; j < prevV.length; j += 3) {
-                        verticies.push(
-                            ..._M.createPolygon(
-                                [prevV[j - 3], prevV[j - 2], prevV[j - 1]],
-                                [cur[j - 3], cur[j - 2], cur[j - 1]],
-                                [cur[j], cur[j + 1], cur[j + 2]],
-                                [prevV[j], prevV[j + 1], prevV[j + 2]],
-                            )
-                        )
-                    }
-                }
-            }
+            //         for (let j = 3; j < prevV.length; j += 3) {
+            //             v.push(
+            //                 ..._M.createPolygon(
+            //                     [prevV[j - 3], prevV[j - 2], prevV[j - 1]],
+            //                     [cur[j - 3], cur[j - 2], cur[j - 1]],
+            //                     [cur[j], cur[j + 1], cur[j + 2]],
+            //                     [prevV[j], prevV[j + 1], prevV[j + 2]],
+            //                 )
+            //             )
+            //             uv.push(..._M.createUv([0, 0], [1, 0], [1, 1], [0, 1]))
+            //             c.push(..._M.fillColorFace([0, 0, 0]))
+            //         }
+            //     }
+            // }
             // save right profile for next
-            saveProfiles = profileRigth
+            //saveProfiles = profileRigth
 
-            // fill last angle with start wall 
-            if (i === perimiter.length - 1 && saveStartPerimetrProfiles !== null) {
-                for (let k = 0; k < saveStartPerimetrProfiles.length; ++k) {
-                    const prevV = profileRigth[k]
-                    const cur = saveStartPerimetrProfiles[k]
+            /** fill last angle with start wall */ 
+            // if (i === perimiter.length - 1 && saveStartPerimetrProfiles !== null) {
+            //     for (let k = 0; k < saveStartPerimetrProfiles.length; ++k) {
+            //         const prevV = profileRigth[k]
+            //         const cur = saveStartPerimetrProfiles[k]
 
-                    for (let j = 3; j < prevV.length; j += 3) {
-                        verticies.push(
-                            ..._M.createPolygon(
-                                [prevV[j - 3], prevV[j - 2], prevV[j - 1]],
-                                [cur[j - 3], cur[j - 2], cur[j - 1]],
-                                [cur[j], cur[j + 1], cur[j + 2]],
-                                [prevV[j], prevV[j + 1], prevV[j + 2]],
-                            )
-                        )
-                        _uv.push(...tileMapWall.noise)
-                    }
-                }
-            }     
+            //         for (let j = 3; j < prevV.length; j += 3) {
+            //             v.push(
+            //                 ..._M.createPolygon(
+            //                     [prevV[j - 3], prevV[j - 2], prevV[j - 1]],
+            //                     [cur[j - 3], cur[j - 2], cur[j - 1]],
+            //                     [cur[j], cur[j + 1], cur[j + 2]],
+            //                     [prevV[j], prevV[j + 1], prevV[j + 2]],
+            //                 )
+            //             )
+            //             uv.push(...tileMapWall.noise)
+            //             c.push(..._M.fillColorFace([0, 0, 0]))
+            //         }
+            //     }
+            // }     
         }
 
-        return { verticies, uv: _uv }
+        return { v, uv, c }
     }
 
 
