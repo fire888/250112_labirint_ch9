@@ -1,4 +1,5 @@
 import { _M } from "./_m";
+import { tileMapWall } from './tileMapWall'
 
 const profileBottom: [number, number][] = [
     [0.25, 0],
@@ -42,6 +43,7 @@ const path: [number, number][] = [
 
 export const createWall_01 = (d: number) => {
     const v: number[] = []
+    const uv: number[] = []
 
     const profiles = [
         { path: profileBottom },
@@ -59,6 +61,7 @@ export const createWall_01 = (d: number) => {
                 [l, c[1], c[0]],
                 [0, c[1], c[0]],
             ))
+            uv.push(...tileMapWall.noise)
         }
     }
 
@@ -68,6 +71,7 @@ export const createWall_01 = (d: number) => {
         l: number
     ) => {
         const v = []
+        const uv = []
         const path2 = [...pathR]
         _M.translateVertices(path2, l, 0, 0)
 
@@ -78,9 +82,10 @@ export const createWall_01 = (d: number) => {
                 [path2[i], path2[i + 1], path2[i + 2]],
                 [path1[i], path1[i + 1], path1[i + 2]],
             ))
+            uv.push(...tileMapWall.noise)
         }
 
-        return v
+        return { v, uv }
     }
 
     const min = 5
@@ -88,7 +93,7 @@ export const createWall_01 = (d: number) => {
     // fill full wall
     if (d < min) {
         fillPoligons(path, d)
-        return { v, profiles }
+        return { v, uv, profiles }
     }
 
     // count columns and holes
@@ -116,41 +121,48 @@ export const createWall_01 = (d: number) => {
     // fill left start
     let currX = 0
     const r = fillPoligonsV3(path0, pathR, RL)
-    v.push(...r)
+    v.push(...r.v)
+    uv.push(...r.uv)
     currX = RL
 
     // fill right end
     const rLast = fillPoligonsV3(pathL, path0, RL)
-    _M.translateVertices(rLast, dd + RL, 0, 0)
-    v.push(...rLast)
+    _M.translateVertices(rLast.v, dd + RL, 0, 0)
+    v.push(...rLast.v)
+    uv.push(...rLast.uv)
 
     for (let i = 0; i < nHol; ++i) {
         // fill hole
         const r = fillPoligonsV3(pathL, pathL, g)
-        _M.rotateVerticesY(r, Math.PI / 2)
-        _M.translateVertices(r, currX, 0, 0)
-        v.push(...r)
+        _M.rotateVerticesY(r.v, Math.PI / 2)
+        _M.translateVertices(r.v, currX, 0, 0)
+        v.push(...r.v)
+        uv.push(...r.uv)
 
         const r1 = fillPoligonsV3(pathR, pathL, wHoll)
-        _M.translateVertices(r1, currX, 0, -g)
-        v.push(...r1)
+        _M.translateVertices(r1.v, currX, 0, -g)
+        v.push(...r1.v)
+        uv.push(...r1.uv)
+
 
         currX += wHoll
 
         const r2 = fillPoligonsV3(pathR, pathR, g)
-        _M.rotateVerticesY(r2, -Math.PI / 2)
-        _M.translateVertices(r2, currX, 0, -g)
-        v.push(...r2)
+        _M.rotateVerticesY(r2.v, -Math.PI / 2)
+        _M.translateVertices(r2.v, currX, 0, -g)
+        v.push(...r2.v)
+        uv.push(...r2.uv)
 
         // fill column (not fill in last itreration)
         if (i < nHol - 1) {
             const r = fillPoligonsV3(pathL, pathR, wColl)
-            _M.translateVertices(r, currX, 0, 0)
-            v.push(...r)
+            _M.translateVertices(r.v, currX, 0, 0)
+            v.push(...r.v)
+            uv.push(...r.uv)
         }
 
         currX += wColl
     }
 
-    return { v, profiles }
+    return { v, uv, profiles }
 }

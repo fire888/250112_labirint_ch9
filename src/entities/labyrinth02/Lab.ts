@@ -4,6 +4,8 @@ import { _M } from "../../geometry/_m";
 import { createScheme} from "./scheme"
 import { createWall_01 } from "geometry/wall01";
 import { offset } from "./offset";
+import { tyleLightMap } from '../../geometry/tyleLightMap'
+import { tileMapWall } from "geometry/tileMapWall";
 
 export class Lab {
     _root: Root
@@ -31,22 +33,58 @@ export class Lab {
             })
         }
 
+        /** walls */
         {
             const v: number[] = []
+            const uv: number[] = []
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].area < 60) { 
                     continue;
                 }
 
-                const vert = this._createHome(areasData[i].perimeterInner)
-                v.push(...vert)
+                const r = this._createHome(areasData[i].perimeterInner)
+                v.push(...r.verticies)
+                uv.push(...r.uv)
             }
-            const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0xaaaabb }) })
+            const m = _M.createMesh({ 
+                v, 
+                uv,
+                material: new THREE.MeshPhongMaterial({ 
+                    // //color: 0xaaaabb,
+                    // //map: this._root.loader.assets.wallMap,
+
+                    // color: 0x333333,
+                    // map: this._root.loader.assets.roadImg,
+                    // //map: this._root.loader.assets.lightMap,
+                    // bumpMap: this._root.loader.assets.roadImg,
+                    // bumpScale: 3,
+                    // shininess: 10,
+                    // specular: 0x5c7974,
+                    // //aoMap: this._root.loader.assets.roadImg,
+                    // //aoMapIntensity: 100,
+
+                    
+                    color: 0x333377,
+                    //color: 0x333333,
+                    map: this._root.loader.assets.roadImg,
+                    //map: this._root.loader.assets.lightMap,
+                    bumpMap: this._root.loader.assets.roadImg,
+                    bumpScale: 3,
+                    shininess: 10,
+                    specular: 0x5c7974,
+                    //aoMap: this._root.loader.assets.roadImg,
+                    //aoMapIntensity: 100,
+
+                }) 
+            })
             this._root.studio.add(m)
         }
 
+        /** roads */
         {
             const v: number[] = []
+            const uv: number[] = [] 
+            const uv2: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].area < 60) { 
@@ -57,13 +95,32 @@ export class Lab {
                 const result = offset(areaData.perimeter, 2.1, this._root)
                 const { offsetLines, existsLines, centerX, centerY } = result
 
-                const vert = this._fillRoad(offsetLines, existsLines)
-                v.push(...vert)
+                const r = this._fillRoad(offsetLines, existsLines)
+                v.push(...r.v)
+                uv.push(...r.uv)
+                uv2.push(...r.uv2)
             }
-            const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0x222288 }) })
+            const m = _M.createMesh({ 
+                v,
+                uv,
+                uv2,
+                material: new THREE.MeshPhongMaterial({ 
+                    color: 0x333377,
+                    //color: 0x333333,
+                    map: this._root.loader.assets.roadImg,
+                    //map: this._root.loader.assets.lightMap,
+                    bumpMap: this._root.loader.assets.roadImg,
+                    bumpScale: 3,
+                    shininess: 10,
+                    specular: 0x5c7974,
+                    //aoMap: this._root.loader.assets.roadImg,
+                    //aoMapIntensity: 100,
+                }) 
+            })
             this._root.studio.add(m)
         }
 
+        /** areas */
         {
             const v: number[] = []
 
@@ -92,6 +149,7 @@ export class Lab {
 
     _createHome (perimiter: [number, number][]) {
         const verticies = []
+        const _uv = []
 
         let saveStartPerimetrProfiles: number[][] | null = null
         let saveProfiles: number[][] | null  = null
@@ -102,11 +160,12 @@ export class Lab {
 
             // create wall
             const d = _M.dist(prev, cur)
-            const { v, profiles } = createWall_01(d)
+            const { v, profiles, uv } = createWall_01(d)
             const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
             _M.rotateVerticesY(v, -angle)
             _M.translateVertices(v, prev[0], 0, prev[1])
             verticies.push(...v)
+            _uv.push(...uv)
 
             // cap angles
             const profileLeft = [] // current wall start profile
@@ -168,12 +227,13 @@ export class Lab {
                                 [prevV[j], prevV[j + 1], prevV[j + 2]],
                             )
                         )
+                        _uv.push(...tileMapWall.noise)
                     }
                 }
             }     
         }
 
-        return verticies
+        return { verticies, uv: _uv }
     }
 
 
@@ -183,6 +243,8 @@ export class Lab {
         }
 
         const v: number[] = [] 
+        const uv: number[] = [] 
+        const uv2: number[] = [] 
 
         for (let i = 0; i < outer.length; ++i) {
             if (!inner[i]) {
@@ -194,6 +256,16 @@ export class Lab {
                     outer[i][0], 0, outer[i][1],
                     outer[i][2], 0, outer[i][3],        
                 )
+                uv.push(
+                    0, 0,
+                    1, 0,
+                    .5, 1,
+                )
+                uv2.push(
+                    0, 0,
+                    0, 0,
+                    0, 0,
+                ) 
             }
             if (inner[i].length == 4) {
                 v.push(
@@ -204,9 +276,19 @@ export class Lab {
                         [outer[i][2], 0, outer[i][3]],    
                     )                     
                 )    
+                uv.push(
+                    ..._M.createUv(
+                        [0, 0],
+                        [1, 0],
+                        [1, 1],
+                        [0, 1],    
+                    )  
+                )
+                //uv.push(...tyleLightMap.shadowR)
+                uv2.push(...tyleLightMap.shadowR)
              }
         }
-        return v
+        return { v, uv, uv2 }
     }
 }
 

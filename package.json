@@ -19,7 +19,7 @@
     "ftp-deploy": "^2.4.7",
     "line-intersect": "^3.0.0",
     "polygon-offset": "^0.3.2",
-    "three": "^0.165.0",
+    "three": "^0.173.0",
     "typescript-eslint-parser": "^21.0.2",
     "webpack-deadcode-plugin": "^0.1.17"
   },

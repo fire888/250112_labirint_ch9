@@ -58,8 +58,9 @@ export class Studio {
         this.camera.lookAt(0, 1, 0)
 
         this.spotLight = new SpotLight( 0xffffff, 1000 )
-        this.spotLight.intensity = 10
-        this.spotLight.position.set( 40, 3, -5 );
+        //this.spotLight.intensity = 10
+        this.spotLight.intensity = 30
+        this.spotLight.position.set(0, 3, 5);
         this.spotLight.angle = Math.PI * .2;
         this.spotLight.penumbra = 1
         this.spotLight.decay = 1
@@ -87,12 +88,13 @@ export class Studio {
         //this.fog = new THREE.Fog(0x00001a, 1, 50)
         //this.scene.fog = this.fog
 
-       this.hemiLight = new HemisphereLight(0x48534a, 0xffffff, .5)
+       this.hemiLight = new HemisphereLight(0x48534a, 0xffffff, 50)
        this.hemiLight.position.set( 0, 20, 0 )
        this.scene.add(this.hemiLight)
 
-        this.dirLight = new DirectionalLight( 0xffffff, 10 )
-        this.dirLight.position.set(-3, 10, 2)
+        //this.dirLight = new DirectionalLight( 0xffffff, 10 )
+        //this.dirLight.position.set(-3, 10, 2)
+        
         // this.dirLight.castShadow = true
         // this.dirLight.shadow.camera.top = 2
         // this.dirLight.shadow.camera.bottom = -2
@@ -100,7 +102,7 @@ export class Studio {
         // this.dirLight.shadow.camera.right = 2
         // this.dirLight.shadow.camera.near = 0.1
         // this.dirLight.shadow.camera.far = 40
-        this.scene.add(this.dirLight)
+        //this.scene.add(this.dirLight)
 
         this.renderer = new WebGLRenderer({ antialias: true })
         this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -170,7 +172,7 @@ export class Studio {
 
     render () {
         this.camera.getWorldPosition(this.spotLight.position)
-        this.spotLight.position.y -= 1
+        this.spotLight.position.y += .1
         this.renderer.render(this.scene, this.camera)
     }
 

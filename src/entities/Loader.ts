@@ -7,6 +7,9 @@ import steps from '../assets/steps_metal.mp3'
 import audioBzink from '../assets/bzink.mp3'
 import audioDoor from '../assets/door.mp3'
 import audioFly from '../assets/fly.mp3'
+import roadImg from '../assets/road.jpg'
+import lightMap from '../assets/tiles.jpg'
+import wallTile from '../assets/tiles_wall.jpg'
 
 type Assets = {
     mapEnv: Texture,
@@ -17,6 +20,9 @@ type Assets = {
     soundBzink: any, 
     soundDoor: any,
     soundFly: any,
+    roadImg: Texture,
+    lightMap: Texture,
+    wallMap: Texture,
 }
 type ResultLoad = {
     key: keyof Assets,
@@ -34,6 +40,9 @@ export class LoaderAssets {
         soundBzink: null,
         soundDoor: null,
         soundFly: null,
+        roadImg: null,
+        lightMap: null,
+        wallMap: null,
     }
 
     init () {}
@@ -41,7 +50,7 @@ export class LoaderAssets {
     loadAssets (): Promise<void> {
         return new Promise(res => {
 
-            const loadTextue = (key: keyof Assets, src: string) => {
+            const loadTexture = (key: keyof Assets, src: string) => {
                 return new Promise<ResultLoad>(res => {
                     this._textureLoader.load(src, texture => {
                         res({ key, texture })
@@ -59,15 +68,19 @@ export class LoaderAssets {
             }
 
             const promises = [
-                loadTextue('mapEnv', mapEnv),
-                loadTextue('sky', sky),
-                loadTextue('sprite', sprite),
+                loadTexture('mapEnv', mapEnv),
+                loadTexture('sky', sky),
+                loadTexture('sprite', sprite),
 
                 loadAudio('soundAmbient', audioAmbient),
                 loadAudio('soundStepsMetal', steps),
                 loadAudio('soundBzink', audioBzink),
                 loadAudio('soundDoor', audioDoor),
                 loadAudio('soundFly', audioFly),
+                
+                loadTexture('roadImg', roadImg),
+                loadTexture('lightMap', lightMap),
+                loadTexture('wallMap', wallTile),
             ]
 
             Promise.all(promises).then(result => {

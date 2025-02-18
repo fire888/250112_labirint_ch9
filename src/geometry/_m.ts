@@ -12,6 +12,7 @@ import {
 } from "three";
 
 export type A3 = [number, number, number]
+export type A2 = [number, number]
 
 let geomLabel: THREE.PlaneGeometry | null = null
 
@@ -20,7 +21,7 @@ let geomLabel: THREE.PlaneGeometry | null = null
 export const _M = {
     createPolygon: function(v0: A3, v1: A3, v2: A3, v3: A3) { return  [...v0, ...v1, ...v2, ...v0, ...v2, ...v3] },
     fillColorFace: (c: A3) => [...c, ...c, ...c, ...c, ...c, ...c],
-    createUv: (v1: A3, v2: A3, v3: A3, v4: A3) => [...v1, ...v2, ...v3, ...v1, ...v3, ...v4],
+    createUv: (v1: A2, v2: A2, v3: A2, v4: A2) => [...v1, ...v2, ...v3, ...v1, ...v3, ...v4],
     applyMatrixToArray(m: Matrix4, arr: number[]) {
         const v3 = new Vector3()
         for (let i = 0; i < arr.length; i += 3) {
@@ -287,13 +288,15 @@ export const _M = {
     createMesh: (data: {
         v: number[], 
         uv?: number[], 
+        uv2?: number[], 
         c?: number[], 
-        material?: MeshBasicMaterial | MeshPhongMaterial,
+        material?: MeshBasicMaterial | MeshPhongMaterial | THREE.MeshPhysicalMaterial | THREE.MeshStandardMaterial,
     }) => {
 
         const { 
             v = [], 
-            uv = [], 
+            uv = [],
+            uv2 = [], 
             c = [],
             material = new MeshBasicMaterial({ color: 0x777777 }) 
         } = data
@@ -309,6 +312,10 @@ export const _M = {
         if (uv.length > 0) {
             const uvF32 = new Float32Array(uv)
             geometry.setAttribute('uv', new BufferAttribute(uvF32, 2))
+        }
+        if (uv2.length > 0) {
+            const uv2F32 = new Float32Array(uv2)
+            geometry.setAttribute('uv2', new BufferAttribute(uv2F32, 2))
         }
         return new Mesh(geometry, material)
     },

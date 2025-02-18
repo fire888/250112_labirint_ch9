@@ -15,30 +15,30 @@ export const createScheme = (root: Root) => {
     }
     const diagram = voronoi.compute(sites, bbox);
 
-    // draw edges
-    let 
-    edges = diagram.edges,
-    iEdge = edges.length
+    // /** draw edges */
+    // let 
+    // edges = diagram.edges,
+    // iEdge = edges.length
 
-    const matLine = new THREE.LineBasicMaterial( {
-        color: 0xffffff,
-        alphaToCoverage: true,
-    } );
+    // const matLine = new THREE.LineBasicMaterial( {
+    //     color: 0xffffff,
+    //     alphaToCoverage: true,
+    // } );
 
-    while (iEdge--) {
-        const edge = edges[iEdge]
-        const v1 = edge.va;
-        const v2 = edge.vb;
+    // while (iEdge--) {
+    //     const edge = edges[iEdge]
+    //     const v1 = edge.va;
+    //     const v2 = edge.vb;
 
-        const points = [
-            new THREE.Vector3( v1.x, 0, v1.y ),
-            new THREE.Vector3( v2.x, 0, v2.y ),
-        ]
-        const geometry = new THREE.BufferGeometry().setFromPoints(points)
-        const line = new THREE.Line(geometry, matLine)
-        line.position.y = .05
-        root.studio.add(line)
-    }
+    //     const points = [
+    //         new THREE.Vector3( v1.x, 0, v1.y ),
+    //         new THREE.Vector3( v2.x, 0, v2.y ),
+    //     ]
+    //     const geometry = new THREE.BufferGeometry().setFromPoints(points)
+    //     const line = new THREE.Line(geometry, matLine)
+    //     line.position.y = .05
+    //     root.studio.add(line)
+    // }
 
     const arr: {
         area: [number, number][],
