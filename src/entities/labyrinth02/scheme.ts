@@ -15,7 +15,7 @@ export const createScheme = (root: Root) => {
     }
     const diagram = voronoi.compute(sites, bbox);
 
-    // /** draw edges */
+    /** draw edges */
     // let 
     // edges = diagram.edges,
     // iEdge = edges.length

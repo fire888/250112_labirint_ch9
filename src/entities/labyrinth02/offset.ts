@@ -25,14 +25,15 @@ export const offset = (points: [number, number][], d: number, root: Root): {
     }
 
     // find center
-    let cX = 0
-    let cY = 0
-    for (let i = 0; i < points.length; ++i) {
-        cX += points[i][0]
-        cY += points[i][1]
-    }
-    cX /= points.length
-    cY /= points.length
+    // let cX = 0
+    // let cY = 0
+    // for (let i = 0; i < points.length; ++i) {
+    //     cX += points[i][0]
+    //     cY += points[i][1]
+    // }
+    // cX /= points.length
+    // cY /= points.length
+    const [ cX, cY ] = _M.center(points) 
 
 
     const innerLines: [number, number, number, number][] = []

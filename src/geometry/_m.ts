@@ -482,7 +482,8 @@ export const _M = {
         l: number,
         uvData: number[], 
         color: A3,
-        maxH: number = 1.5
+        maxH: number = 1.5,
+        isCanRepeatFill: boolean = true 
     ) => {
         const v = []
         const uv = []
@@ -500,15 +501,38 @@ export const _M = {
 
             const n = Math.floor((path1[i + 1] - path2[i - 2]) / maxH) + 1 // делим в высоту чтобы текстура не была вытянута
             const d = (path1[i + 1] - path1[i - 2]) / n
-            for (let j = 0; j < n; ++j) {
-                v.push(..._M.createPolygon(
-                    [path1[i - 3], path1[i - 2] + j * d, path1[i - 1]],
-                    [path2[i - 3], path2[i - 2] + j * d, path2[i - 1]],
-                    [path2[i], path2[i - 2] + (j + 1) * d, path2[i + 2]],
-                    [path1[i], path1[i - 2] + (j + 1) * d, path1[i + 2]],
-                ))
-                uv.push(...uvData)
-                c.push(..._M.fillColorFace(color))
+
+
+            if (isCanRepeatFill && path1[i - 3] === path1[i] && path2[i - 3] === path2[i]) { // элемент не трапеция 
+                let nW = 1
+                let dW = path2[i - 3] - path1[i - 3]
+
+                nW = Math.floor((path2[i - 3] - path1[i - 3]) / maxH) + 1
+                dW = (path2[i - 3] - path1[i - 3]) / nW
+
+                for (let j = 0; j < n; ++j) {
+                    for (let k = 0; k < nW; ++k) {
+                        v.push(..._M.createPolygon(
+                            [path1[i - 3] + (k * dW), path1[i - 2] + j * d, path1[i - 1]],
+                            [path1[i - 3] + (k + 1) * dW, path2[i - 2] + j * d, path2[i - 1]],
+                            [path1[i] + (k + 1) * dW, path2[i - 2] + (j + 1) * d, path2[i + 2]],
+                            [path1[i]  + (k * dW), path1[i - 2] + (j + 1) * d, path1[i + 2]],
+                        ))
+                        uv.push(...uvData)
+                        c.push(..._M.fillColorFace(color))
+                    }
+                }
+            } else {
+                for (let j = 0; j < n; ++j) {
+                    v.push(..._M.createPolygon(
+                        [path1[i - 3] , path1[i - 2] + j * d, path1[i - 1]],
+                        [path2[i - 3], path2[i - 2] + j * d, path2[i - 1]],
+                        [path2[i], path2[i - 2] + (j + 1) * d, path2[i + 2]],
+                        [path1[i], path1[i - 2] + (j + 1) * d, path1[i + 2]],
+                    ))
+                    uv.push(...uvData)
+                    c.push(..._M.fillColorFace(color))
+                }
             }
         }
     

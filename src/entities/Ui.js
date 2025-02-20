@@ -177,17 +177,17 @@ export class Ui {
 
         wrapper.appendChild(createOffset(20))
 
-        const prev = document.createElement('div')
-        prev.classList.add('dark')
-        prev.innerHTML = 'Previous chapters:'
-        wrapper.appendChild(prev)
+        // const prev = document.createElement('div')
+        // prev.classList.add('dark')
+        // prev.innerHTML = 'Previous chapters:'
+        // wrapper.appendChild(prev)
 
-        wrapper.appendChild(createOffset(20))
+        // wrapper.appendChild(createOffset(20))
 
-        const list = createChaptersList()
-        wrapper.appendChild(list)
+        // const list = createChaptersList()
+        // wrapper.appendChild(list)
 
-        wrapper.appendChild(createOffset(20))
+        // wrapper.appendChild(createOffset(20))
 
         {
             const prev = document.createElement('div')
@@ -196,23 +196,23 @@ export class Ui {
             wrapper.appendChild(prev)
         }
 
-        wrapper.appendChild(createOffset(20))
+        //wrapper.appendChild(createOffset(20))
 
-        {
-            const prev = document.createElement('div')
-            prev.classList.add('dark')
-            prev.innerHTML = 'Example of generation level: <a href="https://js.otrisovano.ru/2D/maze/00/" target="_blank">link</a>'
-            wrapper.appendChild(prev)
-        }
+        // {
+        //     const prev = document.createElement('div')
+        //     prev.classList.add('dark')
+        //     prev.innerHTML = 'Example of generation level: <a href="https://js.otrisovano.ru/2D/maze/00/" target="_blank">link</a>'
+        //     wrapper.appendChild(prev)
+        // }
 
-        wrapper.appendChild(createOffset(20))
+        // wrapper.appendChild(createOffset(20))
 
-        {
-            const prev = document.createElement('div')
-            prev.classList.add('dark')
-            prev.innerHTML = 'Source code: <a href="https://github.com/fire888/240612_labirint_ch8" target="_blank">github</a>'
-            wrapper.appendChild(prev)
-        }
+        // {
+        //     const prev = document.createElement('div')
+        //     prev.classList.add('dark')
+        //     prev.innerHTML = 'Source code: <a href="https://github.com/fire888/240612_labirint_ch8" target="_blank">github</a>'
+        //     wrapper.appendChild(prev)
+        // }
 
         wrapper.appendChild(createOffset(60))
 

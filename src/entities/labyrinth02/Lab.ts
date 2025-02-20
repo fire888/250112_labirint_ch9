@@ -3,9 +3,12 @@ import * as THREE from "three";
 import { _M } from "../../geometry/_m";
 import { createScheme} from "./scheme"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01";
+import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { offset } from "./offset";
 import { tyleLightMap } from '../../geometry/tyleLightMap'
 import { tileMapWall } from "geometry/tileMapWall";
+
+const COLOR_PERIM = _M.hexToNormalizedRGB('1c1937')
 
 export class Lab {
     _root: Root
@@ -21,9 +24,10 @@ export class Lab {
             const area = _M.area(scheme[i].area)
             const center = _M.center(scheme[i].area) 
             
-            const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
-            l.position.set(center[0], 1, center[1])
-            root.studio.add(l)
+            /** label */
+            // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
+            // l.position.set(center[0], 1, center[1])
+            // root.studio.add(l)
 
             areasData.push({
                 center,
@@ -106,25 +110,36 @@ export class Lab {
         /** areas */
         {
             const v: number[] = []
+            const uv: number[] = []
+            const c: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].area >= 60) { 
                     continue;
                 }
 
-                const { perimeter, center } = areasData[i]
-
-                for (let j = 1; j < perimeter.length; ++j) {
-                    const prev = perimeter[j - 1]
-                    const cur =  perimeter[j]
-                    v.push(
-                        center[0], 0, center[1],
-                        prev[0], 0, prev[1],
-                        cur[0], 0, cur[1],
-                    )     
-                }
+                const r = this._createArea(areasData[i])
+                v.push(...r.v)
+                uv.push(...r.uv)
+                c.push(...r.c)
             }
-            const m = _M.createMesh({ v, material: new THREE.MeshPhongMaterial({ color: 0x228888 }) })
+            const m = _M.createMesh({ 
+                v,
+                uv,
+                c, 
+                material: new THREE.MeshPhongMaterial({ 
+                    // color: 0x555555,
+                    // map: this._root.loader.assets.mapWall_01,
+                    // vertexColors: true,
+                    color: 0xffffff,
+                    map: this._root.loader.assets.mapWall_01,
+                    bumpMap: this._root.loader.assets.mapWall_01,
+                    bumpScale: 3,
+                    shininess: 5,
+                    specular: 0x5c7974,
+                    vertexColors: true,
+                }) 
+            })
             this._root.studio.add(m)
 
         }
@@ -226,11 +241,145 @@ export class Lab {
                         [0, 1],    
                     )  
                 )
-                //uv.push(...tyleLightMap.shadowR)
                 uv2.push(...tyleLightMap.shadowR)
              }
         }
         return { v, uv, uv2 }
+    }
+
+    _createArea (areaData: any) {
+        const v: number[] = []
+        const uv: number[] = []
+        const c: number[] = []
+
+        const { perimeter, center } = areaData
+        const offsetPoints = offset(perimeter, .5, this._root)
+
+        const H = -Math.random() * 5 -.2 
+        const h = .1
+        const hG = -.2
+
+        let savedStartAngle = null
+        let savedPrevAngle = null
+
+        for (let i = 1; i < offsetPoints.existsLines.length; ++i) {
+            const prevO = offsetPoints.existsLines[i - 1]
+            const prevI = offsetPoints.offsetLines[i - 1]
+            const curO =  offsetPoints.existsLines[i]
+            const curI =  offsetPoints.offsetLines[i]
+
+            const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
+            const r = createWall_02(d, H)
+            const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
+            _M.rotateVerticesY(r.v, -angle + Math.PI)
+            _M.translateVertices(r.v, prevI[2], hG, prevI[3])
+            v.push(...r.v)
+            uv.push(...r.uv)
+            c.push(...r.c)
+
+            if (savedPrevAngle) {
+                const r = createAngleWall_02([prevI[0], hG, prevI[1]], -angle - Math.PI, -savedPrevAngle - Math.PI, H)
+                v.push(...r.v)
+                uv.push(...r.uv)
+                c.push(...r.c)
+            }
+
+            savedPrevAngle = angle
+
+            if (i === 1) {
+                savedStartAngle = angle
+             }
+
+
+            /** top */
+            v.push(..._M.createPolygon(
+                [prevI[0], h, prevI[1]], 
+                [prevO[0], h, prevO[1]],
+                [curO[0], h, curO[1]],  
+                [curI[0], h, curI[1]], 
+
+            ))
+            uv.push(...tileMapWall.noiseLong)
+            c.push(..._M.fillColorFace(COLOR_PERIM))
+
+            /** outer */
+            v.push(..._M.createPolygon( 
+                [prevO[0], h, prevO[1]],
+                [prevO[0], 0, prevO[1]],
+                [curO[0], 0, curO[1]],  
+                [curO[0], h, curO[1]], 
+
+            ))
+            uv.push(...tileMapWall.noiseLong)
+            c.push(..._M.fillColorFace(COLOR_PERIM))
+
+            /** inner */
+            v.push(..._M.createPolygon( 
+                [prevI[0], hG, prevI[1]],
+                [prevI[0], h, prevI[1]],
+                [curI[0], h, curI[1]],  
+                [curI[0], hG, curI[1]], 
+
+            ))
+            uv.push(...tileMapWall.noiseLong)
+            c.push(..._M.fillColorFace(COLOR_PERIM))
+
+            /** last part connect to first */
+            if (i === offsetPoints.existsLines.length - 1) {
+                const prevO = offsetPoints.existsLines[i]
+                const prevI = offsetPoints.offsetLines[i]
+                const curO =  offsetPoints.existsLines[0]
+                const curI =  offsetPoints.offsetLines[0]
+
+                const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
+                const r = createWall_02(d, H)
+                const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
+                _M.rotateVerticesY(r.v, -angle + Math.PI)
+                _M.translateVertices(r.v, prevI[2], hG, prevI[3])
+                v.push(...r.v)
+                uv.push(...r.uv)
+                c.push(...r.c)
+
+                /** top */
+                v.push(..._M.createPolygon(
+                    [prevI[0], h, prevI[1]], 
+                    [prevO[0], h, prevO[1]],
+                    [curO[0], h, curO[1]],  
+                    [curI[0], h, curI[1]], 
+                ))
+                uv.push(...tileMapWall.noiseLong)
+                c.push(..._M.fillColorFace(COLOR_PERIM))
+
+                /** outer */
+                v.push(..._M.createPolygon(
+                    [prevO[0], h, prevO[1]], 
+                    [prevO[0], 0, prevO[1]],
+                    [curO[0], 0, curO[1]],  
+                    [curO[0], h, curO[1]], 
+                ))
+                uv.push(...tileMapWall.noiseLong)
+                c.push(..._M.fillColorFace(COLOR_PERIM))
+
+                /** inner */
+                v.push(..._M.createPolygon( 
+                    [prevI[0], hG, prevI[1]],
+                    [prevI[0], h, prevI[1]],
+                    [curI[0], h, curI[1]],  
+                    [curI[0], hG, curI[1]], 
+
+                ))
+                uv.push(...tileMapWall.noiseLong)
+                c.push(..._M.fillColorFace(COLOR_PERIM))
+            }
+
+            // v.push(
+            //     center[0], 0, center[1],
+            //     prev[0], 0, prev[1],
+            //     cur[0], 0, cur[1],
+            // )     
+        }
+
+        return { v, uv, c }
     }
 }
 

@@ -3,10 +3,8 @@ import { tileMapWall } from './tileMapWall'
 
 const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('3c3865') 
 const COLOR_BLUE_D: A3 = _M.hexToNormalizedRGB('1c1937') 
-
 const C1 = COLOR_BLUE_D
 const C2 = COLOR_BLUE
-
 const PR_BOTTOM: [number, number][] = [
     [0.25, 0],
     [0.25, .3],
@@ -18,7 +16,6 @@ const PR_BOTTOM: [number, number][] = [
     [.1, .5],
     [0, .5], 
 ]
-
 const PR_CENTER: [number, number][] = [
     [0, .95],
     [.1, .95],
@@ -29,7 +26,6 @@ const PR_CENTER: [number, number][] = [
     [.17, 1.1],
     [0, 1.1],
 ]
-
 const PR_TOP: [number, number][] = [
     [0,1.1],
     [0.1,1.1],
@@ -40,22 +36,6 @@ const PR_TOP: [number, number][] = [
     [0.62,1.25],
     [0.62,1.5]
 ]
-
-
-const PATH: [number, number][] = [
-    ...PR_BOTTOM,
-    ...PR_CENTER,
-    ...PR_TOP,
-]
-
-const LEVELS = [
-    { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
-    { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
-    { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
-    { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), _M.convertSimpleProfileToV3(PR_TOP)), color: C2, uvTile: tileMapWall.break },
-    { profile: _M.convertSimpleProfileToV3(PR_TOP), color: C1, uvTile: tileMapWall.noise },
-]
-
 
 export const createWall_01 = (d: number, h: number) => {
     const v: number[] = []
@@ -205,7 +185,7 @@ export const createAngleWall_01 = (pos: A3, angleStart: number, angleEnd: number
         _M.rotateVerticesY(pathL, angleStart)
         _M.rotateVerticesY(pathR, angleEnd)
 
-        const r = _M.fillPoligonsV3(pathL, pathR, 0, e.uvTile, e.color)
+        const r = _M.fillPoligonsV3(pathL, pathR, 0, e.uvTile, e.color, 1.5, false)
         _M.translateVertices(r.v, ...pos)
         v.push(...r.v)
         c.push(...r.c)
