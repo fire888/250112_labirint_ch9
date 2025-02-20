@@ -71,5 +71,15 @@ export const createAngleWall_02 = (pos: A3, angleStart: number, angleEnd: number
         uv.push(...r.uv)
     })
 
+    let isValid = true
+    v.forEach(e => { 
+        if (Number.isNaN(e)) {
+            isValid = false
+        }
+    })
+    if (!isValid) {
+        console.log('MMM', pos, angleStart, angleEnd, h)
+    }
+
     return { v, c, uv }
 }

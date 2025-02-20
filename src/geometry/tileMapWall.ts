@@ -25,4 +25,9 @@ export const tileMapWall = {
         2 * D, 1 * D,
         1 * D, 1 * D,
     ],
+    'breakManyTree': [
+        1 * D, 1 * D,
+        2 * D, 1 * D,
+        1.5 * D, 2 * D,
+    ],
 } 

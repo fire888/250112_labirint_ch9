@@ -9,6 +9,7 @@ import { tyleLightMap } from '../../geometry/tyleLightMap'
 import { tileMapWall } from "geometry/tileMapWall";
 
 const COLOR_PERIM = _M.hexToNormalizedRGB('1c1937')
+const AREA_FOR_DOWN = 60
 
 export class Lab {
     _root: Root
@@ -43,7 +44,7 @@ export class Lab {
             const uv: number[] = []
             const c: number[] = []
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area < 60) { 
+                if (areasData[i].area < AREA_FOR_DOWN) { 
                     continue;
                 }
                 const r = this._createHome(areasData[i].perimeterInner)
@@ -75,7 +76,7 @@ export class Lab {
             const uv2: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area < 60) { 
+                if (areasData[i].area < AREA_FOR_DOWN) { 
                     continue;
                 }
 
@@ -114,7 +115,7 @@ export class Lab {
             const c: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area >= 60) { 
+                if (areasData[i].area >= AREA_FOR_DOWN) { 
                     continue;
                 }
 
@@ -128,9 +129,6 @@ export class Lab {
                 uv,
                 c, 
                 material: new THREE.MeshPhongMaterial({ 
-                    // color: 0x555555,
-                    // map: this._root.loader.assets.mapWall_01,
-                    // vertexColors: true,
                     color: 0xffffff,
                     map: this._root.loader.assets.mapWall_01,
                     bumpMap: this._root.loader.assets.mapWall_01,
@@ -141,7 +139,6 @@ export class Lab {
                 }) 
             })
             this._root.studio.add(m)
-
         }
     }
 
@@ -158,6 +155,11 @@ export class Lab {
         for (let i = 1; i < perimiter.length; ++i) {
             const prev = perimiter[i - 1]
             const cur =  perimiter[i]
+
+            /** проверяем что следующая точка не лежит на предыдущей */
+            if (cur[0] === prev[0] && cur[1] === prev[1]) {
+                continue;
+            }
 
             // create wall
             const d = _M.dist(prev, cur)
@@ -199,6 +201,11 @@ export class Lab {
             return
         }
 
+        /** проверяем что следующая точка не лежит на предыдущей */
+        if (inner[2] === inner[0] && outer[3] === outer[1]) {
+            return;
+        }
+        
         const v: number[] = [] 
         const uv: number[] = [] 
         const uv2: number[] = [] 
@@ -258,6 +265,7 @@ export class Lab {
         const H = -Math.random() * 5 -.2 
         const h = .1
         const hG = -.2
+        const FLOOR_H = H - 2 + .3
 
         let savedStartAngle = null
         let savedPrevAngle = null
@@ -269,14 +277,20 @@ export class Lab {
             const curI =  offsetPoints.offsetLines[i]
 
             /** label */
-            const l = _M.createLabel(i + '', [1, 1, 1], 5)
-            l.position.set(prevI[0], 1, prevI[1])
-            this._root.studio.add(l)
+            // const l = _M.createLabel(i + '', [1, 1, 1], 5)
+            // l.position.set(prevI[0], 1, prevI[1])
+            // this._root.studio.add(l)
 
-            const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
-            const r = createWall_02(d, H)
+            /** проверяем что следующая точка не лежит на предыдущей */
+            if (prevI[2] === prevI[0] && prevI[3] === prevI[1]) {
+                continue;
+            }
+
             const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
 
+            const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
+            
+            const r = createWall_02(d, H)
             _M.rotateVerticesY(r.v, -angle + Math.PI)
             _M.translateVertices(r.v, prevI[2], hG, prevI[3])
             v.push(...r.v)
@@ -329,6 +343,17 @@ export class Lab {
             uv.push(...tileMapWall.noiseLong)
             c.push(..._M.fillColorFace(COLOR_PERIM))
 
+            /** fill floor */
+            v.push(
+                prevO[0], FLOOR_H, prevO[1],
+                curO[0], FLOOR_H, curO[1],
+                center[0], FLOOR_H, center[1],
+            )
+            uv.push(...tileMapWall.breakManyTree)
+            c.push(...COLOR_PERIM)
+            c.push(...COLOR_PERIM)
+            c.push(...COLOR_PERIM)
+
             /** last part connect to first */
             if (i === offsetPoints.existsLines.length - 1) {
                 const prevO = offsetPoints.existsLines[i]
@@ -336,9 +361,14 @@ export class Lab {
                 const curO =  offsetPoints.existsLines[0]
                 const curI =  offsetPoints.offsetLines[0]
 
-                const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
-                const r = createWall_02(d, H)
+                if (prevI[2] === prevI[0] && prevI[3] === prevI[1]) {
+                    continue;
+                }
+
                 const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
+                const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
+                
+                const r = createWall_02(d, H)
                 _M.rotateVerticesY(r.v, -angle + Math.PI)
                 _M.translateVertices(r.v, prevI[2], hG, prevI[3])
                 v.push(...r.v)
@@ -371,7 +401,6 @@ export class Lab {
                     [prevI[0], h, prevI[1]],
                     [curI[0], h, curI[1]],  
                     [curI[0], hG, curI[1]], 
-
                 ))
                 uv.push(...tileMapWall.noiseLong)
                 c.push(..._M.fillColorFace(COLOR_PERIM))
@@ -392,13 +421,17 @@ export class Lab {
                     c.push(...r.c)
                 }
 
-            }
-
-            // v.push(
-            //     center[0], 0, center[1],
-            //     prev[0], 0, prev[1],
-            //     cur[0], 0, cur[1],
-            // )     
+                /** fill floor */
+                v.push(
+                    prevO[0], FLOOR_H, prevO[1],
+                    curO[0], FLOOR_H, curO[1],
+                    center[0], FLOOR_H, center[1],
+                )
+                uv.push(...tileMapWall.breakManyTree)
+                c.push(...COLOR_PERIM)
+                c.push(...COLOR_PERIM)
+                c.push(...COLOR_PERIM)
+            } 
         }
 
         return { v, uv, c }
