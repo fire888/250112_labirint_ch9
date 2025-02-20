@@ -268,9 +268,15 @@ export class Lab {
             const curO =  offsetPoints.existsLines[i]
             const curI =  offsetPoints.offsetLines[i]
 
+            /** label */
+            const l = _M.createLabel(i + '', [1, 1, 1], 5)
+            l.position.set(prevI[0], 1, prevI[1])
+            this._root.studio.add(l)
+
             const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
             const r = createWall_02(d, H)
             const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
+
             _M.rotateVerticesY(r.v, -angle + Math.PI)
             _M.translateVertices(r.v, prevI[2], hG, prevI[3])
             v.push(...r.v)
@@ -278,17 +284,16 @@ export class Lab {
             c.push(...r.c)
 
             if (savedPrevAngle) {
-                const r = createAngleWall_02([prevI[0], hG, prevI[1]], -angle - Math.PI, -savedPrevAngle - Math.PI, H)
+                const r = createAngleWall_02([prevI[0], hG, prevI[1]], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
                 v.push(...r.v)
                 uv.push(...r.uv)
                 c.push(...r.c)
             }
-
             savedPrevAngle = angle
 
             if (i === 1) {
                 savedStartAngle = angle
-             }
+            }
 
 
             /** top */
@@ -370,6 +375,23 @@ export class Lab {
                 ))
                 uv.push(...tileMapWall.noiseLong)
                 c.push(..._M.fillColorFace(COLOR_PERIM))
+
+                /** cap prev */
+                {
+                    const r = createAngleWall_02([prevI[0], hG, prevI[1]], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
+                    v.push(...r.v)
+                    uv.push(...r.uv)
+                    c.push(...r.c)
+                }
+
+                /** cap angle with next  */
+                {
+                    const r = createAngleWall_02([prevI[2], hG, prevI[3]], -savedStartAngle + Math.PI, -angle + Math.PI, H)
+                    v.push(...r.v)
+                    uv.push(...r.uv)
+                    c.push(...r.c)
+                }
+
             }
 
             // v.push(
