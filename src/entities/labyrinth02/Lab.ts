@@ -56,15 +56,7 @@ export class Lab {
                 v, 
                 uv,
                 c,
-                material: new THREE.MeshPhongMaterial({ 
-                    color: 0xffffff,
-                    map: this._root.loader.assets.mapWall_01,
-                    bumpMap: this._root.loader.assets.mapWall_01,
-                    bumpScale: 3,
-                    shininess: 5,
-                    specular: 0x5c7974,
-                    vertexColors: true,
-                }) 
+                material: root.materials.walls00,
             })
             this._root.studio.add(m)
         }
@@ -93,17 +85,7 @@ export class Lab {
                 v,
                 uv,
                 uv2,
-                material: new THREE.MeshPhongMaterial({ 
-                    color: 0x333377,
-                    map: this._root.loader.assets.roadImg,
-                    //map: this._root.loader.assets.lightMap,
-                    bumpMap: this._root.loader.assets.roadImg,
-                    bumpScale: 3,
-                    shininess: 10,
-                    specular: 0x5c7974,
-                    //aoMap: this._root.loader.assets.roadImg,
-                    //aoMapIntensity: 100,
-                }) 
+                material: root.materials.road
             })
             this._root.studio.add(m)
         }
@@ -128,15 +110,7 @@ export class Lab {
                 v,
                 uv,
                 c, 
-                material: new THREE.MeshPhongMaterial({ 
-                    color: 0xffffff,
-                    map: this._root.loader.assets.mapWall_01,
-                    bumpMap: this._root.loader.assets.mapWall_01,
-                    bumpScale: 3,
-                    shininess: 5,
-                    specular: 0x5c7974,
-                    vertexColors: true,
-                }) 
+                material: root.materials.walls00,
             })
             this._root.studio.add(m)
         }

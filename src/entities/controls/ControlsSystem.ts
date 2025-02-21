@@ -38,7 +38,6 @@ export class ControlsSystem {
         this._currentWalkingControls = this._phone
         this._orbit.enable()
 
-
         // click on buttonPointerLock: enable pointerLock and hide phoneControls  
         ui.lockButton.onclick = () => {
             this._pointer.enable().then(isOn => {
@@ -52,6 +51,10 @@ export class ControlsSystem {
                 this._phone.disable()
                 this._orbit.disable()
                 ui.toggleVisibleLock(false) 
+
+                if (root.studio.fog) {
+                    root.studio.scene.fog = root.studio.fog
+                }
             })
         }
         // callback on pointerUnlock: enable phoneControls and show buttonPointerLock
@@ -71,13 +74,13 @@ export class ControlsSystem {
         const onKeyUp = (event: KeyboardEvent ) => {
             if (event.code === 'KeyO') {
                 if (this._orbit.isEnabled) {
-                    //studio.scene.fog = studio.fog
                     this._orbit.disable()
                     this._currentWalkingControls.enable()
                 } else {
-                    //studio.scene.fog = null
                     this._currentWalkingControls.disable()
                     this._orbit.enable()
+
+                    root.studio.scene.fog = null
                 }
             }
         }

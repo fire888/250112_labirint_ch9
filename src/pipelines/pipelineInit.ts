@@ -16,6 +16,7 @@ export const pipelineInit = async (root: Root) => {
         energySystem,
         lab,
         audio,
+        materials,
     } = root
 
     loader.init()
@@ -27,6 +28,8 @@ export const pipelineInit = async (root: Root) => {
         update()
     })
 
+    materials.init(root)
+
     studio.init(root)
     studio.addAxisHelper()
     ticker.on(studio.render.bind(studio))
@@ -37,8 +40,8 @@ export const pipelineInit = async (root: Root) => {
     ticker.on(phisics.update.bind(phisics))
     phisics.createPlayerPhisicsBody(CONSTANTS.PLAYER_START_POS)
 
-    // floor.init(root)
-    // studio.add(floor.mesh)
+    floor.init(root)
+    studio.add(floor.mesh)
 
     await lab.init(root, CONSTANTS.LABS_CONF[0])
     //studio.add(lab.mesh)

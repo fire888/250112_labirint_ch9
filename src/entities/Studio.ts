@@ -84,10 +84,9 @@ export class Studio {
         root.loader.assets.mapEnv.colorSpace = SRGBColorSpace;
 
         this.scene.background = root.loader.assets.mapEnv
-        this.envMap = root.loader.assets.mapEnv
+        this.envMap = root.loader.assets.noise00// root.loader.assets.mapEnv
         //this.scene.background = new THREE.Color(0x999999)
-        //this.fog = new THREE.Fog(0x00001a, 1, 50)
-        //this.fog = new THREE.Fog(0x00001a, 1, 50)
+        this.fog = new THREE.Fog(0x2b2241, 1, 50)
         //this.scene.fog = this.fog
 
         this.amb = new THREE.AmbientLight(0xFFFFFF, 2)

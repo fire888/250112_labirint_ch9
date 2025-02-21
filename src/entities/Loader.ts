@@ -10,6 +10,7 @@ import audioFly from '../assets/fly.mp3'
 import roadImg from '../assets/road.jpg'
 import lightMap from '../assets/tiles.jpg'
 import wallTile from '../assets/tiles_wall.jpg'
+import noise00 from '../assets/noise00.jpg'
 
 type Assets = {
     mapEnv: Texture,
@@ -23,6 +24,7 @@ type Assets = {
     roadImg: Texture,
     lightMap: Texture,
     mapWall_01: Texture,
+    noise00: Texture,
 }
 type ResultLoad = {
     key: keyof Assets,
@@ -43,6 +45,7 @@ export class LoaderAssets {
         roadImg: null,
         lightMap: null,
         mapWall_01: null,
+        noise00: null,
     }
 
     init () {}
@@ -81,6 +84,7 @@ export class LoaderAssets {
                 loadTexture('roadImg', roadImg),
                 loadTexture('lightMap', lightMap),
                 loadTexture('mapWall_01', wallTile),
+                loadTexture('noise00', noise00),
             ]
 
             Promise.all(promises).then(result => {

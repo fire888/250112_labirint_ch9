@@ -1,55 +1,129 @@
 import { MeshBasicMaterial, Mesh } from 'three'
+import * as THREE from 'three'
 import { Root } from "../index";
-import { _M } from 'geometry/_m';
+import { _M, A3 } from 'geometry/_m';
+import { tileMapWall } from 'geometry/tileMapWall'
+
+const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('1a182d') 
+
 export class Floor {
     mesh: Mesh
     constructor() {}
 
     init (root: Root) {
 
-        const v = []
+        const v: number[] = []
         const c: number[] = []
+        const uv: number[] = []
 
-        const SIZE = 70
-        const SIZE_H = SIZE * .5
-        const S = .05
-        const N = 90
-        const COLOR = [.2, .7, 2.]
+        const S = 100
 
-        const centers = []
-        for (let i = 0; i < N; ++i) {
-            for (let j = 0; j < N; ++j) {
-                centers.push([j / N * SIZE - SIZE_H, 0, i / N * SIZE - SIZE_H])
+        /** заливаем квадраты поля кроме цнтрального */ 
+        for (let j = -1; j < 2; ++j) {
+            for (let i = -1; i < 2; ++i) {
+                if (i === 0 && j === 0) {
+                    continue;
+                }
+                v.push(..._M.createPolygon(
+                    [i * S, 0, j * S],
+                    [i * S, 0, (j + 1) * S],
+                    [(i + 1) * S, 0, (j + 1) * S],
+                    [(i + 1) * S, 0, j * S],
+                ))
+                uv.push(..._M.createUv(
+                    [0, 0],
+                    [1, 0],
+                    [1, 1],
+                    [0, 1],
+                ))
             }
         }
 
-        for (let i = 0; i < centers.length; ++i) {
-            const center = centers[i]
-            const dist = Math.sqrt(center[0] * center[0] + center[2] * center[2])
-            const cc = 1. - dist / SIZE_H
-            if (cc < 0.05) { 
-                continue
+        this.mesh = _M.createMesh({ v, c, uv, material: root.materials.desert })
+        this.mesh.position.x = 0
+        this.mesh.position.y = 0
+        this.mesh.position.y = -.2
+
+        { /** stone perimeter */
+            const v: number[] = []
+            const uv: number[] = []
+            const c: number[] = []
+
+            const N = 50
+            const D = S / N
+            const H = .4
+            const H0 = -.2
+            const Z1 = .1
+            const Z2 = -.5
+            for (let i = 0; i < N; ++i) {
+                let startInner = i * D
+                let startOuter = i * D
+                let endInner = (i + 1) * D
+                let endOuter = (i + 1) * D
+                if (i === 0) {
+                    startInner = Z1
+                    startOuter = Z2
+                }
+                if (i === N - 1) {
+                    endInner = endInner - Z1
+                    endOuter = endOuter - Z2
+                }
+                /** inner */
+                v.push(..._M.createPolygon(
+                    [startInner, H, Z1],
+                    [startInner, H0, Z1],
+                    [endInner, H0, Z1],
+                    [endInner, H, Z1],
+                ))
+                uv.push(...tileMapWall.noiseLong)
+                c.push(..._M.fillColorFace(COLOR_BLUE))
+                /** top */
+                v.push(..._M.createPolygon(
+                    [startOuter, H, Z2],
+                    [startInner, H, Z1],
+                    [endInner, H, Z1],
+                    [endOuter, H, Z2],
+
+                ))
+                uv.push(...tileMapWall.noiseLong)
+                c.push(..._M.fillColorFace(COLOR_BLUE))
+                /** outer */
+                v.push(..._M.createPolygon(
+                    [endOuter, H, Z2],
+                    [endOuter, H0, Z2],
+                    [startOuter, H0, Z2],
+                    [startOuter, H, Z2],
+                ))
+                c.push(..._M.fillColorFace(COLOR_BLUE))
+                uv.push(...tileMapWall.noiseLong)
             }
 
-            v.push(
-                ..._M.createPolygon(
-                    [center[0] - S, center[1], center[2] + S],
-                    [center[0] + S, center[1], center[2] + S],
-                    [center[0] + S, center[1], center[2] - S],
-                    [center[0] - S, center[1], center[2] - S],
-                )
-            )
+            /** right */
+            const copy1 = [...v]
+            const vv = [...copy1]
+            _M.rotateVerticesY(vv, -Math.PI / 2)
+            _M.translateVertices(vv, S, 0, 0)
+            v.push(...vv)
+            uv.push(...uv)
+            c.push(...c)
 
-            c.push(..._M.fillColorFace([cc * COLOR[0], cc * COLOR[1], cc * COLOR[2]]))
+            /** bottom */
+            const vvv = [...copy1]
+            _M.rotateVerticesY(vvv, Math.PI)
+            _M.translateVertices(vvv, S, 0, S)
+            v.push(...vvv)
+            uv.push(...uv)
+            c.push(...c)
+
+            /** left */
+            _M.rotateVerticesY(copy1, Math.PI / 2)
+            _M.translateVertices(copy1, 0, 0, S)
+            v.push(...copy1)
+            uv.push(...uv)
+            c.push(...c)
+
+            const m = _M.createMesh({ v, uv, c, material: root.materials.walls00 })
+            this.mesh.add(m)
         }
-
-        const material = new MeshBasicMaterial({
-            color: 0xFFFFFF,
-            vertexColors: true,
-        })
-
-        this.mesh = _M.createMesh({ v, c, material })
-        this.mesh.position.x = 15
-        this.mesh.position.y = -.3
     }
 }
