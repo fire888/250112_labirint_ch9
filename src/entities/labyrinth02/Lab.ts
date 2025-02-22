@@ -2,8 +2,9 @@ import { Root } from "../../index";
 import * as THREE from "three";
 import { _M } from "../../geometry/_m";
 import { createScheme} from "./scheme"
-import { createWall_01, createAngleWall_01 } from "geometry/wall01";
+import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
+import { createWall_03 } from "geometry/wall03";
 import { offset } from "./offset";
 import { tyleLightMap } from '../../geometry/tyleLightMap'
 import { tileMapWall } from "geometry/tileMapWall";
@@ -47,10 +48,19 @@ export class Lab {
                 if (areasData[i].area < AREA_FOR_DOWN) { 
                     continue;
                 }
-                const r = this._createHome(areasData[i].perimeterInner)
-                v.push(...r.v)
-                uv.push(...r.uv)
-                c.push(...r.c)
+                const random = Math.random()
+                if (random < .5) {
+                    const r = this._createHome(areasData[i].perimeterInner)
+                    v.push(...r.v)
+                    uv.push(...r.uv)
+                    c.push(...r.c)
+                } else {
+                    const r = this._createHome_03(areasData[i].perimeterInner)
+                    v.push(...r.v)
+                    uv.push(...r.uv)
+                    c.push(...r.c)
+                }
+
             }
             const m = _M.createMesh({ 
                 v, 
@@ -167,6 +177,28 @@ export class Lab {
         }
 
         return { v, uv, c }
+    }
+
+    _createHome_03 (perimeterInner: [number, number][]) {
+        const H = 1 + Math.random() * 5
+
+        const v: number[] = [] 
+        const uv: number[] = [] 
+        const c: number[] = []
+
+        for (let i = 1; i < perimeterInner.length; ++i) {
+            const prev = perimeterInner[i - 1]
+            const curr = perimeterInner[i]
+            const a = _M.angleFromCoords(curr[0] - prev[0], curr[1] - prev[1])
+            const d = _M.dist(curr, prev)
+            const r = createWall_03(d, H)
+            _M.rotateVerticesY(r.v, -a)
+            _M.translateVertices(r.v, prev[0], 0, prev[1])
+            v.push(...r.v)
+            c.push(...r.c)
+            uv.push(...r.uv)
+        }
+        return { v, c, uv }
     }
 
 

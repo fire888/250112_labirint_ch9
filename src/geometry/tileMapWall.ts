@@ -30,4 +30,12 @@ export const tileMapWall = {
         2 * D, 1 * D,
         1.5 * D, 2 * D,
     ],
+    'white': [
+        D * 3.7, D * 3.7, 
+        D * 4, D * 3.7, 
+        D * 4, D * 4, 
+        D * 3.7, D * 3.7, 
+        D * 4, D * 4, 
+        D * 3.7, D * 4, 
+    ],
 } 

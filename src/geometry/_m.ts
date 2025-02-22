@@ -538,5 +538,59 @@ export const _M = {
     
         return { v, uv, c }
     },
+
+    lathePath: (path: [number, number][], resolution: number, color: A3, uvTile: number[]): { v: number[], uv: number[], c: number[] } => {
+        const v: number[] = []
+        const uv: number[] = []
+        const c: number[] = []
+
+        const n = resolution
+        const angle = Math.PI * 2 / n
+        let save = null
+        let saveStart = null
+        for (let i = 0; i < n; ++i) {
+            const pX = Math.cos(-angle * i) 
+            const pZ = Math.sin(-angle * i)
+
+            const curr = []
+            for (let j = 0; j < path.length; ++j) {
+                curr.push([
+                    pX * path[j][0], 
+                    path[j][1], 
+                    pZ * path[j][0], 
+                ])
+
+                if (save && j > 0) {
+                    v.push(..._M.createPolygon(
+                        [save[j - 1][0], save[j - 1][1], save[j - 1][2]],
+                        [curr[j - 1][0], curr[j - 1][1], curr[j - 1][2]],
+                        [curr[j][0], curr[j][1], curr[j][2]],
+                        [save[j][0], save[j][1], save[j][2]],
+                    ))
+                    c.push(..._M.fillColorFace(color))
+                    uv.push(...uvTile)
+                }
+            }
+            save = curr
+            if (i === 0) {
+                saveStart = curr
+            }
+
+            if (i === n - 1) {
+                for (let j = 1; j < path.length; ++j) {    
+                    v.push(..._M.createPolygon(
+                        [curr[j - 1][0], curr[j - 1][1], curr[j - 1][2]],
+                        [saveStart[j - 1][0], saveStart[j - 1][1], saveStart[j - 1][2]],
+                        [saveStart[j][0], saveStart[j][1], saveStart[j][2]],
+                        [curr[j][0], curr[j][1], curr[j][2]],
+                    ))
+                    c.push(..._M.fillColorFace(color))
+                    uv.push(...uvTile)
+                }
+            }
+        }
+
+        return { v, uv, c }
+    }   
 }
 
