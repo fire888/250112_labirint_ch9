@@ -549,8 +549,8 @@ export const _M = {
         let save = null
         let saveStart = null
         for (let i = 0; i < n; ++i) {
-            const pX = Math.cos(-angle * i) 
-            const pZ = Math.sin(-angle * i)
+            const pX = Math.cos(-angle * i + angle * .5) 
+            const pZ = Math.sin(-angle * i + angle * .5)
 
             const curr = []
             for (let j = 0; j < path.length; ++j) {

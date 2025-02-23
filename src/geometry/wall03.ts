@@ -1,5 +1,6 @@
 import { _M, A3 } from "./_m";
 import { tileMapWall } from './tileMapWall'
+import { createTopElem_00 } from './topElem_00'
 
 const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('3c3865') 
 const COLOR_BLUE_D: A3 = _M.hexToNormalizedRGB('1c1937') 
@@ -71,12 +72,26 @@ export const createWall_03 = (d: number, h: number) => {
         { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), [0, h + .2, 0]), color: C1, uvTile: tileMapWall.noise },
+        //{ profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), [0, h + .2, 0]), color: C2, uvTile: tileMapWall.lines },
+    ]
+
+    const LEVELS_INNER = [
+        { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
+        //{ profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), [0, h + .2, 0]), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), [0, h + .2, 0]), color: C2, uvTile: tileMapWall.lines },
     ]
 
     const LEVELS_COLUMN = [
         { profile: _M.convertSimpleProfileToV3(PR_COLUMN), color: C1, uvTile: tileMapWall.noise },
     ]
+
+    /* top top */
+    const topTopElem = createTopElem_00(COLOR_BLUE_D)
+
+
 
     // top Profile
     const G = .4
@@ -111,6 +126,14 @@ export const createWall_03 = (d: number, h: number) => {
     const wColl = .2 + Math.random() * .5
     const wHoll = (dd - (wColl * nCol)) / nHol
 
+    {/** totTop Elem */
+        const _v = [...topTopElem.v]
+        _M.translateVertices(_v, RL * .5, h + 1.5, -.2)
+        v.push(..._v)
+        c.push(...topTopElem.c)
+        uv.push(...topTopElem.uv)
+    }
+
 
     let currX = 0
 
@@ -134,7 +157,7 @@ export const createWall_03 = (d: number, h: number) => {
 
     /** center */ 
     /** глубина */
-    LEVELS.forEach(e => {
+    LEVELS_INNER.forEach(e => {
         const path0 = e.profile
         const pathL = [...e.profile] 
         const pathR = [...e.profile] 
@@ -230,6 +253,14 @@ export const createWall_03 = (d: number, h: number) => {
 
         for (let i = 1; i < colN; ++i) {
             const x = STEP * i + RL
+
+            {/** totTop Elem */
+                const _v = [...topTopElem.v]
+                _M.translateVertices(_v, x, h + 1.5, -.2)
+                v.push(..._v)
+                c.push(...topTopElem.c)
+                uv.push(...topTopElem.uv)
+            }
 
             {
                 const r = _M.fillPoligonsV3(pilastreL, pilastreR, .8, tileMapWall.noise, COLOR_BLUE_D, 1, true)
