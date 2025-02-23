@@ -1,4 +1,3 @@
-import { Color } from "three";
 import { _M, A3 } from "./_m";
 import { tileMapWall } from './tileMapWall'
 
@@ -18,7 +17,6 @@ const PR_BOTTOM: [number, number][] = [
     [0, .5], 
 ]
 const PR_CENTER: [number, number][] = [
-    //[0, 1.95],
     [0, 1.5],
     [.1, 1.6],
     [.1, 1.63],
@@ -27,16 +25,6 @@ const PR_CENTER: [number, number][] = [
     [.17, 1.7],
     [.17, 1.75],
     [0, 1.75],
-]
-const PR_TOP: [number, number][] = [
-    [0,1.1],
-    [0.1,1.1],
-    [0.1,1.3],
-    [0.5,1.3],
-    [0.55,1.3],
-    [0.55,1.25],
-    [0.62,1.25],
-    [0.62,1.5]
 ]
 
 const PR_COLUMN = [
@@ -62,7 +50,6 @@ const TOP_PROFILE = [
     [.1, 0],
     [.1, .1],
     [.1, .2],
-    // [.2, .2],
     [.2, .3],
     [.1, .3],
     [.1, .9],
@@ -80,24 +67,30 @@ export const createWall_03 = (d: number, h: number) => {
 
     const min = 1 // max width without columns
 
-    const prTopModify = []
-    for (let i = 0; i < PR_TOP.length; ++i) {
-        prTopModify.push([PR_TOP[i][0], PR_TOP[i][1] + h - .85])
-    }
     const LEVELS = [
         { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
-        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), _M.convertSimpleProfileToV3(prTopModify)), color: C2, uvTile: tileMapWall.break },
-        //{ profile: _M.convertSimpleProfileToV3(prTopModify), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), [0, h + .2, 0]), color: C2, uvTile: tileMapWall.lines },
     ]
-
 
     const LEVELS_COLUMN = [
         { profile: _M.convertSimpleProfileToV3(PR_COLUMN), color: C1, uvTile: tileMapWall.noise },
     ]
 
+    // top Profile
+    const G = .4
+    {
+        const copy = [...TOP_PROFILE]
+        copy[0] = [-G, TOP_PROFILE[0][1]] 
+        const converted = _M.convertSimpleProfileToV3(TOP_PROFILE)
+        const r = _M.fillPoligonsV3(converted, converted, d, tileMapWall.noise, COLOR_BLUE_D, .5, true)
+        _M.translateVertices(r.v, 0, h + .2, 0)
+        v.push(...r.v)
+        c.push(...r.c)
+        uv.push(...r.uv)
 
+    }
 
     /** fill full wall */
     if (d < min) {
@@ -117,7 +110,7 @@ export const createWall_03 = (d: number, h: number) => {
     const nHol = nCol + 1
     const wColl = .2 + Math.random() * .5
     const wHoll = (dd - (wColl * nCol)) / nHol
-    const G = .4
+
 
     let currX = 0
 
@@ -213,7 +206,7 @@ export const createWall_03 = (d: number, h: number) => {
         const STEP = (d - RL - RL) / (colN)
         
         /** задник колонны */
-        const PROF = [    
+        const PILASTRE_PROF_V2 = [    
             [0.25, 0],
             [0.25, .3],
             [0.15, .3],
@@ -225,25 +218,21 @@ export const createWall_03 = (d: number, h: number) => {
             [0, .5], 
             [0, h + .4], 
         ]
-        const convertedProf = _M.convertSimpleProfileToV3(PROF)
-        const copyR = []
-        for (let i = 0; i < convertedProf.length; i += 3) {
-            copyR.push(convertedProf[i + 2], convertedProf[i + 1], convertedProf[i + 2])
+        const pilastreProfV3 = _M.convertSimpleProfileToV3(PILASTRE_PROF_V2)
+        const pilastreR = []
+        for (let i = 0; i < pilastreProfV3.length; i += 3) {
+            pilastreR.push(pilastreProfV3[i + 2], pilastreProfV3[i + 1], pilastreProfV3[i + 2])
         }
-        const copyL = []
-        for (let i = 0; i < convertedProf.length; i += 3) {
-            copyL.push(-convertedProf[i + 2], convertedProf[i + 1], convertedProf[i + 2])
+        const pilastreL = []
+        for (let i = 0; i < pilastreProfV3.length; i += 3) {
+            pilastreL.push(-pilastreProfV3[i + 2], pilastreProfV3[i + 1], pilastreProfV3[i + 2])
         }
-
-
-
-
 
         for (let i = 1; i < colN; ++i) {
             const x = STEP * i + RL
 
             {
-                const r = _M.fillPoligonsV3(copyL, copyR, .8, tileMapWall.noise, COLOR_BLUE_D, 1, true)
+                const r = _M.fillPoligonsV3(pilastreL, pilastreR, .8, tileMapWall.noise, COLOR_BLUE_D, 1, true)
                 _M.translateVertices(r.v, x - .4, 0, -.2)
                 v.push(...r.v)
                 c.push(...r.c)
@@ -251,7 +240,7 @@ export const createWall_03 = (d: number, h: number) => {
             }
 
             {
-                const r = _M.fillPoligonsV3(convertedProf, copyR, .3, tileMapWall.noise, COLOR_BLUE_D, 1, true)
+                const r = _M.fillPoligonsV3(pilastreProfV3, pilastreR, .3, tileMapWall.noise, COLOR_BLUE_D, 1, true)
                 _M.rotateVerticesY(r.v, -Math.PI / 2)
                 _M.translateVertices(r.v, x - .4, 0, -G -.1)
                 v.push(...r.v)
@@ -260,14 +249,13 @@ export const createWall_03 = (d: number, h: number) => {
             }
 
             {
-                const r = _M.fillPoligonsV3(copyL, convertedProf, .3, tileMapWall.noise, COLOR_BLUE_D, 1, true)
+                const r = _M.fillPoligonsV3(pilastreL, pilastreProfV3, .3, tileMapWall.noise, COLOR_BLUE_D, 1, true)
                 _M.rotateVerticesY(r.v, Math.PI / 2)
                 _M.translateVertices(r.v, x + .4, 0, -.2)
                 v.push(...r.v)
                 c.push(...r.c)
                 uv.push(...r.uv)
             }
-
 
             LEVELS_COLUMN.forEach(e => {
                 const path0 = e.profile
@@ -326,103 +314,38 @@ export const createWall_03 = (d: number, h: number) => {
 
         }
     }
-
-    // top Profile
-    {
-        //
-        // v.push(
-        //     ...
-        // )
-        const copy = [...TOP_PROFILE]
-        copy[0] = [-G, TOP_PROFILE[0][1]] 
-        const converted = _M.convertSimpleProfileToV3(TOP_PROFILE)
-        const r = _M.fillPoligonsV3(converted, converted, d, tileMapWall.noise, COLOR_BLUE_D, .5, true)
-        _M.translateVertices(r.v, 0, h + .2, 0)
-        v.push(...r.v)
-        c.push(...r.c)
-        uv.push(...r.uv)
-
-    }
-
-
-
-    // for (let i = 0; i < nHol; ++i) {
-    //     // fill hole
-    //     LEVELS.forEach(e => {
-    //         const path0 = e.profile
-    //         const pathL = [...e.profile] 
-    //         const pathR = [...e.profile]
-    //         for (let i = 0; i < pathL.length; i += 3) {
-    //             pathL[i] = -pathL[i + 2] // поворот под 45 градусов
-    //             pathR[i] = pathR[i + 2]  // поворот пол 45 градусов
-    //         }
-
-    //         const r = _M.fillPoligonsV3(pathL, pathL, g, e.uvTile, e.color)
-    //         _M.rotateVerticesY(r.v, Math.PI / 2)
-    //         _M.translateVertices(r.v, currX, 0, 0)
-    //         v.push(...r.v)
-    //         uv.push(...r.uv)
-    //         c.push(...r.c)
-
-    //         const r1 = _M.fillPoligonsV3(pathR, pathL, wHoll, e.uvTile, e.color)
-    //         _M.translateVertices(r1.v, currX, 0, -g)
-    //         v.push(...r1.v)
-    //         uv.push(...r1.uv)
-    //         c.push(...r1.c)
-
-    //         const nX = currX + wHoll
-
-    //         const r2 = _M.fillPoligonsV3(pathR, pathR, g, e.uvTile, e.color)
-    //         _M.rotateVerticesY(r2.v, -Math.PI / 2)
-    //         _M.translateVertices(r2.v, nX, 0, -g)
-    //         v.push(...r2.v)
-    //         uv.push(...r2.uv)
-    //         c.push(...r2.c)
-
-    //         if (i < nHol - 1) {
-    //             const r = _M.fillPoligonsV3(pathL, pathR, wColl, e.uvTile, e.color)
-    //             _M.translateVertices(r.v, nX, 0, 0)
-    //             v.push(...r.v)
-    //             uv.push(...r.uv)
-    //             c.push(...r.c)
-    //         }
-    //     })
-
-    //     currX += wColl + wHoll 
-    // }
-
     return { v, uv, c }
 }
 
-// export const createAngleWall_03 = (pos: A3, angleStart: number, angleEnd: number, h: number) => {
-//     const v: number[] = []
-//     const c: number[] = []
-//     const uv: number[] = []
+export const createAngleWall_03 = (pos: A3, angleStart: number, angleEnd: number, h: number) => {
+    const v: number[] = []
+    const c: number[] = []
+    const uv: number[] = []
 
-//     const prTopModify = []
-//     for (let i = 0; i < PR_TOP.length; ++i) {
-//         prTopModify.push([PR_TOP[i][0], PR_TOP[i][1] + h])
-//     }
-//     const LEVELS = [
-//         { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
-//         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
-//         { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
-//         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), _M.convertSimpleProfileToV3(prTopModify)), color: C2, uvTile: tileMapWall.break },
-//         { profile: _M.convertSimpleProfileToV3(prTopModify), color: C1, uvTile: tileMapWall.noise },
-//     ]
+    const topProfile = _M.convertSimpleProfileToV3(TOP_PROFILE)
+    for (let i = 0; i < topProfile.length; i += 3) {
+        topProfile[i + 1] += h + .2 
+    }
 
-//     LEVELS.forEach(e => {
-//         const pathL = [...e.profile] 
-//         const pathR = [...e.profile]
-//         _M.rotateVerticesY(pathL, angleStart)
-//         _M.rotateVerticesY(pathR, angleEnd)
+    const LEVELS = [
+        { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), [0, h + .2, 0]), color: C2, uvTile: tileMapWall.break },
+        { profile: topProfile, color: C1, uvTile: tileMapWall.noise },
+    ]
 
-//         const r = _M.fillPoligonsV3(pathL, pathR, 0, e.uvTile, e.color, 1.5, false)
-//         _M.translateVertices(r.v, ...pos)
-//         v.push(...r.v)
-//         c.push(...r.c)
-//         uv.push(...r.uv)
-//     })
+    LEVELS.forEach(e => {
+        const pathL = [...e.profile] 
+        const pathR = [...e.profile]
+        _M.rotateVerticesY(pathL, angleStart)
+        _M.rotateVerticesY(pathR, angleEnd)
 
-//     return { v, c, uv }
-// }
+        const r = _M.fillPoligonsV3(pathL, pathR, 0, e.uvTile, e.color, 1.5, false)
+        _M.translateVertices(r.v, ...pos)
+        v.push(...r.v)
+        c.push(...r.c)
+        uv.push(...r.uv)
+    })
+    return { v, c, uv }
+}

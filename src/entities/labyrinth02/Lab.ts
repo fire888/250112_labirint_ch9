@@ -4,7 +4,7 @@ import { _M } from "../../geometry/_m";
 import { createScheme} from "./scheme"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
-import { createWall_03 } from "geometry/wall03";
+import { createWall_03, createAngleWall_03 } from "geometry/wall03";
 import { offset } from "./offset";
 import { tyleLightMap } from '../../geometry/tyleLightMap'
 import { tileMapWall } from "geometry/tileMapWall";
@@ -186,6 +186,9 @@ export class Lab {
         const uv: number[] = [] 
         const c: number[] = []
 
+        let savedStartAngle = null
+        let savedAngle = null
+
         for (let i = 1; i < perimeterInner.length; ++i) {
             const prev = perimeterInner[i - 1]
             const curr = perimeterInner[i]
@@ -197,6 +200,25 @@ export class Lab {
             v.push(...r.v)
             c.push(...r.c)
             uv.push(...r.uv)
+
+            /** cap angles */
+            if (savedAngle !== null) {
+                const r = createAngleWall_03([prev[0], 0, prev[1]], -savedAngle, -a, H)
+                v.push(...r.v)
+                c.push(...r.c)
+                uv.push(...r.uv)
+            }
+
+            if (i === perimeterInner.length - 1 && savedStartAngle !== null) {
+                const r = createAngleWall_03([curr[0], 0, curr[1]], -a, -savedStartAngle, H)
+                v.push(...r.v)
+                c.push(...r.c)
+                uv.push(...r.uv)
+            }
+            
+            savedAngle = a
+            if (i === 1) savedStartAngle = a
+
         }
         return { v, c, uv }
     }
