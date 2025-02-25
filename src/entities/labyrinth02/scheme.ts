@@ -6,37 +6,45 @@ var Offset = require('polygon-offset');
 
 export const createScheme = (root: Root) => {
     const voronoi = new Voronoi();
-    const S = 100
+    //const S = 100
+    const SX = 50
+    const SY = 30
     const N = 100
-    const bbox = { xl: 0, xr: S, yt: 0, yb: S }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
+    const bbox = { xl: 0, xr: SX, yt: 0, yb: SY }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
     const sites: { x: number, y: number }[] = []
-    for (let i = 0; i < N; ++i) {
-        sites.push({ x: Math.random() * S, y: Math.random() * S})
+    const RN = 10 
+    //for (let i = 0; i < N; ++i) {
+    //    sites.push({ x: Math.random() * S, y: Math.random() * S})
+    //}
+    const START = SX / RN * .5
+    for (let i = 0; i < RN; ++i) {
+        sites.push({ x: SX / (RN) * i + START, y: SY * .5 + Math.random() * 10 - 5})
     }
+
     const diagram = voronoi.compute(sites, bbox);
 
     /** draw edges */
-    // let 
-    // edges = diagram.edges,
-    // iEdge = edges.length
-    // const matLine = new THREE.LineBasicMaterial( {
-    //     color: 0xffffff,
-    //     alphaToCoverage: true,
-    // } );
-    // while (iEdge--) {
-    //     const edge = edges[iEdge]
-    //     const v1 = edge.va;
-    //     const v2 = edge.vb;
+    let 
+    edges = diagram.edges,
+    iEdge = edges.length
+    const matLine = new THREE.LineBasicMaterial( {
+        color: 0xffffff,
+        alphaToCoverage: true,
+    } );
+    while (iEdge--) {
+        const edge = edges[iEdge]
+        const v1 = edge.va;
+        const v2 = edge.vb;
 
-    //     const points = [
-    //         new THREE.Vector3( v1.x, 1, v1.y ),
-    //         new THREE.Vector3( v2.x, 1, v2.y ),
-    //     ]
-    //     const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    //     const line = new THREE.Line(geometry, matLine)
-    //     line.position.y = .05
-    //     root.studio.add(line)
-    // }
+        const points = [
+            new THREE.Vector3( v1.x, 1, v1.y ),
+            new THREE.Vector3( v2.x, 1, v2.y ),
+        ]
+        const geometry = new THREE.BufferGeometry().setFromPoints(points)
+        const line = new THREE.Line(geometry, matLine)
+        line.position.y = .05
+        root.studio.add(line)
+    }
 
     const arr: {
         area: [number, number][],

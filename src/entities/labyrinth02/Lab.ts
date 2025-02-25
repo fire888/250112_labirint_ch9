@@ -39,6 +39,10 @@ export class Lab {
             })
         }
 
+        //console.log(areasData)
+
+        //return;
+
         /** walls */
         {
             const v: number[] = []
