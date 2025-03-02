@@ -325,14 +325,7 @@ export const _M = {
         canvas.width = 128 * (t.length * .5);
         canvas.height = 128;
 
-        // ctx.fillStyle = '#000077';
-        // ctx.fillRect( 0, 0, 128 * (t.length * .5), 128 );
-
-        const r = this.componentToHex(color[0])
-        const g = this.componentToHex(color[1])
-        const b = this.componentToHex(color[2])
-
-        const c = '#' + r + g + b
+        const c = _M.normRGBtoHex(...color)
 
         ctx.fillStyle = c
         ctx.font = 'bold 60pt arial'
@@ -393,9 +386,17 @@ export const _M = {
     componentToHex (c: number) {
         c *= 256
         c = Math.floor(c) - 1
+        if (c < 0) c = 0
         var hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     },
+
+    normRGBtoHex(r: number, g: number, b: number): string {
+        const rN = _M.componentToHex(r)
+        const gN = _M.componentToHex(g)
+        const bN = _M.componentToHex(b)
+        return "#" + rN + gN + bN
+    },  
 
     hexToNormalizedRGB(hex: string): [number, number, number] {
         // Remove any leading # if present
@@ -426,30 +427,56 @@ export const _M = {
     },
 
     center: (points: [number, number][]): [number, number] => {
-        let minX = Infinity
-        let maxX = -Infinity
-        let minY = Infinity
-        let maxY = -Infinity
+        // let minX = Infinity
+        // let maxX = -Infinity
+        // let minY = Infinity
+        // let maxY = -Infinity
         
-        for (let i = 0; i < points.length; ++i) {
-            if (minX > points[i][0]) {
-                minX = points[i][0]
-            }
-            if (maxX < points[i][0]) {
-                maxX = points[i][0]
-            }
-            if (minY > points[i][1]) {
-                minY = points[i][1]
-            }
-            if (maxY < points[i][1]) {
-                maxY = points[i][1]
-            }
-        }
+        // for (let i = 0; i < points.length; ++i) {
+        //     if (minX > points[i][0]) {
+        //         minX = points[i][0]
+        //     }
+        //     if (maxX < points[i][0]) {
+        //         maxX = points[i][0]
+        //     }
+        //     if (minY > points[i][1]) {
+        //         minY = points[i][1]
+        //     }
+        //     if (maxY < points[i][1]) {
+        //         maxY = points[i][1]
+        //     }
+        // }
 
-        return [
-            minX + (maxX - minX) * .5,
-            minY + (maxY - minY) * .5,
-        ]
+        // return [
+        //     minX + (maxX - minX) * .5,
+        //     minY + (maxY - minY) * .5,
+        // ]
+
+            let area = 0;
+            let Cx = 0;
+            let Cy = 0;
+            const n = points.length;
+          
+            for (let i = 0; i < n; i++) {
+              const [x0, y0] = points[i];
+              const [x1, y1] = points[(i + 1) % n];
+          
+              const cross = (x0 * y1) - (x1 * y0);
+              area += cross;
+              Cx += (x0 + x1) * cross;
+              Cy += (y0 + y1) * cross;
+            }
+          
+            area /= 2;
+            
+            if (area === 0) {
+              throw new Error('Area of polygon is zero (possibly degenerate polygon)');
+            }
+          
+            Cx /= (6 * area);
+            Cy /= (6 * area);
+          
+            return [Cx, Cy];
     },
 
     getLastAndFirstCoordsPath: (p1: number[], p2: number[]): number[] => {
@@ -591,6 +618,20 @@ export const _M = {
         }
 
         return { v, uv, c }
-    }   
+    },
+
+    waitClickNext: (t: string = 'next') => new Promise((resolve) => {
+        const button = document.createElement('button')
+        button.style.position = 'absolute'
+        button.style.left = '50%'
+        button.style.top = '0'
+        button.innerText = t
+        button.classList.add('debug-button')
+        document.body.appendChild(button)
+        button.addEventListener('pointerdown', () => {
+            document.body.removeChild(button)
+            resolve(true)
+        })
+    }),
 }
 

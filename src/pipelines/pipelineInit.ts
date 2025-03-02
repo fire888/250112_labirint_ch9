@@ -43,6 +43,9 @@ export const pipelineInit = async (root: Root) => {
     floor.init(root)
     studio.add(floor.mesh)
 
+    controls.init(root)
+    ticker.on(controls.update.bind(controls))
+
     await lab.init(root, CONSTANTS.LABS_CONF[0])
     //studio.add(lab.mesh)
 
@@ -63,6 +66,7 @@ export const pipelineInit = async (root: Root) => {
     //await ui.hideStartScreen()
 
     //audio.playAmbient()
-    controls.init(root)
-    ticker.on(controls.update.bind(controls))
+    
+    
+
 }

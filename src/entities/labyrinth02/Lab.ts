@@ -5,7 +5,7 @@ import { createScheme} from "./scheme"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
-import { offset } from "./offset";
+import { offset, offsetDebugAsync } from "./offset";
 import { tyleLightMap } from '../../geometry/tyleLightMap'
 import { tileMapWall } from "geometry/tileMapWall";
 
@@ -86,6 +86,12 @@ export class Lab {
                     continue;
                 }
 
+                /** draw index area */
+                const label = _M.createLabel(i + '', [1, 1, 1], 5)
+                label.position.set(areasData[i].center[0], -1, areasData[i].center[1])
+                this._root.studio.add(label)
+                console.log('indexArea', i)
+
                 const areaData = areasData[i]
                 const result = offset(areaData.perimeter, 2.1, this._root)
                 const { offsetLines, existsLines, centerX, centerY } = result
@@ -93,12 +99,12 @@ export class Lab {
                 const r = this._fillRoad(offsetLines, existsLines)
                 v.push(...r.v)
                 uv.push(...r.uv)
-                uv2.push(...r.uv2)
+                //uv2.push(...r.uv2)
             }
             const m = _M.createMesh({ 
                 v,
                 uv,
-                uv2,
+                //uv2,
                 material: root.materials.road
             })
             this._root.studio.add(m)
@@ -280,10 +286,48 @@ export class Lab {
                         [0, 1],    
                     )  
                 )
-                uv2.push(...tyleLightMap.shadowR)
-             }
+            }
+            uv2.push(...tyleLightMap.shadowR)
         }
-        return { v, uv, uv2 }
+
+        // for (let i = 0; i < inner.length; ++i) {
+        //     if (!inner[i]) {
+        //         continue
+        //     }
+        //     if (inner[i].length == 4) {
+        //         if (inner[i][0] === inner[i][2] && inner[i][1] === inner[i][3]) {
+        //             v.push(
+        //                 inner[i][0], 0, inner[i][1],       
+        //                 outer[i][0], 0, outer[i][1],
+        //                 outer[i][2], 0, outer[i][3],        
+        //             )
+        //             uv.push(
+        //                 0, 0,
+        //                 1, 0,
+        //                 .5, 1,
+        //             )
+        //             continue;
+        //         }
+
+        //         v.push(
+        //             ..._M.createPolygon(
+        //                 [inner[i][2], 0, inner[i][3]], 
+        //                 [inner[i][0], 0, inner[i][1]], 
+        //                 [outer[i][0], 0, outer[i][1]],  
+        //                 [outer[i][2], 0, outer[i][3]],    
+        //             )                     
+        //         )    
+        //         uv.push(
+        //             ..._M.createUv(
+        //                 [0, 0],
+        //                 [1, 0],
+        //                 [1, 1],
+        //                 [0, 1],    
+        //             )  
+        //         )
+        //     }
+        // }
+        return { v, uv }
     }
 
     _createArea (areaData: any) {
