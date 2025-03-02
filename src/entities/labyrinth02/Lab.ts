@@ -44,36 +44,36 @@ export class Lab {
         //return;
 
         /** walls */
-        {
-            const v: number[] = []
-            const uv: number[] = []
-            const c: number[] = []
-            for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area < AREA_FOR_DOWN) { 
-                    continue;
-                }
-                const random = Math.random()
-                if (random < .5) {
-                    const r = this._createHome(areasData[i].perimeterInner)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
-                } else {
-                    const r = this._createHome_03(areasData[i].perimeterInner)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
-                }
+        // {
+        //     const v: number[] = []
+        //     const uv: number[] = []
+        //     const c: number[] = []
+        //     for (let i = 0; i < areasData.length; ++i) {
+        //         if (areasData[i].area < AREA_FOR_DOWN) { 
+        //             continue;
+        //         }
+        //         const random = Math.random()
+        //         if (random < .5) {
+        //             const r = this._createHome(areasData[i].perimeterInner)
+        //             v.push(...r.v)
+        //             uv.push(...r.uv)
+        //             c.push(...r.c)
+        //         } else {
+        //             const r = this._createHome_03(areasData[i].perimeterInner)
+        //             v.push(...r.v)
+        //             uv.push(...r.uv)
+        //             c.push(...r.c)
+        //         }
 
-            }
-            const m = _M.createMesh({ 
-                v, 
-                uv,
-                c,
-                material: root.materials.walls00,
-            })
-            this._root.studio.add(m)
-        }
+        //     }
+        //     const m = _M.createMesh({ 
+        //         v, 
+        //         uv,
+        //         c,
+        //         material: root.materials.walls00,
+        //     })
+        //     this._root.studio.add(m)
+        // }
 
         /** roads */
         {
@@ -81,19 +81,36 @@ export class Lab {
             const uv: number[] = [] 
             const uv2: number[] = []
 
+            type P = [number, number][] 
+            const areasData2 = [ 
+                {
+                    area: 70,
+                    center: [5, 5],
+                    perimeter:<P> [
+                        [27.054005334123623, 0],
+                        [31.838375137828102, 19.239556589222243],
+                        [40.70203416864817, 0],
+                        [27.054005334123623, 0]
+                    ],
+                }
+            ]
+
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].area < AREA_FOR_DOWN) { 
                     continue;
                 }
 
-                /** draw index area */
-                const label = _M.createLabel(i + '', [1, 1, 1], 5)
-                label.position.set(areasData[i].center[0], -1, areasData[i].center[1])
-                this._root.studio.add(label)
-                console.log('indexArea', i)
-
                 const areaData = areasData[i]
-                const result = offset(areaData.perimeter, 2.1, this._root)
+
+                /** draw index area */
+                // const label = _M.createLabel(i + '', [1, 1, 1], 5)
+                // label.position.set(areasData[i].center[0], -1, areasData[i].center[1])
+                // this._root.studio.add(label)
+                // console.log('indexArea', i, areaData.perimeter, 2.1)
+
+
+                const result = await offsetDebugAsync(areaData.perimeter, 2.1, this._root)
+                //const result = offset(areaData.perimeter, 2.1, this._root)
                 const { offsetLines, existsLines, centerX, centerY } = result
 
                 const r = this._fillRoad(offsetLines, existsLines)
