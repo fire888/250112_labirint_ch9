@@ -62,7 +62,7 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         let intersect2 = checkIntersection(...prev, ...next)
         /* @ts-ignore */
         let int2 = intersect2.point ? [intersect2.point.x, intersect2.point.y] : null
-        if (innerLines.length === 4) {
+        if (innerLines.length === 3) {
             int2 = null
         }
 

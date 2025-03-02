@@ -9,7 +9,7 @@ export const createScheme = (root: Root) => {
     //const S = 100
     const SX = 100
     const SY = 100
-    const N = 100
+    const N = 50
     const bbox = { xl: 0, xr: SX, yt: 0, yb: SY }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
     const sites: { x: number, y: number }[] = []
     const RN = 10 
