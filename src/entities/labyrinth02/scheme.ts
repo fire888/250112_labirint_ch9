@@ -10,12 +10,39 @@ export const createScheme = (root: Root) => {
     const SX = 100
     const SY = 100
     const N = 50
+
+    const RN = 10 
+
+    const points: [number, number][] = []
+    const setPoint = () => {
+        let n = 5
+        while (n > 0) {
+            --n
+            const p: [number, number] = [Math.random() * SX,Math.random() * SY ]
+            let isInsert = true
+            for (let i = 0; i < points.length; ++i) {
+                const d = Math.sqrt((p[0] - points[i][0]) * (p[0] - points[i][0]) + (p[1] - points[i][1]) * (p[1] - points[i][1]))
+                if (d < 7) {
+                    isInsert = false
+                    break;
+                }
+            }
+            if (isInsert) {
+                points.push(p)
+                break;
+            }
+        }
+    }
+
+    for (let i = 0; i < N; ++i) {
+       setPoint()
+    }
+
     const bbox = { xl: 0, xr: SX, yt: 0, yb: SY }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
     const sites: { x: number, y: number }[] = []
-    const RN = 10 
-    for (let i = 0; i < N; ++i) {
-       sites.push({ x: Math.random() * SX, y: Math.random() * SY })
-    }
+    points.forEach(e => {
+        sites.push({ x: e[0], y: e[1] })
+    })
     // const START = SX / RN * .5
     // for (let i = 0; i < RN; ++i) {
     //     sites.push({ x: SX / (RN) * i + START, y: SY * .5 + Math.random() * 10 - 5})

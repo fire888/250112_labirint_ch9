@@ -25,6 +25,16 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         }
     }
 
+    // /** draw exist lines */
+    // for (let i = 0; i < existsLines.length; ++i) {
+    //     const l = existsLines[i]
+    //     const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0, 0])
+    //     lp.position.y = .3
+    //     root.studio.add(lp)
+    //     // await _M.waitClickNext()
+    // }
+
+
     const [ cX, cY ] = _M.center(points) 
 
     const innerLines: [number, number, number, number][] = []
@@ -41,6 +51,15 @@ export const offset = (points: [number, number][], d: number, root: Root): {
 
         innerLines.push([xNewPR, yNewPR, xNewCR, yNewCR])
     }
+
+    // for (let i = 0; i < innerLines.length; ++i) {
+    //     const l = innerLines[i]
+    //     const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0.5, 0])
+    //     lp.position.y = .4
+    //     root.studio.add(lp)
+    //     // await _M.waitClickNext()
+    // }
+
     const intercepts = []
     let isSckpPoint = false
     let pointPrev = null

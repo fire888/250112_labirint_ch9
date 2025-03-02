@@ -22,7 +22,12 @@ export class Lab {
 
         const areasData = []
 
+
+
         for (let i = 0; i < scheme.length; ++i) {
+            const random = Math.random() 
+            const isDown = random < .2 
+
             const area = _M.area(scheme[i].area)
             const center = _M.center(scheme[i].area) 
             
@@ -31,12 +36,26 @@ export class Lab {
             // l.position.set(center[0], 1, center[1])
             // root.studio.add(l)
 
+
+
             areasData.push({
                 center,
                 area,
                 perimeter: scheme[i].area,
                 perimeterInner: scheme[i].offset,
+                isDown,
             })
+
+            /** draw index area */
+            const label = _M.createLabel(i + '', [1, 1, 1], 5)
+            label.position.set(center[0], 2, center[1])
+            this._root.studio.add(label)
+            console.log('perimeter:', i, JSON.stringify({
+                center,
+                area,
+                perimeter: scheme[i].area,
+                perimeterInner: scheme[i].offset,
+            }))
         }
 
         //console.log(areasData)
@@ -49,7 +68,7 @@ export class Lab {
             const uv: number[] = []
             const c: number[] = []
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area < AREA_FOR_DOWN) { 
+                if (areasData[i].isDown) { 
                     continue;
                 }
                 const random = Math.random()
@@ -79,22 +98,15 @@ export class Lab {
         {
             const v: number[] = []
             const uv: number[] = [] 
-            const uv2: number[] = []
-
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area < AREA_FOR_DOWN) { 
+                if (areasData[i].isDown) { 
                     continue;
                 }
 
                 const areaData = areasData[i]
 
-                /** draw index area */
-                // const label = _M.createLabel(i + '', [1, 1, 1], 5)
-                // label.position.set(areaData.center[0], -1, areaData.center[1])
-                // this._root.studio.add(label)
-                // console.log('perimeter:', i, JSON.stringify(areaData))
-
+                console.log('p', i, JSON.stringify(areaData))
 
                 const result = offset(areaData.perimeter, 2.1, this._root)
                 //const result = offset(areaData.perimeter, 2.1, this._root)
@@ -103,12 +115,10 @@ export class Lab {
                 const r = this._fillRoad(offsetLines, existsLines)
                 v.push(...r.v)
                 uv.push(...r.uv)
-                //uv2.push(...r.uv2)
             }
             const m = _M.createMesh({ 
                 v,
                 uv,
-                //uv2,
                 material: root.materials.road
             })
            // m.position.y = -2
@@ -122,7 +132,7 @@ export class Lab {
             const c: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].area >= AREA_FOR_DOWN) { 
+                if (!areasData[i].isDown) { 
                     continue;
                 }
 
