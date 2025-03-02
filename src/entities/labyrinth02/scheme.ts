@@ -7,19 +7,19 @@ var Offset = require('polygon-offset');
 export const createScheme = (root: Root) => {
     const voronoi = new Voronoi();
     //const S = 100
-    const SX = 50
-    const SY = 30
+    const SX = 100
+    const SY = 100
     const N = 100
     const bbox = { xl: 0, xr: SX, yt: 0, yb: SY }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
     const sites: { x: number, y: number }[] = []
     const RN = 10 
-    //for (let i = 0; i < N; ++i) {
-    //    sites.push({ x: Math.random() * S, y: Math.random() * S})
-    //}
-    const START = SX / RN * .5
-    for (let i = 0; i < RN; ++i) {
-        sites.push({ x: SX / (RN) * i + START, y: SY * .5 + Math.random() * 10 - 5})
+    for (let i = 0; i < N; ++i) {
+       sites.push({ x: Math.random() * SX, y: Math.random() * SY })
     }
+    // const START = SX / RN * .5
+    // for (let i = 0; i < RN; ++i) {
+    //     sites.push({ x: SX / (RN) * i + START, y: SY * .5 + Math.random() * 10 - 5})
+    // }
 
     const diagram = voronoi.compute(sites, bbox);
 

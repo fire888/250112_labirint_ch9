@@ -13,12 +13,16 @@ export const offset = (points: [number, number][], d: number, root: Root): {
     const existsLines: [number, number, number, number][] = []
     for (let i = 1; i < points.length; ++i) {
         const pr = points[i - 1]
-        const cr = i === points.length - 1 ? points[0] : points[i]
+        const cr = points[i]
         existsLines.push([pr[0], pr[1], cr[0], cr[1]])
 
-        const lp = _M.createLine([pr, cr], [1, 0, 0])
-        lp.position.y = -1
-        root.studio.add(lp)
+        if (i === points.length - 1) {
+            const pr = points[i]
+            const cr = points[0]
+            if (pr[0] !== cr[0] || pr[1] !== cr[1]) {
+                existsLines.push([pr[0], pr[1], cr[0], cr[1]])
+            }
+        }
     }
 
     const [ cX, cY ] = _M.center(points) 
@@ -37,24 +41,33 @@ export const offset = (points: [number, number][], d: number, root: Root): {
 
         innerLines.push([xNewPR, yNewPR, xNewCR, yNewCR])
     }
-
     const intercepts = []
+    let isSckpPoint = false
+    let pointPrev = null
     for (let i = 0; i < innerLines.length; ++i) {
+        if (isSckpPoint) {
+            intercepts.push(pointPrev)
+            isSckpPoint = false
+            continue;
+        }
         const prev = innerLines[i - 1] ? innerLines[i - 1] : innerLines[innerLines.length - 1]
         const curr = innerLines[i]
         const next = innerLines[i + 1] ? innerLines[i + 1] : innerLines[0]
 
-        /** тестово рисуем линию чтоб понимать где она */
-        const lp = _M.createLine([[prev[0], prev[1]], [prev[2], prev[3]]], [1, 1, 1])
-        lp.position.y = -1
-        root.studio.add(lp)
-
-
         const intersect = checkIntersection(...prev, ...curr)
+        /* @ts-ignore */
+        const int1 = intersect.point ? [intersect.point.x, intersect.point.y] : null
+
+        //const int2: any = null 
         let intersect2 = checkIntersection(...prev, ...next)
+        /* @ts-ignore */
+        let int2 = intersect2.point ? [intersect2.point.x, intersect2.point.y] : null
+        if (innerLines.length === 4) {
+            int2 = null
+        }
 
         /* @ts-ignore */
-        if (!intersect.point && !intersect2.point) {
+        if (!int1 && !int2) {
             let isIntercept2 = false
             let offset = 2
             while (!isIntercept2 && offset < innerLines.length) {
@@ -65,60 +78,44 @@ export const offset = (points: [number, number][], d: number, root: Root): {
                 const prevPrev = innerLines[ind]
                 intersect2 = checkIntersection(...prevPrev, ...curr)
                 /* @ts-ignore */
+                int2 = intersect2.point ? [intersect2.point.x, intersect2.point.y] : null
+                /* @ts-ignore */
                 isIntercept2 = !!intersect2.point
                 offset++
             }
         }
 
-        /* @ts-ignore */
-        if (intersect.point) {
-            /* @ts-ignore */
-            if (intersect2.point) {
-                const d = Math.sqrt(
-                    /* @ts-ignore */    
-                    (intersect.point.x - cX) **2 +
-                    /* @ts-ignore */    
-                    (intersect.point.y - cY) **2  
-                )
-                const d2 = Math.sqrt(
-                    /* @ts-ignore */    
-                    (intersect2.point.x - cX) **2 +
-                    /* @ts-ignore */    
-                    (intersect2.point.y - cY) **2  
-                )
-                if (d < d2) {
-                    intercepts.push(intersect)
-                } else {
-                    intercepts.push(intersect2)
-                }
-            } else {
-                intercepts.push(intersect)
-            }
-        } else {
-            /* @ts-ignore */ 
-            if (intersect2.point) {
-                intercepts.push(intersect2)
-            } else {
-                intercepts.push(null)
-            }
+        let pointToInsert = int1
+        let isPoint2 = false
+        if (int1 && int2) {
+            const d = Math.sqrt((int1[0] - cX) **2 + (int1[1] - cY) **2)
+            const d2 = Math.sqrt((int2[0] - cX) **2 + (int2[1] - cY) **2)
+            isPoint2 = d2 < d
+        }
+        if (!int1 && int2) {
+            isPoint2 = true
+        }
+        if (isPoint2) {
+            pointToInsert = int2
+            isSckpPoint = true
+            pointPrev = int2
+        }
+        intercepts.push(pointToInsert)
+    }
+
+    const innerLinesTrimmed: [number, number, number, number][] = []
+    for (let i = 1; i < intercepts.length; ++i) {
+        const prev = intercepts[i - 1]        
+        const curr = intercepts[i] 
+        if (prev && curr) innerLinesTrimmed.push([prev[0], prev[1], curr[0], curr[1]])
+        if (i === intercepts.length - 1) {
+            const prev = intercepts[i]        
+            const curr = intercepts[0] 
+            if (prev && curr) innerLinesTrimmed.push([prev[0], prev[1], curr[0], curr[1]])
         }
     }
 
-    const offsetLines: [number, number, number?, number?][] = []
-    for (let i = 0; i < intercepts.length; ++i) {
-        const prev = intercepts[i]        
-        const curr = intercepts[i + 1] ? intercepts[i + 1] : intercepts[0] 
-        if (prev && curr) {
-            /* @ts-ignore */  
-            offsetLines.push([prev.point.x, prev.point.y, curr.point.x, curr.point.y])
-        } else {
-            offsetLines.push(null)
-        }
-    }
-
-
-
-    return { offsetLines, existsLines, centerX: cX, centerY: cY }
+    return { offsetLines: innerLinesTrimmed, existsLines, centerX: cX, centerY: cY }
 } 
 
 
@@ -153,7 +150,7 @@ export const offsetDebugAsync = async (points: [number, number][], d: number, ro
     //     const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0, 0])
     //     lp.position.y = -1 - (i * .1)
     //     root.studio.add(lp)
-    //     await _M.waitClickNext()
+    //     // await _M.waitClickNext()
     // }
 
 
@@ -176,19 +173,26 @@ export const offsetDebugAsync = async (points: [number, number][], d: number, ro
 
 
     // /** draw inners lines */
-    // for (let i = 0; i < innerLines.length; ++i) {
-    //     const l = innerLines[i]
-    //     const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, .5, 0])
-    //     lp.position.y = -1 - (i * .1)
-    //     root.studio.add(lp)
-    //     await _M.waitClickNext()
-    // }
+    for (let i = 0; i < innerLines.length; ++i) {
+        const l = innerLines[i]
+        const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, .5, 0])
+        lp.position.y = -1 - (i * .1)
+        root.studio.add(lp)
+        // await _M.waitClickNext()
+    }
 
         
 
 
     const intercepts = []
+    let isSckpPoint = false
+    let pointPrev = null
     for (let i = 0; i < innerLines.length; ++i) {
+        if (isSckpPoint) {
+            intercepts.push(pointPrev)
+            isSckpPoint = false
+            continue;
+        }
         const prev = innerLines[i - 1] ? innerLines[i - 1] : innerLines[innerLines.length - 1]
         const curr = innerLines[i]
         const next = innerLines[i + 1] ? innerLines[i + 1] : innerLines[0]
@@ -202,9 +206,15 @@ export const offsetDebugAsync = async (points: [number, number][], d: number, ro
         const intersect = checkIntersection(...prev, ...curr)
         /* @ts-ignore */
         const int1 = intersect.point ? [intersect.point.x, intersect.point.y] : null
+
+        //const int2: any = null 
         let intersect2 = checkIntersection(...prev, ...next)
         /* @ts-ignore */
-        const int2 = intersect2.point ? [intersect2.point.x, intersect2.point.y] : null
+        let int2 = intersect2.point ? [intersect2.point.x, intersect2.point.y] : null
+        if (innerLines.length === 4) {
+            int2 = null
+        }
+
 
         /* @ts-ignore */
         if (!int1 && !int2) {
@@ -225,29 +235,50 @@ export const offsetDebugAsync = async (points: [number, number][], d: number, ro
             }
         }
 
-
-
         let pointToInsert = int1
+        let isPoint2 = false
         if (int1 && int2) {
             const d = Math.sqrt((int1[0] - cX) **2 + (int1[1] - cY) **2)
             const d2 = Math.sqrt((int2[0] - cX) **2 + (int2[1] - cY) **2)
-            pointToInsert = d < d2 ? int1 : int2
+            isPoint2 = d2 < d
+
+            // {
+            //     const l1 = _M.createLabel('p1_' + i, [1, 1, 1], 7)
+            //     l1.position.x = int1[0]
+            //     l1.position.y = 1 + i * .5 
+            //     l1.position.z = int1[1]
+            //     root.studio.add(l1)
+            // }
+            // {
+            //     const l1 = _M.createLabel('p2_' + i, [1, 1, 1], 7)
+            //     l1.position.x = int2[0]
+            //     l1.position.y = 1 + i * .5 
+            //     l1.position.z = int2[1]
+            //     root.studio.add(l1)
+            // }    
+
         }
         if (!int1 && int2) {
-            pointToInsert = int2    
+            isPoint2 = true
+        }
+        if (isPoint2) {
+            pointToInsert = int2
+            isSckpPoint = true
+            pointPrev = int2
         }
         intercepts.push(pointToInsert)
 
-        /** draw label int1 */
-        if (pointToInsert) {
-            const l = _M.createLabel('.' + i, [1, .5, 0], 7)
-            l.position.x = pointToInsert[0]
-            l.position.y = 1
-            l.position.z = pointToInsert[1]
-            root.studio.add(l)
-        }
+        // /** draw label int1 */
+        // if (pointToInsert) {
+        //     const l = _M.createLabel('.' + i, [1, .5, 0], 7)
+        //     l.position.x = pointToInsert[0]
+        //     l.position.y = 1
+        //     l.position.z = pointToInsert[1]
+        //     root.studio.add(l)
+        //    // await _M.waitClickNext()
+        // }
 
-        //await _M.waitClickNext()
+
     }
 
     const innerLinesTrimmed: [number, number, number, number][] = []
@@ -261,6 +292,50 @@ export const offsetDebugAsync = async (points: [number, number][], d: number, ro
             if (prev && curr) innerLinesTrimmed.push([prev[0], prev[1], curr[0], curr[1]])
         }
     }
+
+
+    // /** draw lines trimmed inner */
+    // for (let i = 0; i < innerLinesTrimmed.length; ++i) {
+    //     // const l = innerLinesTrimmed[i]
+    //     // const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 1, 1])
+    //     // const y = 1 + i
+    //     // lp.position.y = y
+    //     // root.studio.add(lp)
+
+    //     // {
+    //     //     const l1 = _M.createLabel('.' + i, [1, 1, 1], 7)
+    //     //     l1.position.x = l[0]
+    //     //     l1.position.y = y
+    //     //     l1.position.z = l[1]
+    //     //     root.studio.add(l1)
+    //     // }
+    //     // {
+    //     //     const l1 = _M.createLabel('.' + i, [1, 1, 1], 7)
+    //     //     l1.position.x = l[2]
+    //     //     l1.position.y = y
+    //     //     l1.position.z = l[3]
+    //     //     root.studio.add(l1)
+    //     // }      
+
+    //     //await _M.waitClickNext()
+    // }
+
+        
+
+
+    // for (let i = 0; i < innerLinesTrimmed.length; ++i) {
+    //     const oL = existsLines[i]
+    //     const iL = innerLinesTrimmed[i]
+    //     const v = _M.createPolygon(
+    //         [iL[0], -1 - i * .2, iL[1]], 
+    //         [oL[0], -1 - i * .2, oL[1]], 
+    //         [oL[2], -1 - i * .2, oL[3]], 
+    //         [iL[2], -1 - i * .2, iL[3]], 
+    //     )
+    //     const m = _M.createMesh({ v })
+    //     root.studio.add(m)
+    //     //await _M.waitClickNext()
+    // }
 
     return { offsetLines: innerLinesTrimmed, existsLines, centerX: cX, centerY: cY }
 } 
