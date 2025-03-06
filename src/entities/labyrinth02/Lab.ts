@@ -20,7 +20,7 @@ export class Lab {
 
         {
             const TUNNEL_RADIUS = 2
-            const TUNNEL_RADIAL_SEGMENTS = 6
+            const TUNNEL_RADIAL_SEGMENTS = 16
             const SIZE = 1
             const HALF_SIZE = SIZE * 0.5
 
@@ -46,32 +46,70 @@ export class Lab {
             {
                 const x = .5
                 const r = 2
+                const TOP_SEGMENTS_COUNT = 18
         
                 const verticies = []
-                verticies.push(
-                    // poligon 1
-                    -x, r, 0, // v0
-                    x, r, 0, // v1
-                    x, r, -r, // v2
-                    -x, r, -r, // v3
+                // verticies.push(
+                //     // poligon 1
+                //     -x, r, 0, // v0
+                //     x, r, 0, // v1
+                //     x, r, -r, // v2
+                //     -x, r, -r, // v3
 
-                    // poligon 2
-                    x, -r, -r, // v4
-                    -x, -r, -r, // v5
-                    -x, r, -r, // v6
-                    x, r, -r, // v7
+                //     // poligon 2
+                //     x, -r, -r, // v4
+                //     -x, -r, -r, // v5
+                //     -x, r, -r, // v6
+                //     x, r, -r, // v7
 
-                    // poligon 3
-                    -x, -r, -r, // v8
-                    x, -r, -r, // v9
-                    x, -r, 0, // v10
-                    -x, -r, 0, // v11
-                )
+                //     // poligon 3
+                //     -x, -r, -r, // v8
+                //     x, -r, -r, // v9
+                //     x, -r, 0, // v10
+                //     -x, -r, 0, // v11
+                // )
                 const indicies = [
-                    0, 1, 2, 0, 2, 3,
-                    4, 5, 6, 4, 6, 7,
-                    8, 9, 10, 8, 10, 11
+                    // 0, 1, 2, 0, 2, 3,
+                    // 4, 5, 6, 4, 6, 7,
+                    // 8, 9, 10, 8, 10, 11
                 ]
+
+                const shape = []
+                for (let i = 0; i < TOP_SEGMENTS_COUNT + 1; ++i) {
+                    const phase = i / TUNNEL_RADIAL_SEGMENTS
+                    const angle = phase * Math.PI
+                    shape.push([Math.cos(angle) * r, Math.sin(angle) * r])
+                }     
+                
+                //let indx = indicies[indicies.length - 1] + 3
+                let indx = 3
+                for (let i = 1; i < shape.length; ++i) {
+                    //if (!shape[i + 1]) {
+                    //    break
+                    //}
+                    const y1 = shape[i - 1][0]
+                    const z1 = shape[i - 1][1]
+                    const y2 = shape[i][0]
+                    const z2 = shape[i][1]
+
+                    if (i === 2) {
+                        verticies.push(
+                            -x, y1, z1,
+                            x, y1, z1,
+                        )
+                    }
+
+                    verticies.push(
+                        -x, y2, z2,
+                        x, y2, z2,
+                    )
+                    indicies.push(
+                        indx - 2, indx - 1, indx,
+                        indx,  indx - 1, indx + 1,
+                    )
+                    indx = indx + 2
+                }
+
                 const verticesF32 = new Float32Array(verticies)
                 const geometry = new THREE.BufferGeometry()
                 geometry.setIndex(indicies)
@@ -298,7 +336,7 @@ export class Lab {
 
                 const areaData = areasData[i]
 
-                console.log('p', i, JSON.stringify(areaData))
+                // console.log('p', i, JSON.stringify(areaData))
 
                 const result = offset(areaData.perimeter, 2.1, this._root)
                 //const result = offset(areaData.perimeter, 2.1, this._root)
