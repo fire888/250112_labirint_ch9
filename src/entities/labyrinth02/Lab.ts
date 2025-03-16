@@ -46,13 +46,48 @@ export class Lab {
             const label = _M.createLabel(i + '', [1, 1, 1], 5)
             label.position.set(center[0], 2, center[1])
             this._root.studio.add(label)
-            // console.log('perimeter:', i, JSON.stringify({
-            //     center,
-            //     area,
-            //     perimeter: scheme[i].area,
-            //     perimeterInner: scheme[i].offset,
-            // }))
+            console.log('perimeter:', i, JSON.stringify({
+                center,
+                area,
+                perimeter: scheme[i].area,
+                perimeterInner: scheme[i].offset,
+            }))
         }
+
+        // const perimeter: [number, number][] =  
+        //     [
+        //         [20.600655518717495,43.01567717058814],
+        //         [32.728059889327426,55.3385775905888],
+        //         [38.181755227062396,54.73172192920582],
+        //         [42.35139802255235,52.55646372315],
+        //         [43.7556428735288,50.68057511474592],
+        //         [41.32691313747409,43.90862741421412],
+        //         [23.566908486768234,35.0568937172398],
+        //         [22.959069425335358,35.429701639899115],
+        //         [20.600655518717495,43.01567717058814]
+        //     ]
+        
+        // const perimeterInner: [number, number][] = [[0,0]]
+        // // [
+        // //     [26.06278111966764,41.110844014424735],
+        // //     [37.947916352707836,45.026130990695364],
+        // //     [44.644873659330905,36.85945303475018],
+        // //     [44.878249977634056,33.907818073863304],
+        // //     [44.015648303434915,32.66774173501599],
+        // //     [31.138369319547802,35.55167061443489],
+        // //     [26.06278111966764,41.110844014424735]
+        // // ]
+
+        // const areasData = [
+        //     {
+        //         "isDown": true,
+        //         "center":[32.10297559318662,45.881318467211045],
+        //         "area":262.6921896219096,
+        //         "perimeter":perimeter,
+        //         "perimeterInner": perimeterInner,
+        //     }
+
+        // ]
 
         //console.log(areasData)
 
@@ -257,7 +292,6 @@ export class Lab {
         
         const v: number[] = [] 
         const uv: number[] = [] 
-        const uv2: number[] = [] 
 
         for (let i = 0; i < outer.length; ++i) {
             if (!inner[i]) {
@@ -274,11 +308,6 @@ export class Lab {
                     1, 0,
                     .5, 1,
                 )
-                uv2.push(
-                    0, 0,
-                    0, 0,
-                    0, 0,
-                ) 
             }
             if (inner[i].length == 4) {
                 v.push(
@@ -298,46 +327,7 @@ export class Lab {
                     )  
                 )
             }
-            uv2.push(...tyleLightMap.shadowR)
         }
-
-        // for (let i = 0; i < inner.length; ++i) {
-        //     if (!inner[i]) {
-        //         continue
-        //     }
-        //     if (inner[i].length == 4) {
-        //         if (inner[i][0] === inner[i][2] && inner[i][1] === inner[i][3]) {
-        //             v.push(
-        //                 inner[i][0], 0, inner[i][1],       
-        //                 outer[i][0], 0, outer[i][1],
-        //                 outer[i][2], 0, outer[i][3],        
-        //             )
-        //             uv.push(
-        //                 0, 0,
-        //                 1, 0,
-        //                 .5, 1,
-        //             )
-        //             continue;
-        //         }
-
-        //         v.push(
-        //             ..._M.createPolygon(
-        //                 [inner[i][2], 0, inner[i][3]], 
-        //                 [inner[i][0], 0, inner[i][1]], 
-        //                 [outer[i][0], 0, outer[i][1]],  
-        //                 [outer[i][2], 0, outer[i][3]],    
-        //             )                     
-        //         )    
-        //         uv.push(
-        //             ..._M.createUv(
-        //                 [0, 0],
-        //                 [1, 0],
-        //                 [1, 1],
-        //                 [0, 1],    
-        //             )  
-        //         )
-        //     }
-        // }
         return { v, uv }
     }
 
@@ -347,7 +337,21 @@ export class Lab {
         const c: number[] = []
 
         const { perimeter, center } = areaData
-        const offsetPoints = offset(perimeter, .5, this._root)
+
+        for (let i = 0; i < perimeter.length; ++i) {
+            const p = perimeter[i]
+            const l = _M.createLabel(i + '', [1, 1, 1], 5)
+            l.position.set(p[0], 1, p[1])
+            this._root.studio.add(l)
+        }
+
+
+        //const offsetPoints = offset(perimeter, .5, this._root)
+        const offsetPoints = offset(perimeter, 1.5, this._root)
+
+
+
+        console.log('@@@@ offsetPoints', offsetPoints)
 
         const H = -Math.random() * 5 -.2 
         const h = .1
@@ -363,7 +367,9 @@ export class Lab {
             const curO =  offsetPoints.existsLines[i]
             const curI =  offsetPoints.offsetLines[i]
 
+            console.log('@@@@', i)
             if (!prevO || !prevI || !curO || !curI) { continue }
+            console.log('@@@@_draw', i)
 
             /** label */
             // const l = _M.createLabel(i + '', [1, 1, 1], 5)
@@ -372,8 +378,37 @@ export class Lab {
 
             /** проверяем что следующая точка не лежит на предыдущей */
             if (prevI[2] === prevI[0] && prevI[3] === prevI[1]) {
+                // если лежит то значит вертикальной стенки нет 
+                // и надо залить пол и борбюр не четврехугольником а треугольником
+                
+                /** top */
+                v.push( 
+                    prevO[0], h, prevO[1],
+                    curO[0], h, curO[1],  
+                    curI[0], h, curI[1], 
+                )
+                uv.push(...tileMapWall.noiseTree)
+                c.push(
+                    ...COLOR_PERIM,
+                    ...COLOR_PERIM,
+                    ...COLOR_PERIM,
+                )
+
+                /** floor */
+                v.push(
+                    prevO[0], FLOOR_H, prevO[1],
+                    curO[0], FLOOR_H, curO[1],
+                    center[0], FLOOR_H, center[1],
+                )
+                uv.push(...tileMapWall.breakManyTree)
+                c.push(...COLOR_PERIM)
+                c.push(...COLOR_PERIM)
+                c.push(...COLOR_PERIM)
+
                 continue;
             }
+
+            console.log('NOT THREE', i)
 
             const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
 
@@ -443,8 +478,10 @@ export class Lab {
             c.push(...COLOR_PERIM)
             c.push(...COLOR_PERIM)
 
+            console.log('!!!BEFORE VVV last part connect to first', i, offsetPoints.existsLines.length - 1)
             /** last part connect to first */
             if (i === offsetPoints.existsLines.length - 1) {
+                console.log('VVV last part connect to first')
                 const prevO = offsetPoints.existsLines[i]
                 const prevI = offsetPoints.offsetLines[i]
                 const curO =  offsetPoints.existsLines[0]
@@ -453,6 +490,8 @@ export class Lab {
                 if (prevI[2] === prevI[0] && prevI[3] === prevI[1]) {
                     continue;
                 }
+
+                console.log('VVV last part connect to first DRAW')
 
                 const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
                 const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])

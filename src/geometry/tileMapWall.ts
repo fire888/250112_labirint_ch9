@@ -9,6 +9,11 @@ export const tileMapWall = {
         1 * D, 1 * D,
         0, 1 * D,
     ],
+    'noiseTree': [
+        0, 0,
+        1 * D, 0,
+        .5 * D, 1 * D,
+    ],
     'noiseLong': [
         0, 1 * D,
         1 * D, 1 * D,
