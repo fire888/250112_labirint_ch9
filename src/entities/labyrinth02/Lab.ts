@@ -18,241 +18,9 @@ export class Lab {
     async init (root: Root, params = {}) {
         this._root = root
 
-        {
-            const TUNNEL_RADIUS = 2
-            const TUNNEL_RADIAL_SEGMENTS = 16
-            const SIZE = 1
-            const HALF_SIZE = SIZE * 0.5
-
-            const x = HALF_SIZE
-            const r = TUNNEL_RADIUS
-    
-            const shape = [
-                -TUNNEL_RADIUS,
-                0,
-                -TUNNEL_RADIUS,
-                -TUNNEL_RADIUS,
-                TUNNEL_RADIUS,
-                -TUNNEL_RADIUS,
-                TUNNEL_RADIUS,
-                0,
-            ]
-    
-            //for (let i = 0; i < TUNNEL_RADIAL_SEGMENTS + 1; ++i) {
-            //    const phase = i / TUNNEL_RADIAL_SEGMENTS
-            //    const angle = phase * Math.PI
-            //    shape.push(Math.cos(angle), Math.sin(angle))
-            //}
-            {
-                const x = .5
-                const r = 2
-                const TOP_SEGMENTS_COUNT = 18
-        
-                const verticies = []
-                // verticies.push(
-                //     // poligon 1
-                //     -x, r, 0, // v0
-                //     x, r, 0, // v1
-                //     x, r, -r, // v2
-                //     -x, r, -r, // v3
-
-                //     // poligon 2
-                //     x, -r, -r, // v4
-                //     -x, -r, -r, // v5
-                //     -x, r, -r, // v6
-                //     x, r, -r, // v7
-
-                //     // poligon 3
-                //     -x, -r, -r, // v8
-                //     x, -r, -r, // v9
-                //     x, -r, 0, // v10
-                //     -x, -r, 0, // v11
-                // )
-                const indicies = [
-                    // 0, 1, 2, 0, 2, 3,
-                    // 4, 5, 6, 4, 6, 7,
-                    // 8, 9, 10, 8, 10, 11
-                ]
-
-                const shape = []
-                for (let i = 0; i < TOP_SEGMENTS_COUNT + 1; ++i) {
-                    const phase = i / TUNNEL_RADIAL_SEGMENTS
-                    const angle = phase * Math.PI
-                    shape.push([Math.cos(angle) * r, Math.sin(angle) * r])
-                }     
-                
-                //let indx = indicies[indicies.length - 1] + 3
-                let indx = 3
-                for (let i = 1; i < shape.length; ++i) {
-                    //if (!shape[i + 1]) {
-                    //    break
-                    //}
-                    const y1 = shape[i - 1][0]
-                    const z1 = shape[i - 1][1]
-                    const y2 = shape[i][0]
-                    const z2 = shape[i][1]
-
-                    if (i === 2) {
-                        verticies.push(
-                            -x, y1, z1,
-                            x, y1, z1,
-                        )
-                    }
-
-                    verticies.push(
-                        -x, y2, z2,
-                        x, y2, z2,
-                    )
-                    indicies.push(
-                        indx - 2, indx - 1, indx,
-                        indx,  indx - 1, indx + 1,
-                    )
-                    indx = indx + 2
-                }
-
-                const verticesF32 = new Float32Array(verticies)
-                const geometry = new THREE.BufferGeometry()
-                geometry.setIndex(indicies)
-                geometry.setAttribute("position", new THREE.BufferAttribute(verticesF32, 3))
-                geometry.computeVertexNormals()
-                const m = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color: 0x888888 }))
-                root.studio.add(m)
-                m.position.y = 10
-            }
-
-            // const verticies = []
-            // verticies.push(
-            //     // poligon 1
-            //     -x, r, 0, // v0
-            //     x, r, 0, // v1
-            //     x, r, -r, // v2
-
-            //     -x, r, -r, // v3
-
-            //     // poligon 2
-            //     // x, -r, -r,
-            //     // -x, -r, -r,
-            //     // -x, r, -r,
-
-            //     // x, -r, -r,
-            //     // -x, r, -r,
-            //     // x, r, -r,
-
-            //     // // poligon 3
-            //     // -x, -r, -r,
-            //     // x, -r, -r,
-            //     // x, -r, 0,
-
-            //     // -x, -r, -r,
-            //     // x, -r, 0,
-            //     // -x, -r, 0,
-            // )
-
-    
-            // // const verticies = []
-            // const indicies = [
-            //     0, 1, 2, 0, 2, 3,//0, 2, 3,
-            //     //6, 7, 8, 9, 10, 11
-            // ]
-            // // let n = 0
-            // // for (let j = 0; j < shape.length; j += 2) {
-            // //     verticies.push(
-            // //         -HALF_SIZE, shape[j + 2], shape[j + 3], // v0
-            // //         HALF_SIZE, shape[j + 2], shape[j + 3], // v1
-            // //         HALF_SIZE, shape[j], shape[j + 1], // v2
-    
-            // //         -HALF_SIZE, shape[j + 2], shape[j + 3], // v0
-            // //         HALF_SIZE, shape[j], shape[j + 1], // v2
-            // //         -HALF_SIZE, shape[j], shape[j + 1], // v3
-            // //     )
-            // //     indicies.push(
-            // //         n, n + 1, n + 2, 
-            // //         n + 3, n + 4, n + 5,
-            // //     )
-            // //     n += 6
-            // // }
-    
-            // const verticesF32 = new Float32Array(verticies)
-            // const geometry = new THREE.BufferGeometry()
-            // geometry.setIndex(indicies)
-            // geometry.setAttribute("position", new THREE.BufferAttribute(verticesF32, 3))
-            // geometry.computeVertexNormals()
-
-            // console.log('!!!', geometry)
-    
-            // const m = _M.createMesh({ v: verticies, material: new THREE.MeshPhongMaterial({ color: 0x888888 }) })
-            // root.studio.add(m)
-            // m.position.y = 10
-        }
-
-
-
-
-
-
-        // const TUNNEL_RADIUS = 2
-        // const TUNNEL_RADIAL_SEGMENTS = 6
-
-        // const shape = [
-        //     -TUNNEL_RADIUS / 2, 0,
-        //     -TUNNEL_RADIUS / 2, -TUNNEL_RADIUS / 2,
-        //     TUNNEL_RADIUS / 2, -TUNNEL_RADIUS / 2,
-        //     TUNNEL_RADIUS / 2, 0, 
-        // ]
-
-        // for (let i = 0; i < TUNNEL_RADIAL_SEGMENTS + 1; ++i) {
-        //     const phase = i / TUNNEL_RADIAL_SEGMENTS
-        //     const angle = phase * Math.PI
-        //     shape.push(Math.cos(angle), Math.sin(angle))   
-        // }
-
-        // const verticies = []
-        // for (let j = 0; j < shape.length; j += 2) {
-        //     verticies.push(
-        //         shape[j + 2], shape[j + 3], -1,
-        //         shape[j + 2], shape[j + 3], 1,
-        //         shape[j], shape[j + 1], 1,
-
-        //         shape[j + 2], shape[j + 3], -1,
-        //         shape[j], shape[j + 1], 1,
-        //         shape[j], shape[j + 1], -1,
-        //     )
-        // }
-
-        // const verticesF32 = new Float32Array(verticies)
-        // const geometry = new THREE.BufferGeometry()
-        // geometry.setAttribute('position', new THREE.BufferAttribute(verticesF32, 3))
-        // geometry.computeVertexNormals()
-
-        // const m = _M.createMesh({ v: verticies, material: new THREE.MeshPhongMaterial({ color: 0x888888 }) })
-        // root.studio.add(m)
-        // m.position.y = 10
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         const scheme = createScheme(root)
 
         const areasData = []
-
-
 
         for (let i = 0; i < scheme.length; ++i) {
             const random = Math.random() 
@@ -266,8 +34,6 @@ export class Lab {
             // l.position.set(center[0], 1, center[1])
             // root.studio.add(l)
 
-
-
             areasData.push({
                 center,
                 area,
@@ -280,12 +46,12 @@ export class Lab {
             const label = _M.createLabel(i + '', [1, 1, 1], 5)
             label.position.set(center[0], 2, center[1])
             this._root.studio.add(label)
-            console.log('perimeter:', i, JSON.stringify({
-                center,
-                area,
-                perimeter: scheme[i].area,
-                perimeterInner: scheme[i].offset,
-            }))
+            // console.log('perimeter:', i, JSON.stringify({
+            //     center,
+            //     area,
+            //     perimeter: scheme[i].area,
+            //     perimeterInner: scheme[i].offset,
+            // }))
         }
 
         //console.log(areasData)
