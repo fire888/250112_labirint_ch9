@@ -40,6 +40,7 @@ export class Lab {
                 perimeter: scheme[i].area,
                 perimeterInner: scheme[i].offset,
                 isDown,
+                //isDown: true,
             })
 
             /** draw index area */
@@ -86,7 +87,6 @@ export class Lab {
         //         "perimeter":perimeter,
         //         "perimeterInner": perimeterInner,
         //     }
-
         // ]
 
         //console.log(areasData)
@@ -338,17 +338,18 @@ export class Lab {
 
         const { perimeter, center } = areaData
 
-        for (let i = 0; i < perimeter.length; ++i) {
-            const p = perimeter[i]
-            const l = _M.createLabel(i + '', [1, 1, 1], 5)
-            l.position.set(p[0], 1, p[1])
-            this._root.studio.add(l)
-        }
-
 
         //const offsetPoints = offset(perimeter, .5, this._root)
         const offsetPoints = offset(perimeter, 1.5, this._root)
 
+        let Y = 1
+        for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
+            const p = offsetPoints.offsetLines[i]
+            const l = _M.createLabel(i + '', [1, 1, 1], 5)
+            l.position.set(p[2], Y, p[3])
+            Y += .3
+            this._root.studio.add(l)
+        }
 
 
         console.log('@@@@ offsetPoints', offsetPoints)
@@ -362,30 +363,34 @@ export class Lab {
         let savedPrevAngle = null
 
         for (let i = 1; i < offsetPoints.existsLines.length; ++i) {
-            const prevO = offsetPoints.existsLines[i - 1]
-            const prevI = offsetPoints.offsetLines[i - 1]
-            const curO =  offsetPoints.existsLines[i]
-            const curI =  offsetPoints.offsetLines[i]
+            const prev_O_X = offsetPoints.existsLines[i][0]
+            const prev_O_Z = offsetPoints.existsLines[i][1]
+            const prev_I_X = offsetPoints.offsetLines[i][0]
+            const prev_I_Z = offsetPoints.offsetLines[i][1]
+            const cur_O_X =  offsetPoints.existsLines[i][2]
+            const cur_O_Z =  offsetPoints.existsLines[i][3]
+            const cur_I_X =  offsetPoints.offsetLines[i][2]
+            const cur_I_Z =  offsetPoints.offsetLines[i][3]
 
-            console.log('@@@@', i)
-            if (!prevO || !prevI || !curO || !curI) { continue }
-            console.log('@@@@_draw', i)
+            // if (
+            //     !prev_O_X || !prev_O_Z || !prev_I_X || !prev_I_Z || 
+            //     !cur_O_X || !cur_O_Z || !cur_I_X || !cur_I_Z 
+            // ) { continue }
 
-            /** label */
-            // const l = _M.createLabel(i + '', [1, 1, 1], 5)
-            // l.position.set(prevI[0], 1, prevI[1])
-            // this._root.studio.add(l)
 
             /** проверяем что следующая точка не лежит на предыдущей */
-            if (prevI[2] === prevI[0] && prevI[3] === prevI[1]) {
+            //console.log('prevI', prevI)
+            if (prev_I_X === cur_I_X && prev_I_Z === cur_I_Z) {
+                console.log('@@@@_draw TRIANGLE', i)
+
                 // если лежит то значит вертикальной стенки нет 
                 // и надо залить пол и борбюр не четврехугольником а треугольником
                 
                 /** top */
                 v.push( 
-                    prevO[0], h, prevO[1],
-                    curO[0], h, curO[1],  
-                    curI[0], h, curI[1], 
+                    prev_O_X, h, prev_O_Z,
+                    cur_O_X, h, cur_O_Z,  
+                    cur_I_X, h, cur_I_Z, 
                 )
                 uv.push(...tileMapWall.noiseTree)
                 c.push(
@@ -396,8 +401,8 @@ export class Lab {
 
                 /** floor */
                 v.push(
-                    prevO[0], FLOOR_H, prevO[1],
-                    curO[0], FLOOR_H, curO[1],
+                    prev_O_X, FLOOR_H, prev_O_Z,
+                    cur_O_X, FLOOR_H, cur_O_Z,
                     center[0], FLOOR_H, center[1],
                 )
                 uv.push(...tileMapWall.breakManyTree)
@@ -408,21 +413,18 @@ export class Lab {
                 continue;
             }
 
-            console.log('NOT THREE', i)
-
-            const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
-
-            const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
+            const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+            const d = _M.dist([prev_I_X, prev_I_Z], [cur_I_X, cur_I_Z])
             
             const r = createWall_02(d, H)
             _M.rotateVerticesY(r.v, -angle + Math.PI)
-            _M.translateVertices(r.v, prevI[2], hG, prevI[3])
+            _M.translateVertices(r.v, cur_I_X, hG, cur_I_Z)
             v.push(...r.v)
             uv.push(...r.uv)
             c.push(...r.c)
 
             if (savedPrevAngle) {
-                const r = createAngleWall_02([prevI[0], hG, prevI[1]], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
+                const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
                 v.push(...r.v)
                 uv.push(...r.uv)
                 c.push(...r.c)
@@ -436,10 +438,10 @@ export class Lab {
 
             /** top */
             v.push(..._M.createPolygon(
-                [prevI[0], h, prevI[1]], 
-                [prevO[0], h, prevO[1]],
-                [curO[0], h, curO[1]],  
-                [curI[0], h, curI[1]], 
+                [prev_I_X, h, prev_I_Z], 
+                [prev_O_X, h, prev_O_Z],
+                [cur_O_X, h, cur_O_Z],  
+                [cur_I_X, h, cur_I_Z], 
 
             ))
             uv.push(...tileMapWall.noiseLong)
@@ -447,10 +449,10 @@ export class Lab {
 
             /** outer */
             v.push(..._M.createPolygon( 
-                [prevO[0], h, prevO[1]],
-                [prevO[0], 0, prevO[1]],
-                [curO[0], 0, curO[1]],  
-                [curO[0], h, curO[1]], 
+                [prev_O_X, h, prev_O_Z],
+                [prev_O_X, 0, prev_O_Z],
+                [cur_O_X, 0, cur_O_Z],  
+                [cur_O_X, h, cur_O_Z], 
 
             ))
             uv.push(...tileMapWall.noiseLong)
@@ -458,10 +460,10 @@ export class Lab {
 
             /** inner */
             v.push(..._M.createPolygon( 
-                [prevI[0], hG, prevI[1]],
-                [prevI[0], h, prevI[1]],
-                [curI[0], h, curI[1]],  
-                [curI[0], hG, curI[1]], 
+                [prev_I_X, hG, prev_I_Z],
+                [prev_I_X, h, prev_I_Z],
+                [cur_I_X, h, cur_I_Z],  
+                [cur_I_X, hG, cur_I_Z], 
 
             ))
             uv.push(...tileMapWall.noiseLong)
@@ -469,8 +471,8 @@ export class Lab {
 
             /** fill floor */
             v.push(
-                prevO[0], FLOOR_H, prevO[1],
-                curO[0], FLOOR_H, curO[1],
+                prev_O_X, FLOOR_H, prev_O_Z,
+                cur_O_X, FLOOR_H, cur_O_Z,
                 center[0], FLOOR_H, center[1],
             )
             uv.push(...tileMapWall.breakManyTree)
@@ -478,64 +480,65 @@ export class Lab {
             c.push(...COLOR_PERIM)
             c.push(...COLOR_PERIM)
 
-            console.log('!!!BEFORE VVV last part connect to first', i, offsetPoints.existsLines.length - 1)
             /** last part connect to first */
             if (i === offsetPoints.existsLines.length - 1) {
-                console.log('VVV last part connect to first')
-                const prevO = offsetPoints.existsLines[i]
-                const prevI = offsetPoints.offsetLines[i]
-                const curO =  offsetPoints.existsLines[0]
-                const curI =  offsetPoints.offsetLines[0]
+                const prev_O_X = offsetPoints.existsLines[i][2]
+                const prev_O_Z = offsetPoints.existsLines[i][3]
+                const prev_I_X = offsetPoints.offsetLines[i][2]
+                const prev_I_Z = offsetPoints.offsetLines[i][3]
 
-                if (prevI[2] === prevI[0] && prevI[3] === prevI[1]) {
+                const cur_O_X =  offsetPoints.existsLines[0][2]
+                const cur_O_Z =  offsetPoints.existsLines[0][3]
+                const cur_I_X =  offsetPoints.offsetLines[0][2]
+                const cur_I_Z =  offsetPoints.offsetLines[0][3]
+
+
+                if (prev_I_X === cur_I_X && prev_I_Z === cur_I_Z) {
                     continue;
                 }
 
-                console.log('VVV last part connect to first DRAW')
-
-                const angle = _M.angleFromCoords(prevI[2] - prevI[0], prevI[3] - prevI[1])
-                const d = _M.dist([prevI[0], prevI[1]], [prevI[2], prevI[3]])
-                
+                const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+                const d = _M.dist([prev_I_X, prev_I_Z], [cur_I_X, cur_I_Z])
                 const r = createWall_02(d, H)
                 _M.rotateVerticesY(r.v, -angle + Math.PI)
-                _M.translateVertices(r.v, prevI[2], hG, prevI[3])
+                _M.translateVertices(r.v, cur_I_X, hG, cur_I_Z)
                 v.push(...r.v)
                 uv.push(...r.uv)
                 c.push(...r.c)
 
                 /** top */
                 v.push(..._M.createPolygon(
-                    [prevI[0], h, prevI[1]], 
-                    [prevO[0], h, prevO[1]],
-                    [curO[0], h, curO[1]],  
-                    [curI[0], h, curI[1]], 
+                    [prev_I_X, h, prev_I_Z], 
+                    [prev_O_X, h, prev_O_Z],
+                    [cur_O_X, h, cur_O_Z],  
+                    [cur_I_X, h, cur_I_Z], 
                 ))
                 uv.push(...tileMapWall.noiseLong)
                 c.push(..._M.fillColorFace(COLOR_PERIM))
 
                 /** outer */
                 v.push(..._M.createPolygon(
-                    [prevO[0], h, prevO[1]], 
-                    [prevO[0], 0, prevO[1]],
-                    [curO[0], 0, curO[1]],  
-                    [curO[0], h, curO[1]], 
+                    [prev_O_X, h, prev_O_Z], 
+                    [prev_O_X, 0, prev_O_Z],
+                    [cur_O_X, 0, cur_O_Z],  
+                    [cur_O_X, h, cur_O_Z], 
                 ))
                 uv.push(...tileMapWall.noiseLong)
                 c.push(..._M.fillColorFace(COLOR_PERIM))
 
                 /** inner */
                 v.push(..._M.createPolygon( 
-                    [prevI[0], hG, prevI[1]],
-                    [prevI[0], h, prevI[1]],
-                    [curI[0], h, curI[1]],  
-                    [curI[0], hG, curI[1]], 
+                    [prev_I_X, hG, prev_I_Z],
+                    [prev_I_X, h, prev_I_Z],
+                    [cur_I_X, h, cur_I_Z],  
+                    [cur_I_X, hG, cur_I_Z], 
                 ))
                 uv.push(...tileMapWall.noiseLong)
                 c.push(..._M.fillColorFace(COLOR_PERIM))
 
-                /** cap prev */
+                // /** cap prev */
                 {
-                    const r = createAngleWall_02([prevI[0], hG, prevI[1]], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
+                    const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
                     v.push(...r.v)
                     uv.push(...r.uv)
                     c.push(...r.c)
@@ -543,7 +546,7 @@ export class Lab {
 
                 /** cap angle with next  */
                 {
-                    const r = createAngleWall_02([prevI[2], hG, prevI[3]], -savedStartAngle + Math.PI, -angle + Math.PI, H)
+                    const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -angle + Math.PI, H)
                     v.push(...r.v)
                     uv.push(...r.uv)
                     c.push(...r.c)
@@ -551,8 +554,8 @@ export class Lab {
 
                 /** fill floor */
                 v.push(
-                    prevO[0], FLOOR_H, prevO[1],
-                    curO[0], FLOOR_H, curO[1],
+                    prev_O_X, FLOOR_H, prev_O_Z,
+                    cur_O_X, FLOOR_H, cur_O_Z,
                     center[0], FLOOR_H, center[1],
                 )
                 uv.push(...tileMapWall.breakManyTree)
