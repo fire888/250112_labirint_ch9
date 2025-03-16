@@ -43,6 +43,7 @@ export const createWall_02 = (d: number, h: number) => {
     return { v, uv, c }
 }
 
+let HH = 0
 export const createAngleWall_02 = (pos: A3, angleStart: number, angleEnd: number, h: number) => {
     const v: number[] = []
     const c: number[] = []
@@ -78,8 +79,13 @@ export const createAngleWall_02 = (pos: A3, angleStart: number, angleEnd: number
         }
     })
     if (!isValid) {
-        console.log('MMM', pos, angleStart, angleEnd, h)
+        console.log('NOT VALID', pos, angleStart, angleEnd, h)
     }
+
+    // for (let i = 0; i < v.length; i += 3) {
+    //     v[i + 1] += HH
+    // }
+    // HH += 2
 
     return { v, c, uv }
 }

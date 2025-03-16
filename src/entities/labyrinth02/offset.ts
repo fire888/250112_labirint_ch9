@@ -10,6 +10,7 @@ export const offset = (points: [number, number][], d: number, root: Root): {
     centerX: number, 
     centerY: number,
 } => {
+    const angles: number[] = [] 
     const existsLines: [number, number, number, number][] = []
     for (let i = 1; i < points.length; ++i) {
         const pr = points[i - 1]
@@ -43,6 +44,8 @@ export const offset = (points: [number, number][], d: number, root: Root): {
     for (let i = 0; i < existsLines.length; ++i) {
         let angle = _M.angleFromCoords(existsLines[i][0] - existsLines[i][2], existsLines[i][1] - existsLines[i][3])
         angle += Math.PI * .5
+
+        angles.push(angle)
 
         const xNewPR = existsLines[i][0] + d * Math.cos(angle)
         const yNewPR = existsLines[i][1] + d * Math.sin(angle)

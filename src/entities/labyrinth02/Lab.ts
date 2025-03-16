@@ -41,8 +41,8 @@ export class Lab {
                 area,
                 perimeter: scheme[i].area,
                 perimeterInner: scheme[i].offset,
-                isDown,
-                //isDown: true,
+                //isDown,
+                isDown: true,
             })
 
             /** draw index area */
@@ -57,43 +57,26 @@ export class Lab {
             }))
         }
 
-        // const perimeter: [number, number][] =  
-        //     [
-        //         [20.600655518717495,43.01567717058814],
-        //         [32.728059889327426,55.3385775905888],
-        //         [38.181755227062396,54.73172192920582],
-        //         [42.35139802255235,52.55646372315],
-        //         [43.7556428735288,50.68057511474592],
-        //         [41.32691313747409,43.90862741421412],
-        //         [23.566908486768234,35.0568937172398],
-        //         [22.959069425335358,35.429701639899115],
-        //         [20.600655518717495,43.01567717058814]
-        //     ]
+        // const perimeter: [number, number][] =  [
+        //     [42.47694420783926,0],
+        //     [42.492043232012,0.6030851328379119],
+        //     [54.33241529909681,7.417178133610525],
+        //     [58.326165351086274,0],[42.47694420783926,0]
+        // ]
         
         // const perimeterInner: [number, number][] = [[0,0]]
-        // // [
-        // //     [26.06278111966764,41.110844014424735],
-        // //     [37.947916352707836,45.026130990695364],
-        // //     [44.644873659330905,36.85945303475018],
-        // //     [44.878249977634056,33.907818073863304],
-        // //     [44.015648303434915,32.66774173501599],
-        // //     [31.138369319547802,35.55167061443489],
-        // //     [26.06278111966764,41.110844014424735]
-        // // ]
-
-        // const areasData = [
+        // const areasData = [ 
         //     {
         //         "isDown": true,
-        //         "center":[32.10297559318662,45.881318467211045],
-        //         "area":262.6921896219096,
-        //         "perimeter":perimeter,
+        //         "center":[51.41370498205763,2.4837480469870554],
+        //         "area":62.29718135222177,
+        //         "perimeter": perimeter,
         //         "perimeterInner": perimeterInner,
         //     }
         // ]
 
-        //console.log(areasData)
 
-        //return;
+
 
         /** walls */
         {
@@ -340,8 +323,6 @@ export class Lab {
 
         const { perimeter, center } = areaData
 
-
-        //const offsetPoints = offset(perimeter, .5, this._root)
         const offsetPoints = offset(perimeter, 1.5, this._root)
 
         let Y = 1
@@ -351,6 +332,18 @@ export class Lab {
             l.position.set(p[2], Y, p[3])
             Y += .3
             this._root.studio.add(l)
+        }
+
+        // calculate angles
+        const angles: number[] = []
+        for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
+            const prev_I_X = offsetPoints.offsetLines[i][0]
+            const prev_I_Z = offsetPoints.offsetLines[i][1]
+            const cur_I_X =  offsetPoints.offsetLines[i][2]
+            const cur_I_Z =  offsetPoints.offsetLines[i][3]
+            
+            const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+            angles.push(Number.isNaN(angle) ? 1000 : angle) 
         }
 
         const H = -Math.random() * 5 -.2 
@@ -390,18 +383,21 @@ export class Lab {
             uv.push(...result.uv)   
 
             const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
-            
-            if (savedPrevAngle) {
-                const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
-                v.push(...r.v)
-                uv.push(...r.uv)
-                c.push(...r.c)
-            }
-            savedPrevAngle = angle
+            if (!Number.isNaN(angle)) {
+                if (savedPrevAngle) {
+                    const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
+                    v.push(...r.v)
+                    uv.push(...r.uv)
+                    c.push(...r.c)
+                }
+                savedPrevAngle = angle
 
-            if (i === 1) {
-                savedStartAngle = angle
+                if (i > 0 && savedStartAngle !== null) {
+                    savedStartAngle = angle
+                }
             }
+            
+
 
             /** last part connect to first */
             if (i === offsetPoints.existsLines.length - 1) {
@@ -433,35 +429,30 @@ export class Lab {
                 c.push(...result.c)
                 uv.push(...result.uv)  
 
-                /** cap prev */
-                // {
-                //     const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
-                //     v.push(...r.v)
-                //     uv.push(...r.uv)
-                //     c.push(...r.c)
-                // }
-
                 const newAngle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
 
-                {
-                    const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -newAngle + Math.PI, -angle + Math.PI, H)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
+                if (!Number.isNaN(newAngle)) {
+                    {
+                        const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -newAngle + Math.PI, -angle + Math.PI, H)
+                        v.push(...r.v)
+                        uv.push(...r.uv)
+                        c.push(...r.c)
+                    }
+
+                    // /** cap angle with next  */
+                    {
+                        const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
+                        v.push(...r.v)
+                        uv.push(...r.uv)
+                        c.push(...r.c)
+                    }
+
                 }
 
                 {
                     const label = _M.createLabel(i + '_ANGLE CAP', [1, .3, .3], 5)  
                     label.position.set(prev_I_X, 2, prev_I_Z)  
                     this._root.studio.add(label)
-                }
-
-                // /** cap angle with next  */
-                {
-                    const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
                 }
             } 
         }
