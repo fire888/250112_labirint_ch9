@@ -392,7 +392,7 @@ export class Lab {
                 }
                 savedPrevAngle = angle
 
-                if (i > 0 && savedStartAngle !== null) {
+                if (i > 0 && savedStartAngle === null) {
                     savedStartAngle = angle
                 }
             }
@@ -441,6 +441,7 @@ export class Lab {
 
                     // /** cap angle with next  */
                     {
+                        //const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
                         const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
                         v.push(...r.v)
                         uv.push(...r.uv)
