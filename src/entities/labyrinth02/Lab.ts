@@ -22,58 +22,60 @@ export class Lab {
 
         const scheme = createScheme(root)
 
-        const areasData = []
+        // const areasData = []
 
-        for (let i = 0; i < scheme.length; ++i) {
-            const random = Math.random() 
-            const isDown = random < .2 
+        // for (let i = 0; i < scheme.length; ++i) {
+        //     const random = Math.random() 
+        //     const isDown = random < .2 
 
-            const area = _M.area(scheme[i].area)
-            const center = _M.center(scheme[i].area) 
+        //     const area = _M.area(scheme[i].area)
+        //     const center = _M.center(scheme[i].area) 
             
-            /** label */
-            // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
-            // l.position.set(center[0], 1, center[1])
-            // root.studio.add(l)
+        //     /** label */
+        //     // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
+        //     // l.position.set(center[0], 1, center[1])
+        //     // root.studio.add(l)
 
-            areasData.push({
-                center,
-                area,
-                perimeter: scheme[i].area,
-                perimeterInner: scheme[i].offset,
-                //isDown,
-                isDown: true,
-            })
+        //     areasData.push({
+        //         center,
+        //         area,
+        //         perimeter: scheme[i].area,
+        //         perimeterInner: scheme[i].offset,
+        //         //isDown,
+        //         isDown: true,
+        //     })
 
-            /** draw index area */
-            const label = _M.createLabel(i + '', [1, 1, 1], 5)
-            label.position.set(center[0], 2, center[1])
-            this._root.studio.add(label)
-            console.log('perimeter:', i, JSON.stringify({
-                center,
-                area,
-                perimeter: scheme[i].area,
-                perimeterInner: scheme[i].offset,
-            }))
-        }
+        //     /** draw index area */
+        //     const label = _M.createLabel(i + '', [1, 1, 1], 5)
+        //     label.position.set(center[0], 2, center[1])
+        //     this._root.studio.add(label)
+        //     console.log('perimeter:', i, JSON.stringify({
+        //         center,
+        //         area,
+        //         perimeter: scheme[i].area,
+        //         perimeterInner: scheme[i].offset,
+        //     }))
+        // }
 
-        // const perimeter: [number, number][] =  [
-        //     [42.47694420783926,0],
-        //     [42.492043232012,0.6030851328379119],
-        //     [54.33241529909681,7.417178133610525],
-        //     [58.326165351086274,0],[42.47694420783926,0]
-        // ]
-        
-        // const perimeterInner: [number, number][] = [[0,0]]
-        // const areasData = [ 
-        //     {
-        //         "isDown": true,
-        //         "center":[51.41370498205763,2.4837480469870554],
-        //         "area":62.29718135222177,
-        //         "perimeter": perimeter,
-        //         "perimeterInner": perimeterInner,
-        //     }
-        // ]
+
+
+        const perimeter: [number, number][] =  
+        [
+            [-1.7763568394002505e-15,72.85891142127764],
+            [10.594787113789055,75.78999543204117],
+            [8.53184871416288,58.934492733245065],
+            [0,63.34405293417792],[0,72.85891142127764]
+        ]
+        const perimeterInner: [number, number][] = [[0,0]]
+        const areasData = [ 
+            {
+                "isDown": true,
+                "center":[5.245558186050693,67.86704444914776],
+                "area":126.85657508995529,
+                "perimeter": perimeter,
+                "perimeterInner": perimeterInner,
+            }
+        ]
 
 
 
@@ -99,7 +101,6 @@ export class Lab {
                     uv.push(...r.uv)
                     c.push(...r.c)
                 }
-
             }
             const m = _M.createMesh({ 
                 v, 
@@ -324,6 +325,8 @@ export class Lab {
         const { perimeter, center } = areaData
 
         const offsetPoints = offset(perimeter, 1.5, this._root)
+
+        console.log('HHHHH', offsetPoints)
 
         let Y = 1
         for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
