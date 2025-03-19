@@ -633,5 +633,7 @@ export const _M = {
             resolve(true)
         })
     }),
+
+    toleranceToZero: (num: number, tolerance = 1e-10) => Math.abs(num) < tolerance ? 0 : num,
 }
 

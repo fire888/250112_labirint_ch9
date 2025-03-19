@@ -22,60 +22,60 @@ export class Lab {
 
         const scheme = createScheme(root)
 
-        // const areasData = []
+        const areasData = []
 
-        // for (let i = 0; i < scheme.length; ++i) {
-        //     const random = Math.random() 
-        //     const isDown = random < .2 
+        for (let i = 0; i < scheme.length; ++i) {
+            const random = Math.random() 
+            const isDown = random < .2 
 
-        //     const area = _M.area(scheme[i].area)
-        //     const center = _M.center(scheme[i].area) 
+            const area = _M.area(scheme[i].area)
+            const center = _M.center(scheme[i].area) 
             
-        //     /** label */
-        //     // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
-        //     // l.position.set(center[0], 1, center[1])
-        //     // root.studio.add(l)
+            /** label */
+            // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
+            // l.position.set(center[0], 1, center[1])
+            // root.studio.add(l)
 
-        //     areasData.push({
-        //         center,
-        //         area,
-        //         perimeter: scheme[i].area,
-        //         perimeterInner: scheme[i].offset,
-        //         //isDown,
-        //         isDown: true,
-        //     })
+            areasData.push({
+                center,
+                area,
+                perimeter: scheme[i].area,
+                perimeterInner: scheme[i].offset,
+                isDown,
+                //isDown: true,
+            })
 
-        //     /** draw index area */
-        //     const label = _M.createLabel(i + '', [1, 1, 1], 5)
-        //     label.position.set(center[0], 2, center[1])
-        //     this._root.studio.add(label)
-        //     console.log('perimeter:', i, JSON.stringify({
-        //         center,
-        //         area,
-        //         perimeter: scheme[i].area,
-        //         perimeterInner: scheme[i].offset,
-        //     }))
-        // }
+            // /** draw index area */
+            // const label = _M.createLabel(i + '', [1, 1, 1], 5)
+            // label.position.set(center[0], 2, center[1])
+            // this._root.studio.add(label)
+            // console.log('perimeter:', i, JSON.stringify({
+            //     center,
+            //     area,
+            //     perimeter: scheme[i].area,
+            //     perimeterInner: scheme[i].offset,
+            // }))
+        }
 
 
 
-        const perimeter: [number, number][] =  
-        [
-            [-1.7763568394002505e-15,72.85891142127764],
-            [10.594787113789055,75.78999543204117],
-            [8.53184871416288,58.934492733245065],
-            [0,63.34405293417792],[0,72.85891142127764]
-        ]
-        const perimeterInner: [number, number][] = [[0,0]]
-        const areasData = [ 
-            {
-                "isDown": true,
-                "center":[5.245558186050693,67.86704444914776],
-                "area":126.85657508995529,
-                "perimeter": perimeter,
-                "perimeterInner": perimeterInner,
-            }
-        ]
+        // const perimeter: [number, number][] =  
+        // [
+        //     [-1.7763568394002505e-15,72.85891142127764],
+        //     [10.594787113789055,75.78999543204117],
+        //     [8.53184871416288,58.934492733245065],
+        //     [0,63.34405293417792],[0,72.85891142127764]
+        // ]
+        // const perimeterInner: [number, number][] = [[0,0]]
+        // const areasData = [ 
+        //     {
+        //         "isDown": true,
+        //         "center":[5.245558186050693,67.86704444914776],
+        //         "area":126.85657508995529,
+        //         "perimeter": perimeter,
+        //         "perimeterInner": perimeterInner,
+        //     }
+        // ]
 
 
 
@@ -326,16 +326,35 @@ export class Lab {
 
         const offsetPoints = offset(perimeter, 1.5, this._root)
 
-        console.log('HHHHH', offsetPoints)
+        //console.log('HHHHH', offsetPoints)
 
-        let Y = 1
-        for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
-            const p = offsetPoints.offsetLines[i]
-            const l = _M.createLabel(i + '', [1, 1, 1], 5)
-            l.position.set(p[2], Y, p[3])
-            Y += .3
-            this._root.studio.add(l)
-        }
+        // let Y = 1
+        // for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
+        //     const p = offsetPoints.offsetLines[i]
+
+        //     // const l = _M.createLabel('s' + i + '', [1, 1, 1], 5)
+        //     // l.position.set(p[0], Y, p[1])
+        //     // this._root.studio.add(l)
+
+        //     // const l1 = _M.createLabel('e' + i + '', [1, 1, 1], 5)
+        //     // l1.position.set(p[2], Y, p[3])
+        //     // Y += .5
+        //     // this._root.studio.add(l1)
+        // }
+
+        // let YY = 1
+        // for (let i = 0; i < offsetPoints.existsLines.length; ++i) {
+        //     const p = offsetPoints.existsLines[i]
+
+        //     // const l = _M.createLabel('s' + i, [1, .5, .5], 5)
+        //     // l.position.set(p[0], YY, p[1])
+        //     // this._root.studio.add(l)
+
+        //     // const l1 = _M.createLabel("e" + i + '', [1, .5, 1], 5)
+        //     // l1.position.set(p[2], YY, p[3])
+        //     // YY += .6
+        //     // this._root.studio.add(l1)
+        // }
 
         // calculate angles
         const angles: number[] = []
@@ -453,11 +472,11 @@ export class Lab {
 
                 }
 
-                {
-                    const label = _M.createLabel(i + '_ANGLE CAP', [1, .3, .3], 5)  
-                    label.position.set(prev_I_X, 2, prev_I_Z)  
-                    this._root.studio.add(label)
-                }
+                // {
+                //     const label = _M.createLabel(i + '_ANGLE CAP', [1, .3, .3], 5)  
+                //     label.position.set(prev_I_X, 2, prev_I_Z)  
+                //     this._root.studio.add(label)
+                // }
             } 
         }
 

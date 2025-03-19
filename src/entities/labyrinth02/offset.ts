@@ -12,14 +12,33 @@ export const offset = (points: [number, number][], d: number, root: Root): {
 } => {
     const angles: number[] = [] 
     const existsLines: [number, number, number, number][] = []
-    for (let i = 1; i < points.length; ++i) {
-        const pr = points[i - 1]
-        const cr = points[i]
+
+    for (let i = 0; i < points.length; ++i) {
+        points[i][0] = _M.toleranceToZero(points[i][0])
+        points[i][1] = _M.toleranceToZero(points[i][1])
+    }
+
+    const filteredPoints = []
+    for (let i = 0; i < points.length; ++i) {
+        if (i === 0) {
+            filteredPoints.push(points[i])
+        }
+        if (i > 0) {
+            const prev = points[i - 1]
+            if (prev [0] !== points[i][0] || prev[1] !== points[i][1]) {
+                filteredPoints.push(points[i])
+            }
+        }     
+    }
+
+    for (let i = 1; i < filteredPoints.length; ++i) {
+        const pr = filteredPoints[i - 1]
+        const cr = filteredPoints[i]
         existsLines.push([pr[0], pr[1], cr[0], cr[1]])
 
-        if (i === points.length - 1) {
-            const pr = points[i]
-            const cr = points[0]
+        if (i === filteredPoints.length - 1) {
+            const pr = filteredPoints[i]
+            const cr = filteredPoints[0]
             if (pr[0] !== cr[0] || pr[1] !== cr[1]) {
                 existsLines.push([pr[0], pr[1], cr[0], cr[1]])
             }
@@ -36,7 +55,7 @@ export const offset = (points: [number, number][], d: number, root: Root): {
     // }
 
 
-    const [ cX, cY ] = _M.center(points) 
+    const [ cX, cY ] = _M.center(filteredPoints) 
 
     const innerLines: [number, number, number, number][] = []
 
@@ -47,10 +66,10 @@ export const offset = (points: [number, number][], d: number, root: Root): {
 
         angles.push(angle)
 
-        const xNewPR = existsLines[i][0] + d * Math.cos(angle)
-        const yNewPR = existsLines[i][1] + d * Math.sin(angle)
-        const xNewCR = existsLines[i][2] + d * Math.cos(angle)
-        const yNewCR = existsLines[i][3] + d * Math.sin(angle)
+        const xNewPR = _M.toleranceToZero(existsLines[i][0] + d * Math.cos(angle))
+        const yNewPR = _M.toleranceToZero(existsLines[i][1] + d * Math.sin(angle))
+        const xNewCR = _M.toleranceToZero(existsLines[i][2] + d * Math.cos(angle))
+        const yNewCR = _M.toleranceToZero(existsLines[i][3] + d * Math.sin(angle))
 
         innerLines.push([xNewPR, yNewPR, xNewCR, yNewCR])
     }
