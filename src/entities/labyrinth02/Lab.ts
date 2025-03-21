@@ -22,57 +22,97 @@ export class Lab {
 
         const scheme = createScheme(root)
 
-        const areasData = []
+        // const areasData = []
 
-        for (let i = 0; i < scheme.length; ++i) {
-            const random = Math.random() 
-            const isDown = random < .2 
+        // for (let i = 0; i < scheme.length; ++i) {
+        //     const random = Math.random() 
+        //     const isDown = random < .2 
 
-            const area = _M.area(scheme[i].area)
-            const center = _M.center(scheme[i].area) 
+        //     const area = _M.area(scheme[i].area)
+        //     const center = _M.center(scheme[i].area) 
             
-            /** label */
-            // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
-            // l.position.set(center[0], 1, center[1])
-            // root.studio.add(l)
+        //     /** label */
+        //     // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
+        //     // l.position.set(center[0], 1, center[1])
+        //     // root.studio.add(l)
 
-            areasData.push({
-                center,
-                area,
-                perimeter: scheme[i].area,
-                perimeterInner: scheme[i].offset,
-                isDown,
-                //isDown: true,
-            })
+        //     areasData.push({
+        //         center,
+        //         area,
+        //         perimeter: scheme[i].area,
+        //         perimeterInner: scheme[i].offset,
+        //         //isDown,
+        //         isDown: true,
+        //     })
 
-            // /** draw index area */
-            // const label = _M.createLabel(i + '', [1, 1, 1], 5)
-            // label.position.set(center[0], 2, center[1])
-            // this._root.studio.add(label)
-            // console.log('perimeter:', i, JSON.stringify({
-            //     center,
-            //     area,
-            //     perimeter: scheme[i].area,
-            //     perimeterInner: scheme[i].offset,
-            // }))
-        }
+        //     /** draw index area */
+        //     const label = _M.createLabel(i + '', [1, 1, 1], 5)
+        //     label.position.set(center[0], 2, center[1])
+        //     this._root.studio.add(label)
+        //     console.log('perimeter:', i, JSON.stringify({
+        //         center,
+        //         area,
+        //         perimeter: scheme[i].area,
+        //         perimeterInner: scheme[i].offset,
+        //     }))
+        // }
 
+        const perimeter1:[number, number][] = [[0,24.53072900296393],[11.597803858286005,11.073176953674057],[0.14598130219601124,0],[0,0],[0,24.53072900296393]]
+        const perimeter2:[number, number][] = [[55.93317693220055,48.07672873716901],[68.34847906165305,57.541862499387044],[75.80817560519182,51.84642184663147],[73.70664355767519,43.85818260971251],[55.95535217620788,47.94650865285302],[55.93317693220055,48.07672873716901]]
+        const perimeter3:[number, number][] = [[68.17718888485739,85.81629028218872],[71.19729037499089,100],[95.54370122560195,100],[83.44190402999253,85.13616225005406],[68.50360873993228,85.38399087618804],[68.17718888485739,85.81629028218872]]
+        const perimeterInner: [number, number][] = [[0,0]]
+        const areasData = [
+            {
+                "center":[3.866209534571476,11.821771853269412],
+                "area":143.0595301341438,
+                perimeter: perimeter1,
+               "perimeterInner": perimeterInner,
+                "isDown": true
+            },
+            // {
+            //     "center":[67.57534904194598,50.10690876121463],
+            //     "area":147.19133523088203,
+            //     "perimeter": perimeter2,
+            //     "perimeterInner": perimeterInner,
+            //     "isDown": true,
+            // },
+            // {
 
+            //     "center":[79.88782273709418,93.18013999113882],
+            //     "area":293.41118245017014,
+            //     "perimeter":perimeter3,
+            //     "perimeterInner": perimeterInner,
+            //     "isDown": true,
+            // }
+        ]
 
-        // const perimeter: [number, number][] =  
-        // [
-        //     [-1.7763568394002505e-15,72.85891142127764],
-        //     [10.594787113789055,75.78999543204117],
-        //     [8.53184871416288,58.934492733245065],
-        //     [0,63.34405293417792],[0,72.85891142127764]
-        // ]
+        // // B01
+        // // {
+        // // "center":[67.57534904194598,50.10690876121463],
+        // // "area":147.19133523088203,
+        // // "perimeter":[[55.93317693220055,48.07672873716901],[68.34847906165305,57.541862499387044],[75.80817560519182,51.84642184663147],[73.70664355767519,43.85818260971251],[55.95535217620788,47.94650865285302],[55.93317693220055,48.07672873716901]],
+        // // "perimeterInner":[[59.25784009868855,48.72517632388863],[68.34781211479725,55.65515677302989],[74.10312560320816,51.26100397875306],[72.62602684851274,45.64632955920021],[59.25784009868855,48.72517632388863]]}
+        // // BO2
+        // // {"center":[79.88782273709418,93.18013999113882],"area":293.41118245017014,"perimeter":
+        // [[68.17718888485739,85.81629028218872],[71.19729037499089,100],[95.54370122560195,100],[83.44190402999253,85.13616225005406],[68.50360873993228,85.38399087618804],[68.17718888485739,85.81629028218872]],
+        // "perimeterInner":[[69.93315242834662,86.86048093631602],[72.41152582769264,98.5],[92.3881423327653,98.5],[82.7385451665962,86.64803749295083],[69.93315242834662,86.86048093631602]]}
+
+        // const p01: [number, number][] =[[55.93317693220055,48.07672873716901],[68.34847906165305,57.541862499387044],[75.80817560519182,51.84642184663147],[73.70664355767519,43.85818260971251],[55.95535217620788,47.94650865285302],[55.93317693220055,48.07672873716901]]
+
+        // // const perimeter: [number, number][] =  
+        // // [
+        // //     [-1.7763568394002505e-15,72.85891142127764],
+        // //     [10.594787113789055,75.78999543204117],
+        // //     [8.53184871416288,58.934492733245065],
+        // //     [0,63.34405293417792],[0,72.85891142127764]
+        // // ]
         // const perimeterInner: [number, number][] = [[0,0]]
         // const areasData = [ 
         //     {
         //         "isDown": true,
         //         "center":[5.245558186050693,67.86704444914776],
         //         "area":126.85657508995529,
-        //         "perimeter": perimeter,
+        //         "perimeter": p01,
         //         "perimeterInner": perimeterInner,
         //     }
         // ]

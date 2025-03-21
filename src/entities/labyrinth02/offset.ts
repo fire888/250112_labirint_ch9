@@ -45,14 +45,29 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         }
     }
 
-    // /** draw exist lines */
-    // for (let i = 0; i < existsLines.length; ++i) {
-    //     const l = existsLines[i]
-    //     const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0, 0])
-    //     lp.position.y = .3
-    //     root.studio.add(lp)
-    //     // await _M.waitClickNext()
-    // }
+    /** draw exist lines */
+    for (let i = 0; i < existsLines.length; ++i) {
+        const l = existsLines[i]
+        const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0, 0])
+        lp.position.y = .3
+        root.studio.add(lp)
+
+        {
+            const p = [l[0], l[1]]
+            const l1 = _M.createLabel('p' + i + 's', [1, 1, 1], 7)
+            l1.position.set(p[0], 1 + i, p[1])
+            root.studio.add(l1)
+        }
+
+        {
+            const p = [l[2], l[3]]
+            const l1 = _M.createLabel('p' + i + 'e', [1, 1, 1], 7)
+            l1.position.set(p[0], 1 + i, p[1])
+            root.studio.add(l1)
+        }
+
+        // await _M.waitClickNext()
+    }
 
 
     const [ cX, cY ] = _M.center(filteredPoints) 
@@ -74,13 +89,28 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         innerLines.push([xNewPR, yNewPR, xNewCR, yNewCR])
     }
 
-    // for (let i = 0; i < innerLines.length; ++i) {
-    //     const l = innerLines[i]
-    //     const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0.5, 0])
-    //     lp.position.y = .4
-    //     root.studio.add(lp)
-    //     // await _M.waitClickNext()
-    // }
+    for (let i = 0; i < innerLines.length; ++i) {
+        const l = innerLines[i]
+        const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0.5, 0])
+        lp.position.y = .4
+        root.studio.add(lp)
+
+        {
+            const p = [l[0], l[1]]
+            const l1 = _M.createLabel('p' + i + 's', [0, 1, 1], 7)
+            l1.position.set(p[0], 1 + i, p[1])
+            root.studio.add(l1)
+        }
+
+        {
+            const p = [l[2], l[3]]
+            const l1 = _M.createLabel('p' + i + 'e', [0, 1, 1], 7)
+            l1.position.set(p[0], 1 + i, p[1])
+            root.studio.add(l1)
+        }
+
+        // await _M.waitClickNext()
+    }
 
     const intercepts = []
     let isSckpPoint = false
@@ -96,13 +126,33 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         const next = innerLines[i + 1] ? innerLines[i + 1] : innerLines[0]
 
         const intersect = checkIntersection(...prev, ...curr)
+        if (i === 2)  { 
+            console.log('prev cur', i, intersect)
+        }
+
         /* @ts-ignore */
         const int1 = intersect.point ? [intersect.point.x, intersect.point.y] : null
+        if (int1) {
+            const p = int1
+            const l1 = _M.createLabel(i + '', [1, 0, 0], 7)
+            l1.position.set(p[0], 1 + i, p[1])
+            root.studio.add(l1)
+        }
+
+
 
         //const int2: any = null 
         let intersect2 = checkIntersection(...prev, ...next)
+        i === 2 && console.log('prev next', i, intersect2)
+
         /* @ts-ignore */
         let int2 = intersect2.point ? [intersect2.point.x, intersect2.point.y] : null
+        if (int2 && i === 2) {
+            const p = int2
+            const l1 = _M.createLabel(i + '', [1, 0, 0], 7)
+            l1.position.set(p[0], 1 + i, p[1])
+            root.studio.add(l1)
+        }
         if (innerLines.length === 3) {
             int2 = null
         }
@@ -138,11 +188,13 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         }
         if (isPoint2) {
             pointToInsert = int2
-            isSckpPoint = true
             pointPrev = int2
         }
         intercepts.push(pointToInsert)
     }
+
+    console.log('GGGG', intercepts)
+    
 
     const innerLinesTrimmed: [number, number, number, number][] = []
     for (let i = 1; i < intercepts.length; ++i) {
