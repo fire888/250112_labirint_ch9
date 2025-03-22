@@ -530,7 +530,7 @@ export const _M = {
             const d = (path1[i + 1] - path1[i - 2]) / n
 
             if (path1[i - 2] > path1[i + 1]) {
-                v.push(..._M.createPolygon(
+               v.push(..._M.createPolygon(
                     [path1[i - 3] , path1[i - 2], path1[i - 1]],
                     [path2[i - 3], path2[i - 2], path2[i - 1]],
                     [path2[i], path2[i + 1], path2[i + 2]],
@@ -560,20 +560,18 @@ export const _M = {
                     }
                 } else {
                     for (let j = 0; j < n; ++j) {
-                    v.push(..._M.createPolygon(
-                        [path1[i - 3] , path1[i - 2] + j * d, path1[i - 1]],
-                        [path2[i - 3], path2[i - 2] + j * d, path2[i - 1]],
-                        [path2[i], path2[i - 2] + (j + 1) * d, path2[i + 2]],
-                        [path1[i], path1[i - 2] + (j + 1) * d, path1[i + 2]],
-                    ))
-                }
-                    uv.push(...uvData)
-                    c.push(..._M.fillColorFace(color))
+                        v.push(..._M.createPolygon(
+                            [path1[i - 3] , path1[i - 2] + j * d, path1[i - 1]],
+                            [path2[i - 3], path2[i - 2] + j * d, path2[i - 1]],
+                            [path2[i], path2[i - 2] + (j + 1) * d, path2[i + 2]],
+                            [path1[i], path1[i - 2] + (j + 1) * d, path1[i + 2]],
+                        ))
+                        uv.push(...uvData)
+                        c.push(..._M.fillColorFace(color))
+                    }
+
                 }
             }
-
-
-
         }
     
         return { v, uv, c }

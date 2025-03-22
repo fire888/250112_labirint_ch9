@@ -186,26 +186,13 @@ export class Lab {
         }
 
         {
-            const X = 24
-            const Z = -10
-            // const r = createWall_02_full_profile(
-            //     X,
-            //     Z,
-            //     X,
-            //     Z - 1,
-            //     X + 10,
-            //     Z,
-            //     X + 10,
-            //     Z - 1,
-            //     [X + 5, Z - 10],
-            //     10,
-            //     -10,
-            // )
-            const r = createWall_02(10, -5)
-            _M.translateVertices(r.v, X, 10, -10)
-            v.push(...r.v)
-            c.push(...r.c)
-            uv.push(...r.uv)
+            // const X = 24
+            // const Z = -10
+            // const r = createWall_02(10, -5)
+            // _M.translateVertices(r.v, X, 10, -10)
+            // v.push(...r.v)
+            // c.push(...r.c)
+            // uv.push(...r.uv)
         }
 
 
