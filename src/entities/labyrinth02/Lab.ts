@@ -145,17 +145,23 @@ export class Lab {
         const uv = []
         const c = []
 
+        const label = _M.createLabel('H: 7 метров', [1, 1, 1], 5)
+        this._root.studio.add(label)
+        label.position.set(0, 7, -10)
+
+        const W = 10
+        const H = 7
+
         {        
-            const d = 10
-            const h = 5
-            const r = createWall_01(d, h)
+
+            const r = createWall_01(W, H)
             _M.translateVertices(r.v, 0, 0, -10)
             v.push(...r.v)
             uv.push(...r.uv)
             c.push(...r.c)
 
             {
-                const r = createAngleWall_01([0, 0, -10], -Math.PI / 2, 0, h)
+                const r = createAngleWall_01([0, 0, -10], -Math.PI / 2, 0, H)
                 v.push(...r.v)
                 c.push(...r.c)
                 uv.push(...r.uv)

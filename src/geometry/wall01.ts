@@ -27,15 +27,25 @@ const PR_CENTER: [number, number][] = [
     [0, 1.1],
 ]
 const PR_TOP: [number, number][] = [
-    [0,1.1],
-    [0.1,1.1],
-    [0.1,1.3],
-    [0.5,1.3],
-    [0.55,1.3],
-    [0.55,1.25],
-    [0.62,1.25],
-    [0.62,1.5]
+    [0,-0.4],
+    [0.1,-0.4],
+    [0.1,-0.2],
 ]
+
+const PR_TOP_TOP: [number, number][] = [
+    [0.5,-0.2],
+    [0.55,-0.2],
+    [0.55,-0.25],
+    [0.62,-0.25],
+    [0.62,0],
+    [0, 0]
+]  
+
+const n: [number, number][] = []
+PR_TOP.forEach(e => {
+    n.push([e[0], +(e[1] - 1.5).toFixed(2)])
+})
+console.log(JSON.stringify(n))
 
 export const createWall_01 = (d: number, h: number) => {
     const v: number[] = []
@@ -56,8 +66,6 @@ export const createWall_01 = (d: number, h: number) => {
         { profile: _M.convertSimpleProfileToV3(prTopModify), color: C1, uvTile: tileMapWall.noise },
     ]
 
-
-
     /** fill full wall */
     if (d < min) {
         LEVELS.forEach(e => {
@@ -66,6 +74,12 @@ export const createWall_01 = (d: number, h: number) => {
                 c.push(...r.c)
                 uv.push(...r.uv)
         })
+        const pr_top_top = _M.convertSimpleProfileToV3([[0, PR_TOP_TOP[0][1]], ...PR_TOP_TOP])
+        const topLevel = _M.fillPoligonsV3(pr_top_top, pr_top_top, d, tileMapWall.noise, C1)
+        _M.translateVertices(topLevel.v, 0, h, 0)
+        v.push(...topLevel.v)
+        uv.push(...topLevel.uv)
+        c.push(...topLevel.c)
         return { v, uv, c }
     }
 
@@ -159,6 +173,16 @@ export const createWall_01 = (d: number, h: number) => {
         currX += wColl + wHoll 
     }
 
+    // fill top profile
+    {
+        const pr_top_top = _M.convertSimpleProfileToV3([[-g, PR_TOP_TOP[0][1]], ...PR_TOP_TOP])
+        const topLevel = _M.fillPoligonsV3(pr_top_top, pr_top_top, d, tileMapWall.noise, C1)
+        _M.translateVertices(topLevel.v, 0, h, 0)
+        v.push(...topLevel.v)
+        uv.push(...topLevel.uv)
+        c.push(...topLevel.c)
+    }
+
     return { v, uv, c }
 }
 
@@ -171,12 +195,18 @@ export const createAngleWall_01 = (pos: A3, angleStart: number, angleEnd: number
     for (let i = 0; i < PR_TOP.length; ++i) {
         prTopModify.push([PR_TOP[i][0], PR_TOP[i][1] + h])
     }
+    const prTopTopModify = [[0, PR_TOP_TOP[0][1] + h]]
+    for (let i = 0; i < PR_TOP_TOP.length; ++i) {
+        prTopTopModify.push([PR_TOP_TOP[i][0], PR_TOP_TOP[i][1] + h])
+    }
+
     const LEVELS = [
         { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), _M.convertSimpleProfileToV3(prTopModify)), color: C2, uvTile: tileMapWall.break },
         { profile: _M.convertSimpleProfileToV3(prTopModify), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.convertSimpleProfileToV3(prTopTopModify), color: C1, uvTile: tileMapWall.noise },
     ]
 
     LEVELS.forEach(e => {
