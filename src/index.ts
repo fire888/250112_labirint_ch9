@@ -4,14 +4,11 @@ import { Studio } from "./entities/Studio"
 import { ControlsSystem } from "./entities/controls/ControlsSystem"
 import { Ticker } from "./entities/Ticker"
 import { Floor } from "./entities/Floor"
-import { SmallTriangles } from "./entities/SmallTriangles"
 import { Particles } from './entities/Particles'
 import { LoaderAssets } from "./entities/Loader";
 import { DeviceData } from "./entities/DeviceData"
 import { Ui } from "./entities/Ui"
 import { Phisics } from "./entities/Phisics"
-import { EnergySystem } from './entities/EnergySystem'
-//import { Lab } from './entities/labyrinth/Lab'
 import { Lab } from './entities/labyrinth02/Lab'
 import { AudioManager } from "./entities/AudioManager"
 import { Materials } from "./entities/Materials"
@@ -26,13 +23,12 @@ export type Root = {
     studio: Studio,
     controls: ControlsSystem,
     floor: Floor,
-    smallTriangles: SmallTriangles,
+    // smallTriangles: SmallTriangles,
     particles: Particles,
     loader: LoaderAssets,
     deviceData: DeviceData,
     ui: Ui,
     phisics: Phisics,
-    energySystem: EnergySystem,
     lab: Lab,
     audio: AudioManager,
     materials: Materials,
@@ -50,12 +46,10 @@ window.addEventListener("DOMContentLoaded", async () => {
         controls: new ControlsSystem(),
         ui: new Ui(),
         floor: new Floor(),
-        smallTriangles: new SmallTriangles(),
         particles: new Particles(),
         loader: new LoaderAssets(),
         deviceData: new DeviceData(),
         phisics: new Phisics(),
-        energySystem: new EnergySystem(),
         lab: new Lab(),
         audio: new AudioManager(),
         materials: new Materials(),

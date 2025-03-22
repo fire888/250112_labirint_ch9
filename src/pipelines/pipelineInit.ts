@@ -9,11 +9,8 @@ export const pipelineInit = async (root: Root) => {
         ui,
         ticker,
         floor,
-        smallTriangles,
-        particles,
         loader,
         phisics,
-        energySystem,
         lab,
         audio,
         materials,
@@ -46,7 +43,7 @@ export const pipelineInit = async (root: Root) => {
     controls.init(root)
     ticker.on(controls.update.bind(controls))
 
-    await lab.init(root, CONSTANTS.LABS_CONF[0])
+    await lab.init(root)
     //studio.add(lab.mesh)
 
     //energySystem.init(root, lab.posesSleepEnds)

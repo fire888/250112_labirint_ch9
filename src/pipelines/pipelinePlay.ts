@@ -10,20 +10,14 @@ export const pipelinePlay = async (root: Root) => {
         controls,
         ui,
         phisics,
-        energySystem,
         lab,
         audio,
     } = root
 
-    const { 
-        LABS_CONF,
-        PLAYER_START_POS,
-        ENERGY_PERCENTAGE_MUST_GET,
-    } = CONSTANTS
 
     // energy get *******************************************/
     //let isFullEnergy = false
-    phisics.onCollision(energySystem.nameSpace, (name: string) => {
+    //phisics.onCollision(energySystem.nameSpace, (name: string) => {
         // phisics.removeMeshFromCollision(name)
         // audio.playEnergy()
         // energySystem.animateMovieHide(name)
@@ -36,5 +30,5 @@ export const pipelinePlay = async (root: Root) => {
         //     return;
         // }
         // isFullEnergy = true
-    })
+    //})
 }
