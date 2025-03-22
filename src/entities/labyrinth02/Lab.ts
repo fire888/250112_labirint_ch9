@@ -41,49 +41,61 @@ export class Lab {
                 area,
                 perimeter: scheme[i].area,
                 perimeterInner: scheme[i].offset,
-                //isDown,
-                isDown: true,
+                isDown,
+                //isDown: true,
             })
 
-            /** draw index area */
-            const label = _M.createLabel(i + '', [1, 1, 1], 5)
-            label.position.set(center[0], 2, center[1])
-            this._root.studio.add(label)
-            console.log('perimeter:', i, JSON.stringify({
-                center,
-                area,
-                perimeter: scheme[i].area,
-                perimeterInner: scheme[i].offset,
-            }))
+            // /** draw index area */
+            // const label = _M.createLabel(i + '', [1, 1, 1], 5)
+            // label.position.set(center[0], 2, center[1])
+            // this._root.studio.add(label)
+            // console.log('perimeter:', i, JSON.stringify({
+            //     center,
+            //     area,
+            //     perimeter: scheme[i].area,
+            //     perimeterInner: scheme[i].offset,
+            // }))
         }
 
         // const perimeter1:[number, number][] = [[0,24.53072900296393],[11.597803858286005,11.073176953674057],[0.14598130219601124,0],[0,0],[0,24.53072900296393]]
         // const perimeter2:[number, number][] = [[55.93317693220055,48.07672873716901],[68.34847906165305,57.541862499387044],[75.80817560519182,51.84642184663147],[73.70664355767519,43.85818260971251],[55.95535217620788,47.94650865285302],[55.93317693220055,48.07672873716901]]
         // const perimeter3:[number, number][] = [[68.17718888485739,85.81629028218872],[71.19729037499089,100],[95.54370122560195,100],[83.44190402999253,85.13616225005406],[68.50360873993228,85.38399087618804],[68.17718888485739,85.81629028218872]]
+        // const perimeter4:[number, number][] = [[24.102250638011064,87.59234887142235],[31.313097205019183,100],[38.20177167920267,100],[45.43294233772796,88.34313789073077],[45.20347574709807,83.85860699163533],[37.80814169070489,78.55843639015781],[30.29084441684774,78.861571766324],[24.102250638011064,87.59234887142235]]
+
+
+
         // const perimeterInner: [number, number][] = [[0,0]]
         // const areasData = [
-        //     {
-        //         "center":[3.866209534571476,11.821771853269412],
-        //         "area":143.0595301341438,
-        //         perimeter: perimeter1,
-        //        "perimeterInner": perimeterInner,
-        //         "isDown": true
-        //     },
         //     // {
-        //     //     "center":[67.57534904194598,50.10690876121463],
-        //     //     "area":147.19133523088203,
-        //     //     "perimeter": perimeter2,
-        //     //     "perimeterInner": perimeterInner,
-        //     //     "isDown": true,
+        //     //     "center":[3.866209534571476,11.821771853269412],
+        //     //     "area":143.0595301341438,
+        //     //     perimeter: perimeter1,
+        //     //    "perimeterInner": perimeterInner,
+        //     //     "isDown": true
         //     // },
-        //     // {
+        //     {
+        //         "center":[67.57534904194598,50.10690876121463],
+        //         "area":147.19133523088203,
+        //         "perimeter": perimeter2,
+        //         "perimeterInner": perimeterInner,
+        //         "isDown": true,
+        //     },
+        //     {
 
-        //     //     "center":[79.88782273709418,93.18013999113882],
-        //     //     "area":293.41118245017014,
-        //     //     "perimeter":perimeter3,
-        //     //     "perimeterInner": perimeterInner,
-        //     //     "isDown": true,
-        //     // }
+        //         "center":[79.88782273709418,93.18013999113882],
+        //         "area":293.41118245017014,
+        //         "perimeter":perimeter3,
+        //         "perimeterInner": perimeterInner,
+        //         "isDown": true,
+        //     },
+
+        //     {
+        //         "center":[35.068508134898046,88.77600104064094],
+        //         "area":319.1221883487283,
+        //         "perimeter": perimeter4,
+        //         "perimeterInner":perimeterInner,
+        //         "isDown": true,
+        //     },
         // ]
 
         // // B01
@@ -416,6 +428,8 @@ export class Lab {
         let savedStartAngle = null
         let savedPrevAngle = null
 
+        // DRAW WALLS //////////////////////////
+
         for (let i = 1; i < offsetPoints.existsLines.length; ++i) {
             const prev_O_X = offsetPoints.existsLines[i][0]
             const prev_O_Z = offsetPoints.existsLines[i][1]
@@ -444,20 +458,20 @@ export class Lab {
             c.push(...result.c)
             uv.push(...result.uv)   
 
-            const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
-            if (!Number.isNaN(angle)) {
-                if (savedPrevAngle) {
-                    const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
-                }
-                savedPrevAngle = angle
+            // const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+            // if (!Number.isNaN(angle)) {
+            //     if (savedPrevAngle) {
+            //         const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -angle + Math.PI, -savedPrevAngle + Math.PI, H)
+            //         v.push(...r.v)
+            //         uv.push(...r.uv)
+            //         c.push(...r.c)
+            //     }
+            //     savedPrevAngle = angle
 
-                if (i > 0 && savedStartAngle === null) {
-                    savedStartAngle = angle
-                }
-            }
+            //     if (i > 0 && savedStartAngle === null) {
+            //         savedStartAngle = angle
+            //     }
+            // }
             
 
 
@@ -491,26 +505,26 @@ export class Lab {
                 c.push(...result.c)
                 uv.push(...result.uv)  
 
-                const newAngle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+                // const newAngle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
 
-                if (!Number.isNaN(newAngle)) {
-                    {
-                        const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -newAngle + Math.PI, -angle + Math.PI, H)
-                        v.push(...r.v)
-                        uv.push(...r.uv)
-                        c.push(...r.c)
-                    }
+                // if (!Number.isNaN(newAngle)) {
+                //     {
+                //         const r = createAngleWall_02([prev_I_X, hG, prev_I_Z], -newAngle + Math.PI, -angle + Math.PI, H)
+                //         v.push(...r.v)
+                //         uv.push(...r.uv)
+                //         c.push(...r.c)
+                //     }
 
-                    // /** cap angle with next  */
-                    {
-                        //const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
-                        const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
-                        v.push(...r.v)
-                        uv.push(...r.uv)
-                        c.push(...r.c)
-                    }
+                //     // /** cap angle with next  */
+                //     {
+                //         //const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
+                //         const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], -savedStartAngle + Math.PI, -newAngle + Math.PI, H)
+                //         v.push(...r.v)
+                //         uv.push(...r.uv)
+                //         c.push(...r.c)
+                //     }
 
-                }
+                // }
 
                 // {
                 //     const label = _M.createLabel(i + '_ANGLE CAP', [1, .3, .3], 5)  
@@ -519,6 +533,42 @@ export class Lab {
                 // }
             } 
         }
+
+        // CAP ANGLES
+        {
+            const wallsData: { angle: number, line: [number, number, number, number]}[] = []
+            for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
+                const prev_I_X = offsetPoints.offsetLines[i][0]
+                const prev_I_Z = offsetPoints.offsetLines[i][1]
+                const cur_I_X =  offsetPoints.offsetLines[i][2]
+                const cur_I_Z =  offsetPoints.offsetLines[i][3]
+                
+                const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+                if (Number.isNaN(angle)) {
+                    continue;
+                }
+                wallsData.push({
+                    angle,
+                    line: [prev_I_X, prev_I_Z, cur_I_X, cur_I_Z]
+                }) 
+            }
+    
+            for (let i = 0; i < wallsData.length; ++i) {
+                const wallPrev = wallsData[i - 1] || wallsData[wallsData.length - 1]
+                const wallCurrent = wallsData[i]
+
+                const cur_I_X =  wallCurrent.line[0]
+                const cur_I_Z =  wallCurrent.line[1]
+                const prevAngle = -wallPrev.angle - Math.PI
+                const curAngle = -wallCurrent.angle + Math.PI
+                
+                const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], prevAngle, curAngle, H)
+                v.push(...r.v)
+                uv.push(...r.uv)
+                c.push(...r.c)
+            }
+        }
+
 
         return { v, uv, c }
     }

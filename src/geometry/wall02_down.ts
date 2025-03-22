@@ -65,7 +65,7 @@ export const createAngleWall_02 = (pos: A3, angleStart: number, angleEnd: number
         _M.rotateVerticesY(pathL, angleStart)
         _M.rotateVerticesY(pathR, angleEnd)
 
-        const r = _M.fillPoligonsV3(pathL, pathR, 0, e.uvTile, e.color, 1.5, false)
+        const r = _M.fillPoligonsV3(pathR, pathL, 0, e.uvTile, e.color, 1.5, false)
         _M.translateVertices(r.v, ...pos)
         v.push(...r.v)
         c.push(...r.c)
