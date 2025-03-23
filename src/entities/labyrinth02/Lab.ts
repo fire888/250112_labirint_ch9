@@ -6,6 +6,7 @@ import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
 import { createCurb00 } from "geometry/curb00";
+import { createArea00 } from "geometry/area00";
 import { offset, } from "./offset";
 import { createExamplesAllWalls } from "./examplesWalls";
 
@@ -289,6 +290,8 @@ export class Lab {
 
         const offsetPoints = offset(perimeter, 1.5, this._root)
 
+
+
         // let Y = 1
         // for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
         //     const p = offsetPoints.offsetLines[i]
@@ -318,6 +321,14 @@ export class Lab {
         // }
 
         const H = Math.random() * 5 -.2 
+
+        {
+            const r = createArea00(perimeter, COLOR_FLOOR, tileMapWall.stoneLong)
+            _M.translateVertices(r.v, 0, -H, 0)
+            v.push(...r.v)    
+            uv.push(...r.uv)
+            c.push(...r.c)
+        }
 
         // DRAW WALLS //////////////////////////
         for (let i = 1; i < offsetPoints.existsLines.length; ++i) {
