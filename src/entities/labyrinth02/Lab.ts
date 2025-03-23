@@ -1,15 +1,19 @@
 import { Root } from "../../index";
 import * as THREE from "three";
-import { _M } from "../../geometry/_m";
+import { _M, A3 } from "../../geometry/_m";
 import { createScheme} from "./scheme"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
-import { createCurb00, TYPE_TEXTURE } from "geometry/curb00";
+import { createCurb00 } from "geometry/curb00";
 import { offset, } from "./offset";
 import { createExamplesAllWalls } from "./examplesWalls";
 
 import { createWall_02_full_profile } from "geometry/wall02_full_profile";
+import { tileMapWall } from "geometry/tileMapWall";
+
+const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
+console.log('HHH', COLOR_FLOOR)
 
 const COLOR_PERIM = _M.hexToNormalizedRGB('1c1937')
 const AREA_FOR_DOWN = 60
@@ -93,6 +97,7 @@ export class Lab {
         {
             const v: number[] = []
             const uv: number[] = [] 
+            const c: number[] = [] 
 
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].isDown) { 
@@ -107,11 +112,14 @@ export class Lab {
                 const r = this._fillRoad(offsetLines, existsLines)
                 v.push(...r.v)
                 uv.push(...r.uv)
+                c.push(...r.c)
             }
             const m = _M.createMesh({ 
                 v,
                 uv,
-                material: root.materials.road
+                c,
+                //material: root.materials.road
+                material: root.materials.walls00,
             })
             this._root.studio.add(m)
         }
@@ -245,50 +253,31 @@ export class Lab {
             return
         }
 
-        /** проверяем что следующая точка не лежит на предыдущей */
-        if (inner[2] === inner[0] && outer[3] === outer[1]) {
-            return;
-        }
-        
         const v: number[] = [] 
         const uv: number[] = [] 
+        const c: number[] = []
 
         for (let i = 0; i < outer.length; ++i) {
-            if (!inner[i]) {
-                continue
-            }
-            if (inner[i].length === 2) {
-                v.push(
-                    inner[i][0], 0, inner[i][1],       
-                    outer[i][0], 0, outer[i][1],
-                    outer[i][2], 0, outer[i][3],        
+            const innerI = inner[i]
+            const outerI = outer[i]
+
+            if (innerI.length === 4) {
+                const r = createCurb00(
+                    [innerI[2], innerI[3]], 
+                    [innerI[0], innerI[1]], 
+                    [outerI[0], outerI[1]], 
+                    [outerI[2], outerI[3]],
+                    tileMapWall.stoneLong,
+                    null,
+                    5,
+                    COLOR_FLOOR,
                 )
-                uv.push(
-                    0, 0,
-                    1, 0,
-                    .5, 1,
-                )
-            }
-            if (inner[i].length === 4) {
-                v.push(
-                    ..._M.createPolygon(
-                        [inner[i][2], 0, inner[i][3]], 
-                        [inner[i][0], 0, inner[i][1]], 
-                        [outer[i][0], 0, outer[i][1]],  
-                        [outer[i][2], 0, outer[i][3]],    
-                    )                     
-                )    
-                uv.push(
-                    ..._M.createUv(
-                        [0, 0],
-                        [1, 0],
-                        [1, 1],
-                        [0, 1],    
-                    )  
-                )
+                v.push(...r.v)    
+                uv.push(...r.uv)
+                c.push(...r.c)
             }
         }
-        return { v, uv }
+        return { v, uv, c }
     }
 
     _createArea (areaData: any) {
@@ -328,25 +317,9 @@ export class Lab {
         //     // this._root.studio.add(l1)
         // }
 
-        // calculate angles
-        const angles: number[] = []
-        for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
-            const prev_I_X = offsetPoints.offsetLines[i][0]
-            const prev_I_Z = offsetPoints.offsetLines[i][1]
-            const cur_I_X =  offsetPoints.offsetLines[i][2]
-            const cur_I_Z =  offsetPoints.offsetLines[i][3]
-            
-            const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
-            angles.push(Number.isNaN(angle) ? 1000 : angle) 
-        }
-
-        //const H = -Math.random() * 5 -.2 
-        const H = Math.random() * 5 +.2 
-        const hG = -.2
-        //const FLOOR_H = H - 2 + .3
+        const H = Math.random() * 5 -.2 
 
         // DRAW WALLS //////////////////////////
-
         for (let i = 1; i < offsetPoints.existsLines.length; ++i) {
             const prev_O_X = offsetPoints.existsLines[i][0]
             const prev_O_Z = offsetPoints.existsLines[i][1]
@@ -357,24 +330,34 @@ export class Lab {
             const cur_I_X =  offsetPoints.offsetLines[i][2]
             const cur_I_Z =  offsetPoints.offsetLines[i][3]
 
-            const result = createWall_02_full_profile(
-                prev_O_X,
-                prev_O_Z,
-                prev_I_X,
-                prev_I_Z,
-                cur_O_X,
-                cur_O_Z,
-                cur_I_X,
-                cur_I_Z,
-                center,
-                H,
-                //FLOOR_H,
-                0,
-            )
-            _M.translateVertices(result.v, 0, -H, 0)
-            v.push(...result.v)
-            c.push(...result.c)
-            uv.push(...result.uv)   
+            {
+                const d = _M.dist([prev_I_X, prev_I_Z], [cur_I_X, cur_I_Z])
+                const r = createWall_02(d, H)
+                const a = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+                _M.rotateVerticesY(r.v, -a + Math.PI)
+                _M.translateVertices(r.v, cur_I_X, -H, cur_I_Z)
+                v.push(...r.v)
+                c.push(...r.c)  
+                uv.push(...r.uv)
+            }
+
+            {
+                const r = createCurb00(
+                    [cur_I_X, cur_I_Z],
+                    [prev_I_X, prev_I_Z],
+                    [prev_O_X, prev_O_Z],
+                    [cur_O_X, cur_O_Z],
+                    tileMapWall.noiseLong,
+                    .3,
+                    5,
+                    COLOR_FLOOR,
+                )
+                _M.translateVertices(r.v, 0, -.2, 0)
+                v.push(...r.v)
+                c.push(...r.c)  
+                uv.push(...r.uv)
+            }
+
 
             /** last part connect to first */
             if (i === offsetPoints.existsLines.length - 1) {
@@ -388,68 +371,35 @@ export class Lab {
                 const cur_I_X =  offsetPoints.offsetLines[0][2]
                 const cur_I_Z =  offsetPoints.offsetLines[0][3]
 
-                const result = createWall_02_full_profile(
-                    prev_O_X,
-                    prev_O_Z,
-                    prev_I_X,
-                    prev_I_Z,
-                    cur_O_X,
-                    cur_O_Z,
-                    cur_I_X,
-                    cur_I_Z,
-                    center,
-                    H,
-                    0,
-                    //FLOOR_H,
-                )
-                _M.translateVertices(result.v, 0, -H, 0)
-                v.push(...result.v)
-                c.push(...result.c)
-                uv.push(...result.uv)  
+                {
+                    const d = _M.dist([prev_I_X, prev_I_Z], [cur_I_X, cur_I_Z])
+                    const r = createWall_02(d, H)
+                    const a = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
+                    _M.rotateVerticesY(r.v, -a + Math.PI)
+                    _M.translateVertices(r.v, cur_I_X, -H, cur_I_Z)
+                    v.push(...r.v)
+                    c.push(...r.c)  
+                    uv.push(...r.uv)
+                }
 
-                // {
-                //     const label = _M.createLabel(i + '_ANGLE CAP', [1, .3, .3], 5)  
-                //     label.position.set(prev_I_X, 2, prev_I_Z)  
-                //     this._root.studio.add(label)
-                // }
+                {
+                    const r = createCurb00(
+                        [cur_I_X, cur_I_Z],
+                        [prev_I_X, prev_I_Z],
+                        [prev_O_X, prev_O_Z],
+                        [cur_O_X, cur_O_Z],
+                        tileMapWall.noiseLong,
+                        .3,
+                        5,
+                        COLOR_FLOOR,
+                    )
+                    _M.translateVertices(r.v, 0, -.2, 0)
+                    v.push(...r.v)
+                    c.push(...r.c)  
+                    uv.push(...r.uv)
+                }
             } 
         }
-
-        // CAP ANGLES
-        {
-            const wallsData: { angle: number, line: [number, number, number, number]}[] = []
-            for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
-                const prev_I_X = offsetPoints.offsetLines[i][0]
-                const prev_I_Z = offsetPoints.offsetLines[i][1]
-                const cur_I_X =  offsetPoints.offsetLines[i][2]
-                const cur_I_Z =  offsetPoints.offsetLines[i][3]
-                
-                const angle = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
-                if (Number.isNaN(angle)) {
-                    continue;
-                }
-                wallsData.push({
-                    angle,
-                    line: [prev_I_X, prev_I_Z, cur_I_X, cur_I_Z]
-                }) 
-            }
-    
-            for (let i = 0; i < wallsData.length; ++i) {
-                const wallPrev = wallsData[i - 1] || wallsData[wallsData.length - 1]
-                const wallCurrent = wallsData[i]
-
-                const cur_I_X =  wallCurrent.line[0]
-                const cur_I_Z =  wallCurrent.line[1]
-                const prevAngle = -wallPrev.angle - Math.PI
-                const curAngle = -wallCurrent.angle + Math.PI
-                
-                const r = createAngleWall_02([cur_I_X, hG, cur_I_Z], prevAngle, curAngle, H)
-                v.push(...r.v)
-                uv.push(...r.uv)
-                c.push(...r.c)
-            }
-        }
-
 
         return { v, uv, c }
     }

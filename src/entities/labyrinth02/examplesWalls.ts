@@ -2,7 +2,8 @@ import { Root } from "index"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
-import { createCurb00, TYPE_TEXTURE } from "geometry/curb00";
+import { createCurb00 } from "geometry/curb00";
+import { tileMapWall } from "geometry/tileMapWall";
 import { _M } from "geometry/_m";
 
 export const createExamplesAllWalls = (root: Root) => {
@@ -64,19 +65,19 @@ export const createExamplesAllWalls = (root: Root) => {
         const X = 36
         const Z = -10
         const D = -2
-        const r = createCurb00([X, Z], [X + W, Z], [X + W, Z + D], [X, Z + D], TYPE_TEXTURE.NOISE_LONG, 1, 1)
+        const r = createCurb00([X, Z], [X + W, Z], [X + W, Z + D], [X, Z + D], tileMapWall.noiseLong, 1, 1)
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)
     }
 
-    // curb triangle
+    // curb triangle 1
     {
         const X = 48
         const Z = -10
         const D = -2
         const W = 3
-        const r = createCurb00([X + W * .5, Z], [X + W * .5, Z], [X + W, Z + D], [X, Z + D], TYPE_TEXTURE.NOISE_LONG, 1)
+        const r = createCurb00([X + W * .5, Z], [X + W * .5, Z], [X + W, Z + D], [X, Z + D], tileMapWall.noise, 1)
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)
@@ -88,7 +89,7 @@ export const createExamplesAllWalls = (root: Root) => {
         const Z = -10
         const D = -2
         const W = 3
-        const r = createCurb00([X, Z], [X + W, Z], [X + W * .5, Z + D], [X + W * .5, Z + D], TYPE_TEXTURE.NOISE_LONG, 1)
+        const r = createCurb00([X, Z], [X + W, Z], [X + W * .5, Z + D], [X + W * .5, Z + D], tileMapWall.noise, 1)
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)

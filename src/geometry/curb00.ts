@@ -3,19 +3,15 @@ import { _M, A3 } from 'geometry/_m'
 
 const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('1a182d') 
 
-export enum TYPE_TEXTURE {
-    NOISE_LONG = "NOISE_LONG",
-    STONE_LONG = "STONE_LONG",
-}
-
 export const createCurb00 = (
     frontStart: [number, number],
     frontEnd: [number, number],
     backEnd: [number, number],
     backStart: [number, number],
-    typeTexture: TYPE_TEXTURE = TYPE_TEXTURE.NOISE_LONG,
+    uvTile: number[] = tileMapWall.noiseLong,
     h: number = 0,
     repeatWidth: number = 100,
+    color: A3 = COLOR_BLUE,
 ) => {
     const v: number[] = []
     const c: number[] = []
@@ -38,18 +34,16 @@ export const createCurb00 = (
     const backZStep = (backEnd[1] - backStart[1]) / n
     /** top */
     if (isCollapseFront) {
-                v.push(
+        v.push(
             backStart[0], h, backStart[1],
             frontStart[0], h, frontStart[1],
             backEnd[0], h, backEnd[1],
         )
-        if (typeTexture === TYPE_TEXTURE.NOISE_LONG) {
-            uv.push(...tileMapWall.noiseTree)
-        }
+        uv.push(...uvTile)
         c.push(
-            ...COLOR_BLUE,
-            ...COLOR_BLUE,
-            ...COLOR_BLUE,
+            ...color,
+            ...color,
+            ...color,
         )
     } if (isCollapseBack) {
         v.push(
@@ -57,13 +51,11 @@ export const createCurb00 = (
             backStart[0], h, backStart[1],
             frontStart[0], h, frontStart[1],
         )
-        if (typeTexture === TYPE_TEXTURE.NOISE_LONG) {
-            uv.push(...tileMapWall.noiseTree)
-        }
+        uv.push(...uvTile)
         c.push(
-            ...COLOR_BLUE,
-            ...COLOR_BLUE,
-            ...COLOR_BLUE,
+            ...color,
+            ...color,
+            ...color,
         )
     } else {
         for (let i = 0; i < n; ++i) {
@@ -73,10 +65,8 @@ export const createCurb00 = (
                 [frontStart[0] + (i + 1) * frontXStep, h, frontStart[1] + (i + 1) * frontZStep],
                 [backStart[0] + (i + 1) * backXStep, h, backStart[1] + (i + 1) * backZStep],
             ))
-            if (typeTexture === TYPE_TEXTURE.NOISE_LONG) {
-                uv.push(...tileMapWall.noiseLong)
-            }
-            c.push(..._M.fillColorFace(COLOR_BLUE))
+            uv.push(...uvTile)
+            c.push(..._M.fillColorFace(color))
         }
     }
 
@@ -91,10 +81,8 @@ export const createCurb00 = (
                     [frontStart[0] + (i + 1) * frontXStep, 0, frontStart[1] + (i + 1) * frontZStep],
                     [frontStart[0] + (i + 1) * frontXStep, h, frontStart[1] + (i + 1) * frontZStep],
                 ))
-                if (typeTexture === TYPE_TEXTURE.NOISE_LONG) {
-                    uv.push(...tileMapWall.noiseLong)
-                }
-                c.push(..._M.fillColorFace(COLOR_BLUE))
+                uv.push(...uvTile)
+                c.push(..._M.fillColorFace(color))
             }
         }
 
@@ -107,10 +95,8 @@ export const createCurb00 = (
                     [backStart[0] + i * backXStep, 0, backStart[1] + i * backZStep],
                     [backStart[0] + i * backXStep, h, backStart[1] + i * backZStep],
                 ))
-                if (typeTexture === TYPE_TEXTURE.NOISE_LONG) {
-                    uv.push(...tileMapWall.noiseLong)
-                }
-                c.push(..._M.fillColorFace(COLOR_BLUE))
+                uv.push(...uvTile)
+                c.push(..._M.fillColorFace(color))
             }
         }
     }

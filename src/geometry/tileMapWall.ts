@@ -51,4 +51,20 @@ export const tileMapWall = {
         D * 4, D * 4, 
         D * 3.7, D * 4, 
     ],
+    'stone': [
+        0, D * 2,
+        D, D * 2,
+        D, D * 3,
+        0, D * 2,
+        D, D * 3,
+        0, D * 3,
+    ],
+    'stoneLong': [
+        0, D * 3,
+        D, D * 3,
+        D, D * 4,
+        0, D * 3,
+        D, D * 4,
+        0, D * 4,
+    ],
 } 
