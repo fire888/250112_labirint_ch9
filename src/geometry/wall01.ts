@@ -41,11 +41,6 @@ const PR_TOP_TOP: [number, number][] = [
     [0, 0]
 ]  
 
-const n: [number, number][] = []
-PR_TOP.forEach(e => {
-    n.push([e[0], +(e[1] - 1.5).toFixed(2)])
-})
-console.log(JSON.stringify(n))
 
 export const createWall_01 = (d: number, h: number) => {
     const v: number[] = []

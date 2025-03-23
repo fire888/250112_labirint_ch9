@@ -8,6 +8,7 @@ const PROFILE: [number, number][] = [
     [.22, .3],
     [.24, .3],
     [.18, 1.3],
+    [0, 1.4],
 ]
 
 export const createTopElem_00 = (color: A3) => {

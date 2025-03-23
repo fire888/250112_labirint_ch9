@@ -6,13 +6,16 @@ const COLOR_BLUE_D: A3 = _M.hexToNormalizedRGB('1c1937')
 const C1 = COLOR_BLUE_D
 const C2 = COLOR_BLUE
 const PR_BOTTOM: [number, number][] = [
-    [-.2, -1.5],
-    [-.2, -1.3],
-    [-.3, -1.2],
+    // [-.2, -1.5],
+    // [-.2, -1.3],
+    // [-.3, -1.2],
+    [.1, 0],
+    [.1, .2],
+    [0, .3],
 ]
 const PR_TOP: [number, number][] = [
-    [-.3, -.2],
-    [0, 0]
+    [0, -.2],
+    [.2, 0]
 ]
 
 export const createWall_02 = (d: number, h: number) => {
@@ -22,15 +25,15 @@ export const createWall_02 = (d: number, h: number) => {
 
     const min = 2.1 // max width without columns
 
-    const copyB = []
-    for (let i = 0; i < PR_BOTTOM.length; ++i) {
-        copyB.push([PR_BOTTOM[i][0], PR_BOTTOM[i][1] + h])
+    const copyT = []
+    for (let i = 0; i < PR_TOP.length; ++i) {
+        copyT.push([PR_TOP[i][0], PR_TOP[i][1] + h])
     } 
 
     const LEVELS = [
-        { profile: _M.convertSimpleProfileToV3(copyB), color: C1, uvTile: tileMapWall.noise },
-        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(copyB), _M.convertSimpleProfileToV3(PR_TOP)), color: C1, uvTile: tileMapWall.break },
-        { profile: _M.convertSimpleProfileToV3(PR_TOP), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
+        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(copyT)), color: C1, uvTile: tileMapWall.break },
+        { profile: _M.convertSimpleProfileToV3(copyT), color: C1, uvTile: tileMapWall.noise },
     ]
 
     /** fill full wall */

@@ -5,7 +5,9 @@ import { createScheme} from "./scheme"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
+import { createCurb00, TYPE_TEXTURE } from "geometry/curb00";
 import { offset, } from "./offset";
+import { createExamplesAllWalls } from "./examplesWalls";
 
 import { createWall_02_full_profile } from "geometry/wall02_full_profile";
 
@@ -18,7 +20,7 @@ export class Lab {
     async init (root: Root, params = {}) {
         this._root = root
 
-        this._createExamples()
+        createExamplesAllWalls(root)
 
         
         const scheme = createScheme(root)
@@ -138,72 +140,6 @@ export class Lab {
             })
             this._root.studio.add(m)
         }
-    }
-
-    _createExamples () {
-        const v = []
-        const uv = []
-        const c = []
-
-        const label = _M.createLabel('H: 7 метров', [1, 1, 1], 5)
-        this._root.studio.add(label)
-        label.position.set(0, 7, -10)
-
-        const W = 10
-        const H = 7
-
-        {        
-
-            const r = createWall_01(W, H)
-            _M.translateVertices(r.v, 0, 0, -10)
-            v.push(...r.v)
-            uv.push(...r.uv)
-            c.push(...r.c)
-
-            {
-                const r = createAngleWall_01([0, 0, -10], -Math.PI / 2, 0, H)
-                v.push(...r.v)
-                c.push(...r.c)
-                uv.push(...r.uv)
-            }
-        }
-
-        {        
-            const d = 10
-            const h = 5
-            const r = createWall_03(d, h)
-            _M.translateVertices(r.v, 12, 0, -10)
-            v.push(...r.v)
-            uv.push(...r.uv)
-            c.push(...r.c)
-
-            {
-                const r = createAngleWall_03([12, 0, -10], -Math.PI / 2, 0, h)
-                v.push(...r.v)
-                c.push(...r.c)
-                uv.push(...r.uv)
-            }
-        }
-
-        {
-            // const X = 24
-            // const Z = -10
-            // const r = createWall_02(10, -5)
-            // _M.translateVertices(r.v, X, 10, -10)
-            // v.push(...r.v)
-            // c.push(...r.c)
-            // uv.push(...r.uv)
-        }
-
-
-        const m = _M.createMesh({ 
-            v,
-            uv,
-            c, 
-            material: this._root.materials.walls00,
-        })
-        this._root.studio.add(m)
-
     }
 
     _createHome (perimiter: [number, number][]) {
@@ -404,13 +340,10 @@ export class Lab {
             angles.push(Number.isNaN(angle) ? 1000 : angle) 
         }
 
-        const H = -Math.random() * 5 -.2 
-        const h = .1
+        //const H = -Math.random() * 5 -.2 
+        const H = Math.random() * 5 +.2 
         const hG = -.2
-        const FLOOR_H = H - 2 + .3
-
-        let savedStartAngle = null
-        let savedPrevAngle = null
+        //const FLOOR_H = H - 2 + .3
 
         // DRAW WALLS //////////////////////////
 
@@ -435,8 +368,10 @@ export class Lab {
                 cur_I_Z,
                 center,
                 H,
-                FLOOR_H,
+                //FLOOR_H,
+                0,
             )
+            _M.translateVertices(result.v, 0, -H, 0)
             v.push(...result.v)
             c.push(...result.c)
             uv.push(...result.uv)   
@@ -464,9 +399,10 @@ export class Lab {
                     cur_I_Z,
                     center,
                     H,
-                    FLOOR_H,
+                    0,
+                    //FLOOR_H,
                 )
-    
+                _M.translateVertices(result.v, 0, -H, 0)
                 v.push(...result.v)
                 c.push(...result.c)
                 uv.push(...result.uv)  
