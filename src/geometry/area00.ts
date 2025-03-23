@@ -15,6 +15,8 @@ export const createArea00 = (coords: [number, number][] = [], color: A3, uvTile:
     const uv: number[] = [] 
     const c: number[] = []
 
+
+
     for (let i = 0; i < filtered.length; ++i) { 
         const prev = filtered[i - 1] || filtered[filtered.length - 1]
         const curr = filtered[i]
@@ -25,7 +27,11 @@ export const createArea00 = (coords: [number, number][] = [], color: A3, uvTile:
         ]
         v.push(...rV)    
         uv.push(...uvTile)
-        c.push(..._M.fillColorFace(color))
+        c.push(
+            ...color,
+            ...color,
+            ...color,
+        )
     }
 
     return { v, uv, c }

@@ -9,8 +9,6 @@ import { createCurb00 } from "geometry/curb00";
 import { createArea00 } from "geometry/area00";
 import { offset, } from "./offset";
 import { createExamplesAllWalls } from "./examplesWalls";
-
-import { createWall_02_full_profile } from "geometry/wall02_full_profile";
 import { tileMapWall } from "geometry/tileMapWall";
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
@@ -152,9 +150,9 @@ export class Lab {
     }
 
     _createHome (perimiter: [number, number][]) {
-        const v = []
-        const uv = []
-        const c = []
+        const v: number[] = [] 
+        const uv: number[] = [] 
+        const c: number[] = []
 
         let savedAngle = null
         let savedStartAngle = null 
@@ -286,11 +284,10 @@ export class Lab {
         const uv: number[] = []
         const c: number[] = []
 
-        const { perimeter, center } = areaData
+        const { perimeter } = areaData
 
         const offsetPoints = offset(perimeter, 1.5, this._root)
-
-
+        const offsetPoints2 = offset(perimeter, 1.7, this._root)
 
         // let Y = 1
         // for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
@@ -323,7 +320,7 @@ export class Lab {
         const H = Math.random() * 5 -.2 
 
         {
-            const r = createArea00(perimeter, COLOR_FLOOR, tileMapWall.stoneLong)
+            const r = createArea00(perimeter, COLOR_FLOOR, tileMapWall.stoneTree)
             _M.translateVertices(r.v, 0, -H, 0)
             v.push(...r.v)    
             uv.push(...r.uv)
@@ -343,16 +340,21 @@ export class Lab {
 
             {
                 const d = _M.dist([prev_I_X, prev_I_Z], [cur_I_X, cur_I_Z])
-                const r = createWall_02(d, H)
+                const r = createWall_02(d, H - .2)
                 const a = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
                 _M.rotateVerticesY(r.v, -a + Math.PI)
                 _M.translateVertices(r.v, cur_I_X, -H, cur_I_Z)
                 v.push(...r.v)
-                c.push(...r.c)  
                 uv.push(...r.uv)
+                c.push(...r.c)  
             }
 
             {
+                const prev_I_X = offsetPoints2.offsetLines[i][0]
+                const prev_I_Z = offsetPoints2.offsetLines[i][1]
+                const cur_I_X =  offsetPoints2.offsetLines[i][2]
+                const cur_I_Z =  offsetPoints2.offsetLines[i][3]
+
                 const r = createCurb00(
                     [cur_I_X, cur_I_Z],
                     [prev_I_X, prev_I_Z],
@@ -365,8 +367,8 @@ export class Lab {
                 )
                 _M.translateVertices(r.v, 0, -.2, 0)
                 v.push(...r.v)
-                c.push(...r.c)  
                 uv.push(...r.uv)
+                c.push(...r.c)  
             }
 
 
@@ -384,16 +386,26 @@ export class Lab {
 
                 {
                     const d = _M.dist([prev_I_X, prev_I_Z], [cur_I_X, cur_I_Z])
-                    const r = createWall_02(d, H)
+                    const r = createWall_02(d, H - .2)
                     const a = _M.angleFromCoords(cur_I_X - prev_I_X, cur_I_Z - prev_I_Z)
                     _M.rotateVerticesY(r.v, -a + Math.PI)
                     _M.translateVertices(r.v, cur_I_X, -H, cur_I_Z)
                     v.push(...r.v)
-                    c.push(...r.c)  
                     uv.push(...r.uv)
+                    c.push(...r.c)  
                 }
 
                 {
+                    const prev_O_X = offsetPoints2.existsLines[i][2]
+                    const prev_O_Z = offsetPoints2.existsLines[i][3]
+                    const prev_I_X = offsetPoints2.offsetLines[i][2]
+                    const prev_I_Z = offsetPoints2.offsetLines[i][3]
+    
+                    const cur_O_X =  offsetPoints2.existsLines[0][2]
+                    const cur_O_Z =  offsetPoints2.existsLines[0][3]
+                    const cur_I_X =  offsetPoints2.offsetLines[0][2]
+                    const cur_I_Z =  offsetPoints2.offsetLines[0][3]
+
                     const r = createCurb00(
                         [cur_I_X, cur_I_Z],
                         [prev_I_X, prev_I_Z],
@@ -406,8 +418,8 @@ export class Lab {
                     )
                     _M.translateVertices(r.v, 0, -.2, 0)
                     v.push(...r.v)
-                    c.push(...r.c)  
                     uv.push(...r.uv)
+                    c.push(...r.c)  
                 }
             } 
         }
