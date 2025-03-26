@@ -48,49 +48,57 @@ export class Lab {
             })
 
             /** label */
-            // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
-            // l.position.set(center[0], 1, center[1])
-            // root.studio.add(l)
-            // console.log('perimeter:', i, JSON.stringify({
-            //     center,
-            //     area,
-            //     perimeter: scheme[i].area,
-            //     perimeterInner: scheme[i].offset,
-            // }))
+            const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
+            l.position.set(center[0], 1, center[1])
+            root.studio.add(l)
+            console.log('perimeter:', i, JSON.stringify({
+                center,
+                area,
+                perimeter: scheme[i].area,
+                perimeterInner: scheme[i].offset,
+            }))
         }
 
+        // const p0: [number, number][] =
+        //     [[47.5068170931952,40.954869246100614],[49.35495133579947,50.28669379945678],[69.31320673659431,49.56875676984434],[69.91321808140812,48.479099662266876],[66.96852621022883,41.359869636973414],[55.805643071992485,36.709009938495576],[47.5068170931952,40.954869246100614]]
+
+        // const pInner: [number, number][] = [[0, 0]]   
+        // const areasData = [
+        // {
+        //     "center":[58.005884214904306,44.43471196883098],"area":219.9280942974118,"perimeter": p0, perimeterInner: pInner, isDown: false  }
+        // ] 
 
 
         /** walls */
-        {
-            const v: number[] = []
-            const uv: number[] = []
-            const c: number[] = []
-            for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].isDown) { 
-                    continue;
-                }
-                const random = Math.random()
-                if (random < .5) {
-                    const r = this._createHome(areasData[i].perimeterInner)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
-                } else {
-                    const r = this._createHome_03(areasData[i].perimeterInner)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
-                }
-            }
-            const m = _M.createMesh({ 
-                v, 
-                uv,
-                c,
-                material: root.materials.walls00,
-            })
-            this._root.studio.add(m)
-        }
+        // {
+        //     const v: number[] = []
+        //     const uv: number[] = []
+        //     const c: number[] = []
+        //     for (let i = 0; i < areasData.length; ++i) {
+        //         if (areasData[i].isDown) { 
+        //             continue;
+        //         }
+        //         const random = Math.random()
+        //         if (random < .5) {
+        //             const r = this._createHome(areasData[i].perimeterInner)
+        //             v.push(...r.v)
+        //             uv.push(...r.uv)
+        //             c.push(...r.c)
+        //         } else {
+        //             const r = this._createHome_03(areasData[i].perimeterInner)
+        //             v.push(...r.v)
+        //             uv.push(...r.uv)
+        //             c.push(...r.c)
+        //         }
+        //     }
+        //     const m = _M.createMesh({ 
+        //         v, 
+        //         uv,
+        //         c,
+        //         material: root.materials.walls00,
+        //     })
+        //     this._root.studio.add(m)
+        // }
 
         /** roads */
         {
@@ -124,29 +132,29 @@ export class Lab {
         }
 
         /** areas */
-        {
-            const v: number[] = []
-            const uv: number[] = []
-            const c: number[] = []
+        // {
+        //     const v: number[] = []
+        //     const uv: number[] = []
+        //     const c: number[] = []
 
-            for (let i = 0; i < areasData.length; ++i) {
-                if (!areasData[i].isDown) { 
-                    continue;
-                }
+        //     for (let i = 0; i < areasData.length; ++i) {
+        //         if (!areasData[i].isDown) { 
+        //             continue;
+        //         }
 
-                const r = this._createArea(areasData[i])
-                v.push(...r.v)
-                uv.push(...r.uv)
-                c.push(...r.c)
-            }
-            const m = _M.createMesh({ 
-                v,
-                uv,
-                c, 
-                material: root.materials.walls00,
-            })
-            this._root.studio.add(m)
-        }
+        //         const r = this._createArea(areasData[i])
+        //         v.push(...r.v)
+        //         uv.push(...r.uv)
+        //         c.push(...r.c)
+        //     }
+        //     const m = _M.createMesh({ 
+        //         v,
+        //         uv,
+        //         c, 
+        //         material: root.materials.walls00,
+        //     })
+        //     this._root.studio.add(m)
+        // }
     }
 
     _createHome (perimiter: [number, number][]) {
@@ -246,38 +254,6 @@ export class Lab {
         return { v, c, uv }
     }
 
-
-    _fillRoad (inner: [number, number, number?, number?][], outer: [number, number, number, number][]) {
-        if (!inner) {
-            return
-        }
-
-        const v: number[] = [] 
-        const uv: number[] = [] 
-        const c: number[] = []
-
-        for (let i = 0; i < outer.length; ++i) {
-            const innerI = inner[i]
-            const outerI = outer[i]
-
-            if (innerI.length === 4) {
-                const r = createCurb00(
-                    [innerI[2], innerI[3]], 
-                    [innerI[0], innerI[1]], 
-                    [outerI[0], outerI[1]], 
-                    [outerI[2], outerI[3]],
-                    tileMapWall.stoneLong,
-                    null,
-                    5,
-                    COLOR_FLOOR,
-                )
-                v.push(...r.v)    
-                uv.push(...r.uv)
-                c.push(...r.c)
-            }
-        }
-        return { v, uv, c }
-    }
 
     _createArea (areaData: any) {
         const v: number[] = []
@@ -424,6 +400,41 @@ export class Lab {
             } 
         }
 
+        return { v, uv, c }
+    }
+
+    _fillRoad (inner: [number, number, number?, number?][], outer: [number, number, number, number][]) {
+        if (!inner) {
+            return
+        }
+
+        const v: number[] = [] 
+        const uv: number[] = [] 
+        const c: number[] = []
+
+        for (let i = 0; i < outer.length; ++i) {
+            const innerI = inner[i]
+            const outerI = outer[i]
+
+            if (innerI.length === 4) {
+                const r = createCurb00(
+                    [innerI[2], innerI[3]], 
+                    [innerI[0], innerI[1]], 
+                    [outerI[0], outerI[1]], 
+                    [outerI[2], outerI[3]],
+
+
+                    
+                    tileMapWall.stoneLong,
+                    null,
+                    5,
+                    COLOR_FLOOR,
+                )
+                v.push(...r.v)    
+                uv.push(...r.uv)
+                c.push(...r.c)
+            }
+        }
         return { v, uv, c }
     }
 }
