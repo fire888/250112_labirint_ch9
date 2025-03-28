@@ -45,7 +45,7 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         }
     }
 
-    // /** draw exist lines */
+    /** draw exist lines */
     // for (let i = 0; i < existsLines.length; ++i) {
     //     const l = existsLines[i]
     //     const lp = _M.createLine([[l[0], l[1]], [l[2], l[3]]], [1, 0, 0])
@@ -54,15 +54,15 @@ export const offset = (points: [number, number][], d: number, root: Root): {
 
     //     {
     //         const p = [l[0], l[1]]
-    //         const l1 = _M.createLabel('p' + i + 's', [1, 1, 1], 7)
-    //         l1.position.set(p[0], 1 + i, p[1])
+    //         const l1 = _M.createLabel('p' + i + 's', [1, 1, 1], 1)
+    //         l1.position.set(p[0], (1 + i) * .2, p[1])
     //         root.studio.add(l1)
     //     }
 
     //     {
     //         const p = [l[2], l[3]]
-    //         const l1 = _M.createLabel('p' + i + 'e', [1, 1, 1], 7)
-    //         l1.position.set(p[0], 1 + i, p[1])
+    //         const l1 = _M.createLabel('p' + i + 'e', [1, 1, 1], 1)
+    //         l1.position.set(p[0], (1 + i) * .2, p[1])
     //         root.studio.add(l1)
     //     }
 
@@ -97,15 +97,15 @@ export const offset = (points: [number, number][], d: number, root: Root): {
 
     //     {
     //         const p = [l[0], l[1]]
-    //         const l1 = _M.createLabel('p' + i + 's', [0, 1, 1], 7)
-    //         l1.position.set(p[0], 1 + i, p[1])
+    //         const l1 = _M.createLabel('p' + i + 's', [0, 1, 1], 1)
+    //         l1.position.set(p[0], (1 + i) * .2, p[1])
     //         root.studio.add(l1)
     //     }
 
     //     {
     //         const p = [l[2], l[3]]
-    //         const l1 = _M.createLabel('p' + i + 'e', [0, 1, 1], 7)
-    //         l1.position.set(p[0], 1 + i, p[1])
+    //         const l1 = _M.createLabel('p' + i + 'e', [0, 1, 1], 1)
+    //         l1.position.set(p[0], (1 + i) * .2, p[1])
     //         root.studio.add(l1)
     //     }
 
@@ -167,11 +167,13 @@ export const offset = (points: [number, number][], d: number, root: Root): {
 
         let pointToInsert = int1
         let isPoint2 = false
-        // if (int1 && int2) {
-        //     const d = Math.sqrt((int1[0] - cX) **2 + (int1[1] - cY) **2)
-        //     const d2 = Math.sqrt((int2[0] - cX) **2 + (int2[1] - cY) **2)
-        //     isPoint2 = d2 < d
-        // }
+        if (int1 && int2) {
+            if (innerLines.length !== 3 && innerLines.length !== 4) {
+                const d = Math.sqrt((int1[0] - cX) **2 + (int1[1] - cY) **2)
+                const d2 = Math.sqrt((int2[0] - cX) **2 + (int2[1] - cY) **2)
+                isPoint2 = d2 < d
+            }
+        }
         if (!int1 && int2) {
             isPoint2 = true
         }
@@ -181,6 +183,12 @@ export const offset = (points: [number, number][], d: number, root: Root): {
         intercepts.push(pointToInsert)
     }
 
+    // intercepts.forEach((e, i) => {
+    //         const p = e
+    //         const l1 = _M.createLabel(i + '', [1, 0, 0], 1)
+    //         l1.position.set(p[0], (1 + i) * .2, p[1])
+    //         root.studio.add(l1)
+    // })
 
     const innerLinesTrimmed: [number, number, number, number][] = []
     for (let i = 1; i < intercepts.length; ++i) {

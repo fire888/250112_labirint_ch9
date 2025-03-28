@@ -48,57 +48,72 @@ export class Lab {
             })
 
             /** label */
-            const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
-            l.position.set(center[0], 1, center[1])
-            root.studio.add(l)
-            console.log('perimeter:', i, JSON.stringify({
-                center,
-                area,
-                perimeter: scheme[i].area,
-                perimeterInner: scheme[i].offset,
-            }))
+            // const l = _M.createLabel(i + ':_' + area.toFixed(1), [1, 1, 1], 5)
+            // l.position.set(center[0], 1, center[1])
+            // root.studio.add(l)
+            // console.log('perimeter:', i, JSON.stringify({
+            //     center,
+            //     area,
+            //     perimeter: scheme[i].area,
+            //     perimeterInner: scheme[i].offset,
+            // }))
         }
 
         // const p0: [number, number][] =
         //     [[47.5068170931952,40.954869246100614],[49.35495133579947,50.28669379945678],[69.31320673659431,49.56875676984434],[69.91321808140812,48.479099662266876],[66.96852621022883,41.359869636973414],[55.805643071992485,36.709009938495576],[47.5068170931952,40.954869246100614]]
 
+        //  const p01: [number, number][] = [[68.59407568095797,45.5307863279735],[68.83585260037971,46.24963718839549],[89.07093997376052,46.20276341983279],[91.85810725046277,36.05857565615229],[78.7059202233192,31.567298017156013],[73.41190441699894,32.7939119092836],[68.59407568095797,45.5307863279735]]
+        // const p02: [number, number][] = [[0,31.499905342549102],[9.196230856895248,30.922536038745356],[0.12798325970139324,12.874530416066566],[0,12.780680513086763],[0,31.499905342549102]] 
+        
         // const pInner: [number, number][] = [[0, 0]]   
         // const areasData = [
-        // {
-        //     "center":[58.005884214904306,44.43471196883098],"area":219.9280942974118,"perimeter": p0, perimeterInner: pInner, isDown: false  }
+        //     {
+        //         "center":[80.27200511526718,39.809324570276864],
+        //         "area":257.36826082930475,
+        //         "perimeter":p01,
+        //         perimeterInner: pInner,
+        //         isDown: false,
+        //     },
+        //     {
+        //         "center":[3.0657687629986774,25.015538167748087],
+        //         "area":86.80255071368364,
+        //         "perimeter": p02,
+        //         "perimeterInner": p02,
+        //         isDown: false,
+        //     }
         // ] 
 
 
-        /** walls */
-        // {
-        //     const v: number[] = []
-        //     const uv: number[] = []
-        //     const c: number[] = []
-        //     for (let i = 0; i < areasData.length; ++i) {
-        //         if (areasData[i].isDown) { 
-        //             continue;
-        //         }
-        //         const random = Math.random()
-        //         if (random < .5) {
-        //             const r = this._createHome(areasData[i].perimeterInner)
-        //             v.push(...r.v)
-        //             uv.push(...r.uv)
-        //             c.push(...r.c)
-        //         } else {
-        //             const r = this._createHome_03(areasData[i].perimeterInner)
-        //             v.push(...r.v)
-        //             uv.push(...r.uv)
-        //             c.push(...r.c)
-        //         }
-        //     }
-        //     const m = _M.createMesh({ 
-        //         v, 
-        //         uv,
-        //         c,
-        //         material: root.materials.walls00,
-        //     })
-        //     this._root.studio.add(m)
-        // }
+        // /** walls */
+        {
+            const v: number[] = []
+            const uv: number[] = []
+            const c: number[] = []
+            for (let i = 0; i < areasData.length; ++i) {
+                if (areasData[i].isDown) { 
+                    continue;
+                }
+                const random = Math.random()
+                if (random < .5) {
+                    const r = this._createHome(areasData[i].perimeterInner)
+                    v.push(...r.v)
+                    uv.push(...r.uv)
+                    c.push(...r.c)
+                } else {
+                    const r = this._createHome_03(areasData[i].perimeterInner)
+                    v.push(...r.v)
+                    uv.push(...r.uv)
+                    c.push(...r.c)
+                }
+            }
+            const m = _M.createMesh({ 
+                v, 
+                uv,
+                c,
+                material: root.materials.walls00,
+            })
+            this._root.studio.add(m)
+        }
 
         /** roads */
         {
@@ -132,29 +147,29 @@ export class Lab {
         }
 
         /** areas */
-        // {
-        //     const v: number[] = []
-        //     const uv: number[] = []
-        //     const c: number[] = []
+        {
+            const v: number[] = []
+            const uv: number[] = []
+            const c: number[] = []
 
-        //     for (let i = 0; i < areasData.length; ++i) {
-        //         if (!areasData[i].isDown) { 
-        //             continue;
-        //         }
+            for (let i = 0; i < areasData.length; ++i) {
+                if (!areasData[i].isDown) { 
+                    continue;
+                }
 
-        //         const r = this._createArea(areasData[i])
-        //         v.push(...r.v)
-        //         uv.push(...r.uv)
-        //         c.push(...r.c)
-        //     }
-        //     const m = _M.createMesh({ 
-        //         v,
-        //         uv,
-        //         c, 
-        //         material: root.materials.walls00,
-        //     })
-        //     this._root.studio.add(m)
-        // }
+                const r = this._createArea(areasData[i])
+                v.push(...r.v)
+                uv.push(...r.uv)
+                c.push(...r.c)
+            }
+            const m = _M.createMesh({ 
+                v,
+                uv,
+                c, 
+                material: root.materials.walls00,
+            })
+            this._root.studio.add(m)
+        }
     }
 
     _createHome (perimiter: [number, number][]) {

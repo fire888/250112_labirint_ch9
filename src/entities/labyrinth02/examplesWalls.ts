@@ -4,6 +4,7 @@ import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
 import { createCurb00 } from "geometry/curb00";
 import { tileMapWall } from "geometry/tileMapWall";
+import { createDoor_00 } from "geometry/door00";
 import { _M } from "geometry/_m";
 
 export const createExamplesAllWalls = (root: Root) => {
@@ -93,6 +94,21 @@ export const createExamplesAllWalls = (root: Root) => {
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)
+    }
+
+
+    {
+        const r = createDoor_00(root)
+
+        const m = _M.createMesh({ 
+            v: r.v,
+            uv: r.uv,
+            c: r.c, 
+            material: root.materials.walls00,
+        })
+        m.position.z = -15
+        root.studio.add(m)
+        //_M.translateVertices(r.v)
     }
 
 

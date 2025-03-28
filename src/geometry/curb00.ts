@@ -39,7 +39,11 @@ export const createCurb00 = (
             frontStart[0], h, frontStart[1],
             backEnd[0], h, backEnd[1],
         )
-        uv.push(...uvTile)
+        uv.push(
+            uvTile[0], uvTile[1],
+            uvTile[2], uvTile[3],
+            uvTile[4], uvTile[5],
+        )
         c.push(
             ...color,
             ...color,
@@ -51,7 +55,11 @@ export const createCurb00 = (
             backStart[0], h, backStart[1],
             frontStart[0], h, frontStart[1],
         )
-        uv.push(...uvTile)
+        uv.push(
+            uvTile[0], uvTile[1],
+            uvTile[2], uvTile[3],
+            uvTile[4], uvTile[5],
+        )
         c.push(
             ...color,
             ...color,
