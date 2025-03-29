@@ -12,7 +12,6 @@ import { createExamplesAllWalls } from "./examplesWalls";
 import { tileMapWall } from "geometry/tileMapWall";
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
-console.log('HHH', COLOR_FLOOR)
 
 const COLOR_PERIM = _M.hexToNormalizedRGB('1c1937')
 const AREA_FOR_DOWN = 60

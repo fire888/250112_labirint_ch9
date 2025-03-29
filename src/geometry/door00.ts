@@ -1,10 +1,19 @@
 import { _M, A3 } from "./_m"
 import { tileMapWall } from './tileMapWall'
 import { createCurb00 } from "./curb00"
+import { COLOR_BLUE, COLOR_BLUE_L } from "../constants/CONSTANTS"
 
 import { Root } from "index"
 
-const COLOR_WHITE: A3 = _M.hexToNormalizedRGB('444444') 
+
+const TOP_PROFILE: [number, number][] = [
+    [0, 0],
+    [.8, 0],
+    [.8, .15],
+    [1, .15],
+    [1, .3],
+    [0, .33],
+]
 
 export const createDoor_00 = (
     root: Root, 
@@ -21,16 +30,16 @@ export const createDoor_00 = (
     const R = w * .5
     const DS = .1
 
-    { // проем внутренний
+    const H_SQ = 1 // высота плоскости над дверью
 
+    { // проем внутренний
         // порог нижний
         {
-            const r = createCurb00([0, 0], [R, 0], [R, -d], [0, -d], tileMapWall.noise, .1, 100, COLOR_WHITE)
+            const r = createCurb00([0, 0], [R, 0], [R, -d], [0, -d], tileMapWall.noise, .1, 100, COLOR_BLUE)
             v.push(...r.v)
             uv.push(...r.uv)
             c.push(...r.c)
         }
-
 
         v.push(
             ..._M.createPolygon(
@@ -41,7 +50,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
 
         v.push(
             ..._M.createPolygon(
@@ -52,7 +61,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
     }
 
     { // передний внутренний профиль
@@ -66,7 +75,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
 
         v.push(
             ..._M.createPolygon(
@@ -77,7 +86,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
 
         // закрываем сверху внутренний профиль
         v.push(
@@ -89,27 +98,26 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
 
-        const HN = .5
         // квадрат над дверью
         v.push(
             ..._M.createPolygon(
                 [0, h + ws, DS],
                 [R + ws, h + ws, DS],
-                [R + ws, h + ws + HN, DS],
-                [0, h + ws + HN, DS],
+                [R + ws, h + ws + H_SQ, DS],
+                [0, h + ws + H_SQ, DS],
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
     }
 
     { // передняя пилястра
         const R1 = R + .2
         const R2 = R1 + .3
-        const D = .2
-        const H = h + .2 + .5
+        const D = .4
+        const H = h + .2 + H_SQ + .3
 
         // перед
         v.push(
@@ -121,7 +129,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE_L))
 
         // лево
         v.push(
@@ -133,7 +141,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE_L))
 
         // право
         v.push(
@@ -145,13 +153,13 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE_L))
     }
 
     { // низ пилястры
-        const R1 = R
+        const R1 = R + .1
         const R2 = R + .2 + .3 + .05
-        const D = .25
+        const D = .42
         const H = .5
 
         // перед
@@ -164,7 +172,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
 
         // лево
         v.push(
@@ -176,7 +184,7 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
 
         // право
         v.push(
@@ -188,20 +196,116 @@ export const createDoor_00 = (
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
 
         // верх
         v.push(
             ..._M.createPolygon(
-                [R, H, D],
+                [R1, H, D],
                 [R2, H, D],
                 [R2, H, 0],
-                [R, H, 0],
+                [R1, H, 0],
             )
         )
         uv.push(...tileMapWall.white)
-        c.push(..._M.fillColorFace(COLOR_WHITE))
+        c.push(..._M.fillColorFace(COLOR_BLUE))
     }
+
+    { // верхний профиль
+        const RT = R - .2
+
+        const pr =  _M.convertSimpleProfileToV3(TOP_PROFILE)
+        const pr2 = []
+        for (let i = 0; i < pr.length; i += 3) {
+            pr2.push(pr[i + 2], pr[i + 1], pr[i + 2]) 
+        }
+
+        const r = _M.fillPoligonsV3(pr, pr2, RT, tileMapWall.white, COLOR_BLUE_L)
+        _M.translateVertices(r.v, 0, h + .2 + H_SQ, 0)
+        v.push(...r.v)
+        c.push(...r.c)
+        uv.push(...r.uv)
+
+        _M.translateVertices(pr2, RT, 0, 0)
+        const pr3 = []
+        for (let i = 0; i < pr2.length; i += 3) {
+            pr3.push(pr2[i], pr2[i + 1], 0)
+        }
+        const r2 = _M.fillPoligonsV3(pr2, pr3, 0, tileMapWall.white, COLOR_BLUE_L)
+        _M.translateVertices(r2.v, 0, h + .2 + H_SQ, 0)
+        v.push(...r2.v)
+        c.push(...r2.c)
+        uv.push(...r2.uv)
+    }
+
+    { // внутренний косяк в комнате
+        const ws = .2
+        const DSS = -d - DS
+
+        // право
+        v.push(
+            ..._M.createPolygon(
+                [R + ws, 0, -ws * .3 + DSS],
+                [R, 0, DSS],
+                [R, h, + DSS],
+                [R + ws, h + ws, -ws * .3 + DSS],
+            )
+        )
+        uv.push(...tileMapWall.white)
+        c.push(..._M.fillColorFace(COLOR_BLUE))
+
+        // право к стенке
+        v.push(
+            ..._M.createPolygon(
+                [R + ws, 0, -d],
+                [R + ws, 0, -ws * .3 + DSS],
+                [R + ws, h + ws, -ws * .3 + DSS],
+                [R + ws, h + ws, -d],
+            )
+        )
+        uv.push(...tileMapWall.white)
+        c.push(..._M.fillColorFace(COLOR_BLUE))
+
+        v.push(
+            ..._M.createPolygon(
+                [R, h, DSS],
+                [0, h, DSS],
+                [0, h + ws, -ws * .3 + DSS],
+                [R + ws, h + ws, -ws * .3 + DSS],
+            )
+        )
+        uv.push(...tileMapWall.white)
+        c.push(..._M.fillColorFace(COLOR_BLUE))
+
+        // закрываем сверху внутренний профиль
+        v.push(
+            ..._M.createPolygon(
+                [R + ws, h + ws, -ws * .3 + DSS],
+                [0, h + ws, -ws * .3 + DSS],
+                [0, h + ws, -d],
+                [R + ws, h + ws, -d],
+            )
+        )
+        uv.push(...tileMapWall.white)
+        c.push(..._M.fillColorFace(COLOR_BLUE))
+
+        // // квадрат над дверью
+        // v.push(
+        //     ..._M.createPolygon(
+        //         [0, h + ws, DS],
+        //         [R + ws, h + ws, DS],
+        //         [R + ws, h + ws + H_SQ, DS],
+        //         [0, h + ws + H_SQ, DS],
+        //     )
+        // )
+        // uv.push(...tileMapWall.white)
+        // c.push(..._M.fillColorFace(COLOR_BLUE))
+    }
+
+    { // mirror
+        _M.appendMirrorX(v, c, uv)
+    }
+
 
     return { v, uv, c }
 }

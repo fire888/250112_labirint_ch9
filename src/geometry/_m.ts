@@ -646,5 +646,27 @@ export const _M = {
     }),
 
     toleranceToZero: (num: number, tolerance = 1e-10) => Math.abs(num) < tolerance ? 0 : num,
+
+    appendMirrorX: (v: number[], c: number[], uv: number[]) => {
+        const copyV = []
+        for (let i = 0; i < v.length; i += 18) {
+            const p0 = [-v[i], v[i + 1], v[i + 2]]
+            const p1 = [-v[i + 3], v[i + 4], v[i + 5]]
+            const p4 = [-v[i + 12], v[i + 13], v[i + 14]]    
+            const p5 = [-v[i + 15], v[i + 16], v[i + 17]]
+            copyV.push(...p1)
+            copyV.push(...p0)
+            copyV.push(...p5)
+            copyV.push(...p1)
+            copyV.push(...p5)
+            copyV.push(...p4)
+        }
+        const copyC = [...c]
+        const copyUV = [...uv]
+
+        v.push(...copyV)
+        c.push(...copyC)
+        uv.push(...copyUV)
+    },
 }
 
