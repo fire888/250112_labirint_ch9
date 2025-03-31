@@ -1,5 +1,6 @@
 import { Root } from "index"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
+import { createWall_01_door } from "geometry/wall01_door";
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
 import { createCurb00 } from "geometry/curb00";
@@ -109,6 +110,19 @@ export const createExamplesAllWalls = (root: Root) => {
         m.position.z = -15
         root.studio.add(m)
         //_M.translateVertices(r.v)
+    }
+
+    {
+        const r = createWall_01_door(
+            root, 
+            15, 
+            10, 
+            { width: 1.5, height: 4, offsetLeft: 5, offsetBottom: 0, depth: .5 },            
+        )
+        _M.translateVertices(r.v, 0, 0, -20)
+        v.push(...r.v)
+        c.push(...r.c)
+        uv.push(...r.uv)
     }
 
 

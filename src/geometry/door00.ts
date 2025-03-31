@@ -160,7 +160,7 @@ export const createDoor_00 = (
         const R1 = R + .1
         const R2 = R + .2 + .3 + .05
         const D = .42
-        const H = .5
+        const H = .6
 
         // перед
         v.push(
@@ -288,18 +288,6 @@ export const createDoor_00 = (
         )
         uv.push(...tileMapWall.white)
         c.push(..._M.fillColorFace(COLOR_BLUE))
-
-        // // квадрат над дверью
-        // v.push(
-        //     ..._M.createPolygon(
-        //         [0, h + ws, DS],
-        //         [R + ws, h + ws, DS],
-        //         [R + ws, h + ws + H_SQ, DS],
-        //         [0, h + ws + H_SQ, DS],
-        //     )
-        // )
-        // uv.push(...tileMapWall.white)
-        // c.push(..._M.fillColorFace(COLOR_BLUE))
     }
 
     { // mirror
