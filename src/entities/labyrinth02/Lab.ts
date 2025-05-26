@@ -10,6 +10,7 @@ import { createArea00 } from "geometry/area00";
 import { offset, } from "./offset";
 import { createExamplesAllWalls } from "./examplesWalls";
 import { tileMapWall } from "geometry/tileMapWall";
+import { log, STYLE_KEYS } from "helpers/logger";
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
 
@@ -22,9 +23,14 @@ export class Lab {
     async init (root: Root, params = {}) {
         this._root = root
 
-        createExamplesAllWalls(root)
+        let d = Date.now()
 
+        console.log('[MESSAGE:] START EXAMPLES')
+        createExamplesAllWalls(root)
+        console.log('[TIME:] COMPLETE EXAMPLES:', ((Date.now() - d) / 1000).toFixed(2))
         
+        console.log('[MESSAGE:] START SCHEME')
+        d = Date.now()
         const scheme = createScheme(root)
 
         const areasData = []
@@ -57,6 +63,7 @@ export class Lab {
             //     perimeterInner: scheme[i].offset,
             // }))
         }
+        console.log('[TIME:] COMPLETE SCHEME:', ((Date.now() - d) / 1000).toFixed(2))
 
         // const p0: [number, number][] =
         //     [[47.5068170931952,40.954869246100614],[49.35495133579947,50.28669379945678],[69.31320673659431,49.56875676984434],[69.91321808140812,48.479099662266876],[66.96852621022883,41.359869636973414],[55.805643071992485,36.709009938495576],[47.5068170931952,40.954869246100614]]
@@ -84,6 +91,8 @@ export class Lab {
 
 
         // /** walls */
+        console.log('[MESSAGE:] START WALLS')
+        d = Date.now()
         {
             const v: number[] = []
             const uv: number[] = []
@@ -100,9 +109,15 @@ export class Lab {
                     c.push(...r.c)
                 } else {
                     const r = this._createHome_03(areasData[i].perimeterInner)
-                    v.push(...r.v)
-                    uv.push(...r.uv)
-                    c.push(...r.c)
+                    for (let i = 0; i < r.v.length; ++i) {
+                        v.push(r.v[i])
+                    }
+                    for (let i = 0; i < r.uv.length; ++i) {
+                        uv.push(r.uv[i])       
+                    }
+                    for (let i = 0; i < r.c.length; ++i) {
+                         c.push(r.c[i])   
+                    }
                 }
             }
             const m = _M.createMesh({ 
@@ -113,8 +128,11 @@ export class Lab {
             })
             this._root.studio.add(m)
         }
+        console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
 
         /** roads */
+        console.log('[MESSAGE:] START ROADS ')
+        d = Date.now()
         {
             const v: number[] = []
             const uv: number[] = [] 
@@ -144,8 +162,11 @@ export class Lab {
             })
             this._root.studio.add(m)
         }
+        console.log('[TIME:] COMPLETE ROADS', ((Date.now() - d) / 1000).toFixed(2))
 
         /** areas */
+        console.log('[MESSAGE:] START AREAS')
+        d = Date.now()
         {
             const v: number[] = []
             const uv: number[] = []
@@ -155,7 +176,6 @@ export class Lab {
                 if (!areasData[i].isDown) { 
                     continue;
                 }
-
                 const r = this._createArea(areasData[i])
                 v.push(...r.v)
                 uv.push(...r.uv)
@@ -169,6 +189,7 @@ export class Lab {
             })
             this._root.studio.add(m)
         }
+        console.log('[TIME:] COMPLETE AREAS',((Date.now() - d) / 1000).toFixed(2))
     }
 
     _createHome (perimiter: [number, number][]) {
@@ -319,6 +340,10 @@ export class Lab {
 
         // DRAW WALLS //////////////////////////
         for (let i = 1; i < offsetPoints.existsLines.length; ++i) {
+            if (!offsetPoints.offsetLines[i]) {
+                log('[ERROR]: WRONG OFFSET_LINES NOT CORRESPONDING EXISTS LINES:', STYLE_KEYS.RED, offsetPoints)
+                continue;
+            }
             const prev_O_X = offsetPoints.existsLines[i][0]
             const prev_O_Z = offsetPoints.existsLines[i][1]
             const prev_I_X = offsetPoints.offsetLines[i][0]
@@ -422,6 +447,8 @@ export class Lab {
             return
         }
 
+
+
         const v: number[] = [] 
         const uv: number[] = [] 
         const c: number[] = []
@@ -429,6 +456,10 @@ export class Lab {
         for (let i = 0; i < outer.length; ++i) {
             const innerI = inner[i]
             const outerI = outer[i]
+
+            if (!innerI || !outerI) {
+                continue;
+            }
 
             if (innerI.length === 4) {
                 const r = createCurb00(
@@ -440,7 +471,7 @@ export class Lab {
 
                     
                     tileMapWall.stoneLong,
-                    null,
+                    0,
                     5,
                     COLOR_FLOOR,
                 )
