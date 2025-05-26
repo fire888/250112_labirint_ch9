@@ -12,8 +12,8 @@ export const pipelineEnd = async (root: Root) => {
 
 
     controls.disable()
-    setTimeout(() => {
-        studio.showFinalView()
-    }, 600)
+    // setTimeout(() => {
+    //     studio.showFinalView()
+    // }, 600)
     await ui.showFinalPage()
 }

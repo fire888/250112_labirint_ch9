@@ -2,6 +2,7 @@ import { _M, A3 } from "./_m";
 import { tileMapWall } from './tileMapWall'
 import { createDoor_00 } from "./door00";
 import { Root } from "index";
+import { createPlaneWithHoles } from "./planeHoles";
 
 type DoorData = {
     width: number
@@ -65,7 +66,7 @@ export const createWall_01_door = (root: Root, d: number, h: number, doorData: D
         { profile: _M.convertSimpleProfileToV3(PR_BOTTOM), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_BOTTOM), _M.convertSimpleProfileToV3(PR_CENTER)), color: C1, uvTile: tileMapWall.noise },
         { profile: _M.convertSimpleProfileToV3(PR_CENTER), color: C1, uvTile: tileMapWall.noise },
-        { profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), _M.convertSimpleProfileToV3(prTopModify)), color: C2, uvTile: tileMapWall.break },
+        //{ profile: _M.getLastAndFirstCoordsPath(_M.convertSimpleProfileToV3(PR_CENTER), _M.convertSimpleProfileToV3(prTopModify)), color: C2, uvTile: tileMapWall.break },
         { profile: _M.convertSimpleProfileToV3(prTopModify), color: C1, uvTile: tileMapWall.noise },
     ]
 
