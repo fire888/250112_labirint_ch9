@@ -1,9 +1,10 @@
-import { _M, A3 } from "./_m"
-import { tileMapWall } from './tileMapWall'
-import { createCurb00 } from "./curb00"
-import { COLOR_BLUE, COLOR_BLUE_L } from "../constants/CONSTANTS"
+import { _M, A3 } from "../_m"
+import { tileMapWall } from '../tileMapWall'
+import { createCurb00 } from "../bevel00/curb00"
+import { COLOR_BLUE, COLOR_BLUE_L } from "../../constants/CONSTANTS"
 
 import { Root } from "index"
+import { IHoleData } from "../../types/GeomTypes"
 
 
 const TOP_PROFILE: [number, number][] = [
@@ -17,14 +18,18 @@ const TOP_PROFILE: [number, number][] = [
 
 export const createDoor_00 = (
     root: Root, 
-    w: number = 2, 
-    d: number = .8, 
-    h: number = 4, 
-    hStairs: number = .5
+    doorData: IHoleData,
 ) => {
     const v: number[] = [] 
     const uv: number[] = [] 
     const c: number[] = []
+
+
+    const {
+        w = 2, 
+        d = .8, 
+        h = 4,
+    } = doorData
 
 
     const R = w * .5

@@ -1,5 +1,5 @@
-import { _M, A3 } from './_m'
-import { tileMapWall } from './tileMapWall'
+import { _M, A3 } from '../_m'
+import { tileMapWall } from '../tileMapWall'
 
 const PROFILE: [number, number][] = [
     [.25, 0],

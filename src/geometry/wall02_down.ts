@@ -1,8 +1,7 @@
 import { _M, A3 } from "./_m";
 import { tileMapWall } from './tileMapWall'
-
-const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('3c3865') 
-const COLOR_BLUE_D: A3 = _M.hexToNormalizedRGB('1c1937') 
+import { COLOR_BLUE, COLOR_BLUE_D } from "constants/CONSTANTS";
+ 
 const C1 = COLOR_BLUE_D
 const C2 = COLOR_BLUE
 const PR_BOTTOM: [number, number][] = [

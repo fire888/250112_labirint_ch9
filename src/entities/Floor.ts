@@ -3,8 +3,8 @@ import * as THREE from 'three'
 import { Root } from "../index";
 import { _M, A3 } from 'geometry/_m';
 import { tileMapWall } from 'geometry/tileMapWall'
+import { COLOR_BLUE } from 'constants/CONSTANTS';
 
-const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('1a182d') 
 
 export class Floor {
     mesh: Mesh

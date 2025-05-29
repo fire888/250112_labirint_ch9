@@ -1,12 +1,19 @@
 import { Root } from "index"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
-import { createWall_01_door } from "geometry/wall01_door";
+import { createWall_01_door_window, IWallData_01_door_window  } from "geometry/wall01_door_window";
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
-import { createCurb00 } from "geometry/curb00";
+import { createCurb00 } from "geometry/bevel00/curb00";
 import { tileMapWall } from "geometry/tileMapWall";
-import { createDoor_00 } from "geometry/door00";
 import { _M } from "geometry/_m";
+import { ElemType } from 'types/GeomTypes'
+
+import { createDoor_00 } from "geometry/door00/door00";
+import { createWindow00 } from "geometry/window00/window00";
+import { createHole00 } from "geometry/hole00/hole00";
+import { createTopElem_00 } from "geometry/topElem/topElem_00";
+import { createArea00 } from "geometry/area00/area00";
+
 
 export const createExamplesAllWalls = (root: Root) => {
     const v = []
@@ -97,27 +104,114 @@ export const createExamplesAllWalls = (root: Root) => {
         uv.push(...r.uv)
     }
 
-
+    // door
     {
-        const r = createDoor_00(root)
+        const door = createDoor_00(root, { w: 1, h: 4, d: .3, offsetX: 0, offsetY: 0 })
+        _M.translateVertices(door.v, 60, 0, -10)
+        v.push(...door.v)
+        c.push(...door.c)
+        uv.push(...door.uv) 
+    }
 
-        const m = _M.createMesh({ 
-            v: r.v,
-            uv: r.uv,
-            c: r.c, 
-            material: root.materials.walls00,
-        })
-        m.position.z = -15
-        root.studio.add(m)
-        //_M.translateVertices(r.v)
+    // window 
+    {
+        const window = createWindow00(root, { w: 1, h: 2, d: .3, offsetX: 0, offsetY: 0 })        
+        _M.translateVertices(window.v, 70, 0, -10)
+        v.push(...window.v)
+        c.push(...window.c)
+        uv.push(...window.uv)
+    }
+
+    // hole 
+    {
+        const hole = createHole00(root, { w: 1, h: 2, d: .3, offsetX: 0, offsetY: 1, width: 2, height: 4 })        
+        _M.translateVertices(hole.v, 80, 0, -10)
+        v.push(...hole.v)
+        c.push(...hole.c)
+        uv.push(...hole.uv)
+    }
+
+    // top elem 
+    {
+        const topElem = createTopElem_00([.3, .3, 1])
+        _M.translateVertices(topElem.v, 90, 0, -10)
+        v.push(...topElem.v)
+        c.push(...topElem.c)
+        uv.push(...topElem.uv)
+    }
+
+    // area00 
+    {
+        const area = createArea00([[-2, 5], [0, 5], [5, -5], [-5, -5]], [.5, .5, 1], tileMapWall.break)           
+        _M.translateVertices(area.v, 100, 1, -10)
+        v.push(...area.v)
+        c.push(...area.c)
+        uv.push(...area.uv)
     }
 
     {
-        const r = createWall_01_door(
-            root, 
-            15, 
-            10, 
-            { width: 1.5, height: 4, offsetLeft: 5, offsetBottom: 0, depth: .5 },            
+
+
+
+        const windows = []
+        const pilasters = []
+
+        const w = 20
+        const n = 5
+        const step = w / (n)
+        const windowW = step * .3
+
+        for (let i = 0; i < n; ++i) {
+            windows.push({
+                elemType: ElemType.WINDOW_00,
+                w: windowW,
+                h: 2,
+                d: .3,
+                offsetX: step * (i + .5),
+                offsetY: 2,
+            })
+            if (i !== n - 1) {
+                pilasters.push({
+                    elemType: ElemType.PILASTER_00,
+                    w: 1,
+                    h: 5,
+                    d: .3,
+                    offsetX: step * (i + 1),
+                    offsetY: 0,
+                })                    
+            } 
+        }
+
+        const wall: IWallData_01_door_window = {
+            w,
+            h: 5,
+            d: .3,
+            floors: [
+                {
+                    h: 5,
+                    d: .3,
+                    w,
+                    windows,
+                    pilasters,
+                    poiases: [
+                       {
+                            elemType: ElemType.POIAS_00,
+                            w,
+                            h: .8,
+                            d: .05,
+                            offsetY: 0,
+                            offsetX: 0,
+                        }
+                    ]
+                },
+            ]
+        }
+
+        
+
+        const r = createWall_01_door_window(
+            root,
+            wall,            
         )
         _M.translateVertices(r.v, 0, 0, -20)
         v.push(...r.v)

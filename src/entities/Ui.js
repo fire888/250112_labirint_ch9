@@ -1,5 +1,5 @@
 import { Tween, Interpolation } from '@tweenjs/tween.js'
-import { pause, elementClickOnce } from './_helpers'
+import { pause, elementClickOnce } from '../helpers/htmlHelpers'
 
 export class Ui {
     _currentEnergyMinWidth = 0

@@ -1,7 +1,7 @@
 import { tileMapWall } from 'geometry/tileMapWall'
 import { _M, A3 } from 'geometry/_m'
-
-const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('1a182d') 
+import { COLOR_BLUE } from 'constants/CONSTANTS'
+//const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('1a182d') 
 
 export const createCurb00 = (
     frontStart: [number, number],

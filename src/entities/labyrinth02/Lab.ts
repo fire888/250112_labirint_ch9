@@ -5,8 +5,8 @@ import { createScheme} from "./scheme"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
-import { createCurb00 } from "geometry/curb00";
-import { createArea00 } from "geometry/area00";
+import { createCurb00 } from "geometry/bevel00/curb00";
+import { createArea00 } from "geometry/area00/area00";
 import { offset, } from "./offset";
 import { createExamplesAllWalls } from "./examplesWalls";
 import { tileMapWall } from "geometry/tileMapWall";

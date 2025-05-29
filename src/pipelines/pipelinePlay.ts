@@ -1,5 +1,5 @@
 import { Root } from '../index'
-import { pause } from '../entities/_helpers'
+import { pause } from '../helpers/htmlHelpers'
 
 let indexLevel = 0
 
