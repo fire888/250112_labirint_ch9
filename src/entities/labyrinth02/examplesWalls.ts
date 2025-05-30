@@ -18,6 +18,7 @@ import { createPilaster00 } from "geometry/pilaster00/pilastre00";
 import { createPilaster01 } from "geometry/pilaster01/pilaster01";
 import { createPoias00 } from "geometry/poias00/poias00";
 import { createPoias01 } from "geometry/poias01/poias01";
+import { createColumn00 } from "geometry/column00/column00";
 
 import { COLOR_BLUE } from "constants/CONSTANTS";
 
@@ -52,7 +53,7 @@ export const createExamplesAllWalls = (root: Root) => {
     }
 
     {        
-        const r = createWall_03(W, H)
+        const r = createWall_03(root, W, H)
         _M.translateVertices(r.v, 12, 0, Z)
         v.push(...r.v)
         uv.push(...r.uv)
@@ -158,37 +159,58 @@ export const createExamplesAllWalls = (root: Root) => {
 
     // pilastre00
     {
-        const pilaster00 = createPilaster00(5)
+        const pilaster00 = createPilaster00(root, 5, 5, 1)
         _M.translateVertices(pilaster00.v, 110, 0, -10)
         v.push(...pilaster00.v)
         c.push(...pilaster00.c)        
         uv.push(...pilaster00.uv) 
+        root.studio.addAxisHelper(110, 0, -10, 1)
+        root.studio.addAxisHelper(110, 5, -10, 1)
+        root.studio.addAxisHelper(110, 0, -9, 1)
+        root.studio.addAxisHelper(109, 0, -10, 1)
     }
 
     // pilaster01 
     {
-        const pilaster01 = createPilaster01(root, .7, 5, .5)
+        const pilaster01 = createPilaster01(root, .7, 5, 1)
         _M.translateVertices(pilaster01.v, 115, 0, -10)
         v.push(...pilaster01.v)
         c.push(...pilaster01.c)        
         uv.push(...pilaster01.uv) 
+        root.studio.addAxisHelper(115, 0, -10, 5)
+        root.studio.addAxisHelper(115, 5, -10, 5)
+        root.studio.addAxisHelper(115, 0, -9, 5)
     }
 
     // poias00 
     {
-        const poias00 = createPoias00(root, 2.5)
+        const poias00 = createPoias00(root, 2.5, 2, 0)
         _M.translateVertices(poias00.v, 120, 0, -10)
         v.push(...poias00.v)
         c.push(...poias00.c)        
         uv.push(...poias00.uv)
+        root.studio.addAxisHelper(120, 0, -10, 5)
+        root.studio.addAxisHelper(120, 2, -10, 5)
     }
     // poias01 
     {
-        const poias01 = createPoias01(root, 5, 1, .3)
+        const poias01 = createPoias01(root, 2.5, 2, .2)
         _M.translateVertices(poias01.v, 125, 0, -10)
         v.push(...poias01.v)
         c.push(...poias01.c)        
         uv.push(...poias01.uv)
+        root.studio.addAxisHelper(125, 0, -10, 5)
+        root.studio.addAxisHelper(125, 2, -10, 5)
+        root.studio.addAxisHelper(125, 2, -9.7, 5)
+    }
+
+    // column 00
+    {
+        const col = createColumn00(root, .21, 5)
+        _M.translateVertices(col.v, 130, 0, -10)
+        v.push(...col.v)
+        c.push(...col.c)        
+        uv.push(...col.uv)
     }
 
     {
@@ -236,8 +258,8 @@ export const createExamplesAllWalls = (root: Root) => {
                        {
                             elemType: ElemType.POIAS_00,
                             w,
-                            h: .8,
-                            d: .05,
+                            h: 1.1,
+                            d: .1,
                             offsetY: 0,
                             offsetX: 0,
                         }

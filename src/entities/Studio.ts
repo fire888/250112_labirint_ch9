@@ -9,18 +9,12 @@ import {
     EquirectangularReflectionMapping,
     SRGBColorSpace,
     Object3D,
-    Vector3,
     AxesHelper,
-    Quaternion,
     SpotLight,
 } from 'three'
 import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-// import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-//import { BokehPass } from 'three/examples/jsm/postprocessing/';
-// import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { Root } from "../index";
-import { Tween, Interpolation, Easing } from '@tweenjs/tween.js'
 
 
 
@@ -107,7 +101,6 @@ export class Studio {
         this.camera.updateProjectionMatrix()
 
         this.renderer.setSize(window.innerWidth, window.innerHeight)
-        //this.composer.setSize(window.innerWidth, window.innerHeight)
     }
 
     add (m: Object3D) {
@@ -118,8 +111,9 @@ export class Studio {
         this.scene.remove(m)
     }
 
-    addAxisHelper () {
-        const axesHelper = new AxesHelper(15)
+    addAxisHelper (x = 0, y = 0, z = 0, size = 15) {
+        const axesHelper = new AxesHelper(size)
+        axesHelper.position.set(x, y, z)
         this.scene.add(axesHelper)
     }
 }

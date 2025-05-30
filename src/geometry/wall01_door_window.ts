@@ -145,8 +145,6 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
     const uv: number[] = []
     const c: number[] = []
 
-
-
     // РАССАВЛЯЕМ ЭЛЕМЕНТЫ НА СТЕНЕ ПО ПОРЯДКУ
     const lineElements: (IHoleData)[] = []
 
@@ -215,10 +213,10 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
 
     {
         if (floorData.pilasters) {
-            const r = createPilaster00(floorData.h + 1.3)
+            const r = createPilaster00(root, .7, floorData.h, .5)
             for (let i = 0; i < floorData.pilasters.length; ++i) {
                 const _v = [...r.v]
-                _M.translateVertices(_v, floorData.pilasters[i].offsetX, floorData.pilasters[i].offsetY, .5)
+                _M.translateVertices(_v, floorData.pilasters[i].offsetX, floorData.pilasters[i].offsetY, 0)
                 v.push(..._v)
                 uv.push(...r.uv)
                 c.push(...r.c)
@@ -242,7 +240,7 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
 
     // left pilaster
     {
-        const r = createPilaster01(root, .3, floorData.h + 1.3, .4)
+        const r = createPilaster01(root, .3, floorData.h , .4)
         _M.translateVertices(r.v, .3 * .5, 0, 0)
         v.push(...r.v)
         uv.push(...r.uv)
@@ -251,7 +249,7 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
 
     // right pilaster
     {
-        const r = createPilaster01(root, .3, floorData.h + 1.3, .4)
+        const r = createPilaster01(root, .3, floorData.h, .4)
         _M.translateVertices(r.v, floorData.w - .3 * .5, 0, 0)
         v.push(...r.v)
         uv.push(...r.uv)
@@ -260,8 +258,8 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
 
     //top poias
     {
-        const r = createPoias01(root, floorData.w, .3, .3)
-        _M.translateVertices(r.v, 0, floorData.h + 1, .4)
+        const r = createPoias01(root, floorData.w, 1.5, .5)
+        _M.translateVertices(r.v, 0, floorData.h, 0)
         v.push(...r.v)
         uv.push(...r.uv)
         c.push(...r.c)

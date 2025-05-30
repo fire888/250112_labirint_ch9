@@ -9,35 +9,64 @@ const C1 = COLOR_BLUE_D
 const C2 = COLOR_BLUE
 
 
-const TOP_PROFILE = [
-    [-0.7,-1.3],
-    [0,-1.3],
-    [0.1,-1.3],
-    [0.1,-1.2],
-    [0.1,-1.1],
-    [0.2,-1],
-    [0.1,-1],
-    [0.1,-0.4],
-    [0.2,-0.3],
-    [0.25,-0.3],
-    [0.25,-0.2],
-    [0.3,-0.2],
-    [0.3,0],
+const TOP_PROFILE = 
+[
     [0,0],
+    [0,0],
+    [0,0.1],
+    [0,0.2],
+    [0.1,0.3],
+    [0,0.3],
+    [0,0.9],
+    [0.1,1],
+    [0.15,1],
+    [0.15,1.1],
+    [0.2,1.1],
+    [0.2,1.3],
+    [0,1.3]
 ]
 
-export const createPoias01 = (root: Root, w: number, h: number = 1.5, d: number = .3): IArrayForBuffers => {
+const n = []
+for (let i = 0; i < TOP_PROFILE.length; ++i) {
+    n.push([TOP_PROFILE[i][0] - .1, TOP_PROFILE[i][1]])
+}
+
+console.log(JSON.stringify(n))
+
+
+export const createPoias01 = (root: Root, w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
 
-    const G = .4
+    let profile = TOP_PROFILE
+    if (h !== 1.3) {
+        profile = []
+        for (let i = 0; i < TOP_PROFILE.length; ++i) {
+            if (i < 6) {
+                profile.push([TOP_PROFILE[i][0], TOP_PROFILE[i][1]])
+            } else {
+                profile.push([TOP_PROFILE[i][0], TOP_PROFILE[i][1] - 1.3 + h])
+            }
+        }
+    }
+
+    if (d !== 0) {
+        const profileD = []
+        for (let i = 0; i < profile.length; ++i) {
+            if (i === 0 || i === profile.length - 1) {
+                profileD.push([profile[i][0], profile[i][1]])
+            } else {
+                profileD.push([profile[i][0] + d, profile[i][1]])
+            }
+        }
+        profile = profileD
+    }
+
     {
-        const copy = [...TOP_PROFILE]
-        copy[0] = [-G, TOP_PROFILE[0][1]] 
-        const converted = _M.convertSimpleProfileToV3(TOP_PROFILE)
+        const copy = [...profile]
+        const converted = _M.convertSimpleProfileToV3(profile)
         const r = _M.fillPoligonsV3(converted, converted, w, tileMapWall.noise, COLOR_BLUE_D, .5, true)
-        _M.translateVertices(r.v, 0, h, 0)
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)

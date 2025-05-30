@@ -260,7 +260,7 @@ export class Lab {
             const curr = perimeterInner[i]
             const a = _M.angleFromCoords(curr[0] - prev[0], curr[1] - prev[1])
             const d = _M.dist(curr, prev)
-            const r = createWall_03(d, H)
+            const r = createWall_03(this._root, d, H)
             _M.rotateVerticesY(r.v, -a)
             _M.translateVertices(r.v, prev[0], 0, prev[1])
             v.push(...r.v)

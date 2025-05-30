@@ -4,6 +4,7 @@ import { createTopElem_00 } from './topElem/topElem_00'
 import { createPilaster00 } from "./pilaster00/pilastre00";
 
 import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
+import { Root } from "index";
 
 const C1 = COLOR_BLUE_D
 const C2 = COLOR_BLUE
@@ -47,7 +48,7 @@ const TOP_PROFILE = [
     [0,0],
 ]
 
-export const createWall_03 = (d: number, h: number) => {
+export const createWall_03 = (root: Root, d: number, h: number) => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
@@ -206,7 +207,7 @@ export const createWall_03 = (d: number, h: number) => {
         const colN = Math.floor((d - RL - RL) / W_MIN)
         const STEP = (d - RL - RL) / (colN)
         
-        const r = createPilaster00(h)
+        const r = createPilaster00(root, Math.random() + .6, h - 1.3, .6)
 
 
         for (let i = 1; i < colN; ++i) {
@@ -222,7 +223,7 @@ export const createWall_03 = (d: number, h: number) => {
 
             {/** pilaster  */
                 const _v = [...r.v]
-                _M.translateVertices(_v, x, 0, 0)
+                _M.translateVertices(_v, x, 0, -.4)
                 v.push(..._v)
                 c.push(...r.c)
                 uv.push(...r.uv)

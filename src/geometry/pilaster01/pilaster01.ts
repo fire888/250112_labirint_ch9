@@ -35,7 +35,6 @@ export const createPilaster01 = (root: Root, w: number, h: number, d: number = .
     const c: number[] = []
     const uv: number[] = []
             
-    /** задник колонны */
     const PILASTRE_PROF_V2 = [    
         [0.25, 0],
         [0.25, .3],
@@ -46,7 +45,7 @@ export const createPilaster01 = (root: Root, w: number, h: number, d: number = .
         [.1, .45],
         [.1, .5],
         [0, .5], 
-        [0, h - 1.3], 
+        [0, h], 
     ]
     
     const pilastreProfV3 = _M.convertSimpleProfileToV3(PILASTRE_PROF_V2)

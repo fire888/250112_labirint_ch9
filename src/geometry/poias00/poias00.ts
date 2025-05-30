@@ -29,15 +29,15 @@ const PR_CENTER: [number, number][] = [
     [0, 1.75],
 ]
 
-export const createPoias00 = (root: Root, w: number, h: number = 1.5): IArrayForBuffers => {
+export const createPoias00 = (root: Root, w: number, h: number = 1.75, d: number = .25): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
 
     let profileCenter = PR_CENTER
-    if (h !== 1.5) {
+    if (h !== 1.75) {
         profileCenter = []
-        PR_CENTER.forEach(e => profileCenter.push([e[0], e[1] - 1.5 + h]))
+        PR_CENTER.forEach(e => profileCenter.push([e[0], e[1] - 1.75 + h]))
     }
     
     const LEVELS = [

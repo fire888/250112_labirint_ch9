@@ -1,8 +1,11 @@
 import { _M, A3 } from "../_m";
 import { tileMapWall } from '../tileMapWall'
 import { IArrayForBuffers } from "types/GeomTypes";
-
+import { Root } from "index";
 import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
+import { createPilaster01 } from "geometry/pilaster01/pilaster01";
+import { createColumn00 } from "geometry/column00/column00";
+
 const C1 = COLOR_BLUE_D
 const C2 = COLOR_BLUE
 
@@ -29,61 +32,19 @@ const LEVELS_COLUMN = [
 
 const G = .4
 
-export const createPilaster00 = (h: number): IArrayForBuffers => {
+export const createPilaster00 = (root: Root, w: number, h: number, d: number): IArrayForBuffers => {
     const v: number[] = []
     const c: number[] = []
     const uv: number[] = []
             
-    /** задник колонны */
-    const PILASTRE_PROF_V2 = [    
-        [0.25, 0],
-        [0.25, .3],
-        [0.15, .3],
-        [.1, .4],
-        [.12, .4],
-        [.12, .45],
-        [.1, .45],
-        [.1, .5],
-        [0, .5], 
-        [0, h - 1.3], 
-    ]
-    
-    const pilastreProfV3 = _M.convertSimpleProfileToV3(PILASTRE_PROF_V2)
-    const pilastreR = []
-    for (let i = 0; i < pilastreProfV3.length; i += 3) {
-        pilastreR.push(pilastreProfV3[i + 2], pilastreProfV3[i + 1], pilastreProfV3[i + 2])
-    }
-    const pilastreL = []
-    for (let i = 0; i < pilastreProfV3.length; i += 3) {
-        pilastreL.push(-pilastreProfV3[i + 2], pilastreProfV3[i + 1], pilastreProfV3[i + 2])
-    }
-    
-    
-    {
-        const r = _M.fillPoligonsV3(pilastreL, pilastreR, .8, tileMapWall.noise, COLOR_BLUE_D, 1, true)
-        _M.translateVertices(r.v, -.4, 0, -.2)
-        v.push(...r.v)
-        c.push(...r.c)
-        uv.push(...r.uv)
-    }
-    
-    {
-        const r = _M.fillPoligonsV3(pilastreProfV3, pilastreR, .3, tileMapWall.noise, COLOR_BLUE_D, 1, true)
-        _M.rotateVerticesY(r.v, -Math.PI / 2)
-        _M.translateVertices(r.v, -.4, 0, -G -.1)
-        v.push(...r.v)
-        c.push(...r.c)
-        uv.push(...r.uv)
-    }
-    
-    {
-        const r = _M.fillPoligonsV3(pilastreL, pilastreProfV3, .3, tileMapWall.noise, COLOR_BLUE_D, 1, true)
-        _M.rotateVerticesY(r.v, Math.PI / 2)
-        _M.translateVertices(r.v, .4, 0, -.2)
-        v.push(...r.v)
-        c.push(...r.c)
-        uv.push(...r.uv)
-    }
+    const D_COLUMN_BASE = .2  // выдвижение вперед базы колонны
+    const OFFSET_COLUMN = .3
+    const OFFSET_COLUMN_BASE = .14
+
+    const p = createPilaster01(root, w, h, d - D_COLUMN_BASE)
+    v.push(...p.v)
+    c.push(...p.c)
+    uv.push(...p.uv)
     
     LEVELS_COLUMN.forEach(e => {
         const path0 = e.profile
@@ -94,50 +55,50 @@ export const createPilaster00 = (h: number): IArrayForBuffers => {
             pathR[i] = pathR[i + 2]  // поворот пол 45 градусов
         }
         /** front */
-        const r = _M.fillPoligonsV3(pathL, pathR, .3, e.uvTile, e.color)
-        _M.translateVertices(r.v, - .3 * .5, 0, 0)
+        const r = _M.fillPoligonsV3(pathL, pathR, w - OFFSET_COLUMN_BASE - OFFSET_COLUMN_BASE, e.uvTile, e.color)
+        _M.translateVertices(r.v, -(w - OFFSET_COLUMN_BASE - OFFSET_COLUMN_BASE) * .5, 0, d)
         v.push(...r.v)
         uv.push(...r.uv)
         c.push(...r.c)
         /** left */
         {
-            const r = _M.fillPoligonsV3(path0, pathR, G, e.uvTile, e.color)
+            const r = _M.fillPoligonsV3(path0, pathR, D_COLUMN_BASE, e.uvTile, e.color)
             _M.rotateVerticesY(r.v, -Math.PI * .5)
-            _M.translateVertices(r.v, - .3 * .5, 0, -G)
+            _M.translateVertices(r.v, -w * .5 + OFFSET_COLUMN_BASE, 0, d - D_COLUMN_BASE)
             v.push(...r.v)
             uv.push(...r.uv)
             c.push(...r.c)
         }
         /** right */
         {
-            const r = _M.fillPoligonsV3(pathL, path0, G, e.uvTile, e.color)
+            const r = _M.fillPoligonsV3(pathL, path0, D_COLUMN_BASE, e.uvTile, e.color)
             _M.rotateVerticesY(r.v, Math.PI * .5)
-            _M.translateVertices(r.v, + .3 * .5, 0, 0)
+            _M.translateVertices(r.v, w * .5 - OFFSET_COLUMN_BASE, 0, d)
             v.push(...r.v)
             uv.push(...r.uv)
             c.push(...r.c)
         }
     })
-            
-    {// bodycolumn
-        const W = .15
-        const r = _M.lathePath(
-            [
-                [W + .08, 1.3],
-                [W + .08, 1.5],
-                [W + .06, 1.53],
-                [W + .06, h - .2 - 1.3],
-                [W + .15, h - .15 - 1.3],
-                [W + .15, h - 1.3],
-            ],
-            8,
-            COLOR_BLUE,
-            tileMapWall.white,
-        )
-        _M.translateVertices(r.v, 0, 0, -0.2)
-        v.push(...r.v)
-        uv.push(...r.uv)
-        c.push(...r.c)
+      
+    // bodycolumn    
+    {
+        // если база широкая расставляем несколько колонн
+        const H_BASE = 1.4
+
+        const r = createColumn00(root, .38, h - H_BASE) // 1.4 - высота базы
+
+        const _W = w - (OFFSET_COLUMN_BASE - .1) - (OFFSET_COLUMN_BASE - .1)
+        const DIAM = (.15 + .1) * 2
+        const count = Math.floor(_W / DIAM)
+        const W_COL = DIAM * count
+
+        for (let i = 0; i < count; ++i) {
+            const copyV = [...r.v]
+            _M.translateVertices(copyV, -W_COL * .5 + DIAM * .5 + i * DIAM, H_BASE, d - OFFSET_COLUMN * .6)
+            v.push(...copyV)
+            uv.push(...r.uv)
+            c.push(...r.c)
+        }
     } 
 
     return { v, c, uv }
