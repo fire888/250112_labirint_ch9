@@ -3,7 +3,7 @@ import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_01_door_window, IWallData_01_door_window  } from "geometry/wall01_door_window";
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
-import { createCurb00 } from "geometry/bevel00/curb00";
+
 import { tileMapWall } from "geometry/tileMapWall";
 import { _M } from "geometry/_m";
 import { ElemType } from 'types/GeomTypes'
@@ -13,6 +13,13 @@ import { createWindow00 } from "geometry/window00/window00";
 import { createHole00 } from "geometry/hole00/hole00";
 import { createTopElem_00 } from "geometry/topElem/topElem_00";
 import { createArea00 } from "geometry/area00/area00";
+import { createCurb00 } from "geometry/bevel00/curb00";
+import { createPilaster00 } from "geometry/pilaster00/pilastre00";
+import { createPilaster01 } from "geometry/pilaster01/pilaster01";
+import { createPoias00 } from "geometry/poias00/poias00";
+import { createPoias01 } from "geometry/poias01/poias01";
+
+import { COLOR_BLUE } from "constants/CONSTANTS";
 
 
 export const createExamplesAllWalls = (root: Root) => {
@@ -142,17 +149,49 @@ export const createExamplesAllWalls = (root: Root) => {
 
     // area00 
     {
-        const area = createArea00([[-2, 5], [0, 5], [5, -5], [-5, -5]], [.5, .5, 1], tileMapWall.break)           
+        const area = createArea00([[-2, 5], [0, 5], [5, -5], [-5, -5], [-2, 5]], COLOR_BLUE, tileMapWall.stoneTree)           
         _M.translateVertices(area.v, 100, 1, -10)
         v.push(...area.v)
         c.push(...area.c)
         uv.push(...area.uv)
     }
 
+    // pilastre00
     {
+        const pilaster00 = createPilaster00(5)
+        _M.translateVertices(pilaster00.v, 110, 0, -10)
+        v.push(...pilaster00.v)
+        c.push(...pilaster00.c)        
+        uv.push(...pilaster00.uv) 
+    }
 
+    // pilaster01 
+    {
+        const pilaster01 = createPilaster01(root, .7, 5, .5)
+        _M.translateVertices(pilaster01.v, 115, 0, -10)
+        v.push(...pilaster01.v)
+        c.push(...pilaster01.c)        
+        uv.push(...pilaster01.uv) 
+    }
 
+    // poias00 
+    {
+        const poias00 = createPoias00(root, 2.5)
+        _M.translateVertices(poias00.v, 120, 0, -10)
+        v.push(...poias00.v)
+        c.push(...poias00.c)        
+        uv.push(...poias00.uv)
+    }
+    // poias01 
+    {
+        const poias01 = createPoias01(root, 5, 1, .3)
+        _M.translateVertices(poias01.v, 125, 0, -10)
+        v.push(...poias01.v)
+        c.push(...poias01.c)        
+        uv.push(...poias01.uv)
+    }
 
+    {
         const windows = []
         const pilasters = []
 

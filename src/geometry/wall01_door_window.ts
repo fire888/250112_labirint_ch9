@@ -4,7 +4,9 @@ import { createDoor_00 } from "./door00/door00"
 import { createWindow00 } from "./window00/window00";
 import { createHole00 } from "./hole00/hole00";
 import { createPilaster00 } from "./pilaster00/pilastre00";
+import { createPilaster01 } from "./pilaster01/pilaster01";
 import { createPoias00 } from "./poias00/poias00";
+import { createPoias01 } from "./poias01/poias01";
 import { Root } from "index";
 import { 
     IHoleData,
@@ -213,7 +215,7 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
 
     {
         if (floorData.pilasters) {
-            const r = createPilaster00(floorData.h + 1.2)
+            const r = createPilaster00(floorData.h + 1.3)
             for (let i = 0; i < floorData.pilasters.length; ++i) {
                 const _v = [...r.v]
                 _M.translateVertices(_v, floorData.pilasters[i].offsetX, floorData.pilasters[i].offsetY, .5)
@@ -237,6 +239,33 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
             }
         }
     }
+
+    // left pilaster
+    {
+        const r = createPilaster01(root, .3, floorData.h + 1.3, .4)
+        _M.translateVertices(r.v, .3 * .5, 0, 0)
+        v.push(...r.v)
+        uv.push(...r.uv)
+        c.push(...r.c)
+    }
+
+    // right pilaster
+    {
+        const r = createPilaster01(root, .3, floorData.h + 1.3, .4)
+        _M.translateVertices(r.v, floorData.w - .3 * .5, 0, 0)
+        v.push(...r.v)
+        uv.push(...r.uv)
+        c.push(...r.c)
+    }
+
+    //top poias
+    {
+        const r = createPoias01(root, floorData.w, .3, .3)
+        _M.translateVertices(r.v, 0, floorData.h + 1, .4)
+        v.push(...r.v)
+        uv.push(...r.uv)
+        c.push(...r.c)
+    } 
 
     return { v, uv, c}
 }
