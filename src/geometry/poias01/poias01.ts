@@ -5,10 +5,6 @@ import { Root } from "index";
 
 import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
 
-const C1 = COLOR_BLUE_D
-const C2 = COLOR_BLUE
-
-
 const TOP_PROFILE = 
 [
     [0,0],
@@ -30,9 +26,6 @@ const n = []
 for (let i = 0; i < TOP_PROFILE.length; ++i) {
     n.push([TOP_PROFILE[i][0] - .1, TOP_PROFILE[i][1]])
 }
-
-console.log(JSON.stringify(n))
-
 
 export const createPoias01 = (root: Root, w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
     const v: number[] = []

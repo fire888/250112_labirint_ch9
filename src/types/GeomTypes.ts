@@ -3,12 +3,14 @@ export enum ElemType {
     DOOR_00 = 'DOOR_00',
     PILASTER_00 = 'PILASTER_00',
     POIAS_00 = 'POIAS_00',
+    POIAS_01 = 'POIAS_01',
 }
 
 export interface IHoleData {
     elemType?: ElemType,
     offsetX?: number,
     offsetY?: number,
+    offsetZ?: number,
     w: number,
     h: number,
     d: number,

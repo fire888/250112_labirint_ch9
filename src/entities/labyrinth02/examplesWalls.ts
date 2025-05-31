@@ -6,7 +6,7 @@ import { createWall_03, createAngleWall_03 } from "geometry/wall03";
 
 import { tileMapWall } from "geometry/tileMapWall";
 import { _M } from "geometry/_m";
-import { ElemType } from 'types/GeomTypes'
+import { ElemType, IHoleData } from 'types/GeomTypes'
 
 import { createDoor_00 } from "geometry/door00/door00";
 import { createWindow00 } from "geometry/window00/window00";
@@ -16,6 +16,9 @@ import { createArea00 } from "geometry/area00/area00";
 import { createCurb00 } from "geometry/bevel00/curb00";
 import { createPilaster00 } from "geometry/pilaster00/pilastre00";
 import { createPilaster01 } from "geometry/pilaster01/pilaster01";
+import { createPilaster02 } from "geometry/pilaster02/pilaster02";
+import { createPilaster03 } from "geometry/pilaster03/pilaster03";
+import { createPilaster04 } from "geometry/pilaster04/pilaster04";
 import { createPoias00 } from "geometry/poias00/poias00";
 import { createPoias01 } from "geometry/poias01/poias01";
 import { createColumn00 } from "geometry/column00/column00";
@@ -182,6 +185,37 @@ export const createExamplesAllWalls = (root: Root) => {
         root.studio.addAxisHelper(115, 0, -9, 5)
     }
 
+    // pilaster02
+    {
+        const pilaster02 = createPilaster02(root, .7, 5, 1)
+        _M.translateVertices(pilaster02.v, 117, 0, -10)
+        v.push(...pilaster02.v)
+        c.push(...pilaster02.c)        
+        uv.push(...pilaster02.uv) 
+        root.studio.addAxisHelper(117, 0, -10, 5)
+        root.studio.addAxisHelper(117, 5, -10, 5)
+        root.studio.addAxisHelper(116.65, 0, -9, 5)
+    }
+    // pilaster03
+    {
+        const pilaster03 = createPilaster03(root, .7, 5, 1)
+        _M.translateVertices(pilaster03.v, 118, 0, -15)
+        v.push(...pilaster03.v)
+        c.push(...pilaster03.c)        
+        uv.push(...pilaster03.uv)
+    }
+    // pilaster04
+    {
+        const pilaster04 = createPilaster04(root, .7, 5, 1)
+        _M.translateVertices(pilaster04.v, 119, 0, -10)
+        v.push(...pilaster04.v)
+        c.push(...pilaster04.c)        
+        uv.push(...pilaster04.uv)
+        root.studio.addAxisHelper(119, 0, -10, 5)
+        root.studio.addAxisHelper(119, 5, -10, 5)
+        root.studio.addAxisHelper(118.65, 0, -9, 5)
+    }
+
     // poias00 
     {
         const poias00 = createPoias00(root, 2.5, 2, 0)
@@ -213,9 +247,10 @@ export const createExamplesAllWalls = (root: Root) => {
         uv.push(...col.uv)
     }
 
+    // wall 01 door window - WINDOW
     {
-        const windows = []
-        const pilasters = []
+        const windows: IHoleData[] = []
+        const pilasters: IHoleData[] = []
 
         const w = 20
         const n = 5
@@ -262,19 +297,114 @@ export const createExamplesAllWalls = (root: Root) => {
                             d: .1,
                             offsetY: 0,
                             offsetX: 0,
+                            offsetZ: 0,
+                        },
+                                               {
+                        elemType: ElemType.POIAS_01,
+                            w,
+                            h: 1.1,
+                            d: .5,
+                            offsetY: 5,
+                            offsetX: 0,
+                            offsetZ: 0,
                         }
                     ]
                 },
             ]
         }
 
-        
-
         const r = createWall_01_door_window(
             root,
             wall,            
         )
         _M.translateVertices(r.v, 0, 0, -20)
+        v.push(...r.v)
+        c.push(...r.c)
+        uv.push(...r.uv)
+    }
+
+    // wall 01 door window - DOOR
+    {
+        const windows: IHoleData[] = []
+        const doors: IHoleData[] = []
+        const pilasters: IHoleData[] = []
+
+        const w = 20
+        const n = 5
+        const step = w / (n)
+        const windowW = step * .3
+
+        for (let i = 0; i < n; ++i) {
+            if (i !== 2) {
+                windows.push({
+                    elemType: ElemType.WINDOW_00,
+                    w: windowW,
+                    h: 2,
+                    d: .3,
+                    offsetX: step * (i + .5),
+                    offsetY: 2,
+                })
+            } else {
+                doors.push({
+                    elemType: ElemType.DOOR_00,
+                    w: windowW,
+                    h: 4,
+                    d: .3,
+                    offsetX: step * (i + .5),
+                    offsetY: 0,
+                })
+            }
+            if (i !== n - 1) {
+                pilasters.push({
+                    elemType: ElemType.PILASTER_00,
+                    w: 1,
+                    h: 5,
+                    d: .3,
+                    offsetX: step * (i + 1),
+                    offsetY: 0,
+                })                    
+            }
+        }
+
+        const r = createWall_01_door_window(
+            root,
+            {
+                w,
+                h: 5,
+                d: .3,
+                floors: [
+                    {
+                        h: 5.6,
+                        d: .3,
+                        w,
+                        windows,
+                        doors,
+                        pilasters,
+                        poiases: [
+                            {
+                                elemType: ElemType.POIAS_00,
+                                w,
+                                h: 1.1,
+                                d: .1,
+                                offsetX: 0,
+                                offsetY: 0,
+                                offsetZ: 0,
+                            },
+                            {                            
+                                elemType: ElemType.POIAS_01,
+                                w,
+                                h: 1.1,
+                                d: .4,
+                                offsetX: 0,
+                                offsetY: 5.6,
+                                offsetZ: 0,
+                            },
+                        ]
+                    },
+                ]
+            }
+        )
+        _M.translateVertices(r.v, 0, 0, -30)
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)
