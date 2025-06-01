@@ -72,4 +72,12 @@ export const tileMapWall = {
         D, D * 4,
         0, D * 4,
     ],
+    'breakMany': [
+        1 * D, 1 * D,
+        2 * D, 1 * D,
+        2 * D, 2 * D,
+        1 * D, 1 * D,
+        2 * D, 2 * D,
+        1 * D, 2 * D,
+    ],
 } 

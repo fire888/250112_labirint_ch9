@@ -8,10 +8,10 @@ import { tileMapWall } from "geometry/tileMapWall";
 import { _M } from "geometry/_m";
 import { ElemType, IHoleData } from 'types/GeomTypes'
 
-import { createDoor_00 } from "geometry/door00/door00";
+import { createDoor00 } from "geometry/door00/door00";
 import { createWindow00 } from "geometry/window00/window00";
 import { createHole00 } from "geometry/hole00/hole00";
-import { createTopElem_00 } from "geometry/topElem/topElem_00";
+import { createTopElem_00 } from "geometry/topElem00/topElem_00";
 import { createArea00 } from "geometry/area00/area00";
 import { createCurb00 } from "geometry/bevel00/curb00";
 import { createPilaster00 } from "geometry/pilaster00/pilastre00";
@@ -117,7 +117,7 @@ export const createExamplesAllWalls = (root: Root) => {
 
     // door
     {
-        const door = createDoor_00(root, { w: 1, h: 4, d: .3, offsetX: 0, offsetY: 0 })
+        const door = createDoor00(root, { w: 1, h: 4, d: .3, offsetX: 0, offsetY: 0 })
         _M.translateVertices(door.v, 60, 0, -10)
         v.push(...door.v)
         c.push(...door.c)

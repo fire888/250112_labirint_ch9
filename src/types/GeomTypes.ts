@@ -18,7 +18,7 @@ export interface IHoleData {
 
 export interface IHoleEgesData extends IHoleData {
     width: number,
-    height: number
+    height: number,
 }
 
 export type IFloorData = {
@@ -29,6 +29,13 @@ export type IFloorData = {
     w: number
     d: number
     h: number
+}
+
+export type IWallData = {
+    w: number,
+    h: number,
+    d: number,
+    floors: IFloorData[],
 }
 
 export type IArrayForBuffers = {

@@ -5,6 +5,7 @@ import { createScheme} from "./scheme"
 import { createWall_01, createAngleWall_01 } from "geometry/wall01"
 import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
 import { createWall_03, createAngleWall_03 } from "geometry/wall03";
+import { calculateLogicWall04 } from "calculateLogicWalls/logicWall04";
 import { createCurb00 } from "geometry/bevel00/curb00";
 import { createArea00 } from "geometry/area00/area00";
 import { offset, } from "./offset";
@@ -26,6 +27,10 @@ export class Lab {
         let d = Date.now()
 
         console.log('[MESSAGE:] START EXAMPLES')
+        for (let i = 0; i < 5; ++i) {
+            calculateLogicWall04(root, 20, 2 + Math.random() * 3, .3, i * 5)
+        }
+
         createExamplesAllWalls(root)
         console.log('[TIME:] COMPLETE EXAMPLES:', ((Date.now() - d) / 1000).toFixed(2))
         

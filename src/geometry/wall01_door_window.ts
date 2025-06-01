@@ -1,6 +1,6 @@
 import { _M, A3 } from "./_m";
 import { tileMapWall } from './tileMapWall'
-import { createDoor_00 } from "./door00/door00"
+import { createDoor00 } from "./door00/door00"
 import { createWindow00 } from "./window00/window00";
 import { createHole00 } from "./hole00/hole00";
 import { createPilaster00 } from "./pilaster00/pilastre00";
@@ -201,7 +201,7 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
                 c.push(...window.c)
             }
             if (holeData.elemType === ElemType.DOOR_00) {
-                const door = createDoor_00(root, holeData)
+                const door = createDoor00(root, holeData)
                 _M.translateVertices(door.v, holeData.offsetX, holeData.offsetY, 0)
                 v.push(...door.v)
                 uv.push(...door.uv)

@@ -36,7 +36,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
     const y2 = holeData.offsetY + holeData.h
     const y3 = holeData.height
 
-    const mapTile = tileMapWall.lines
     const color = COLOR_BLUE
 
     const v: number[] = []
@@ -53,9 +52,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x0, y1, 0],
             )
         )
-        uv.push(
-            ...mapTile
-        )
         c.push(..._M.fillColorFace(color))
     }
     if (x1 < x2 && y0 < y1) {
@@ -67,9 +63,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x1, y1, 0],
             )
         )
-        uv.push(
-            ...mapTile
-        )
         c.push(..._M.fillColorFace(color))
     }
     if (x2 < x3 && y0 < y1) {
@@ -80,9 +73,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x3, y1, 0],
                 [x2, y1, 0],
             )
-        )
-        uv.push(
-            ...mapTile
         )
         c.push(..._M.fillColorFace(color))
     }
@@ -97,9 +87,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x0, y2, 0],
             )
         )
-        uv.push(
-            ...mapTile
-        )
         c.push(..._M.fillColorFace(color))
     }   
     if (x2 < x3 && y1 < y2) {
@@ -110,9 +97,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x3, y2, 0],
                 [x2, y2, 0],
             )
-        )
-        uv.push(
-            ...mapTile
         )
         c.push(..._M.fillColorFace(color))
     }
@@ -126,9 +110,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x0, y3, 0],
             )
         )
-        uv.push(
-            ...mapTile
-        )
         c.push(..._M.fillColorFace(color))
     }
     if (x1 < x2 && y2 < y3) {
@@ -139,9 +120,6 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x2, y3, 0],
                 [x1, y3, 0],
             )
-        )
-        uv.push(
-            ...mapTile
         )
         c.push(..._M.fillColorFace(color))
     }      
@@ -154,14 +132,17 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
                 [x2, y3, 0],
             )
         )
-        uv.push(
-            ...mapTile
-        )
         c.push(..._M.fillColorFace(color))
     }
 
     _M.translateVertices(v, -holeData.width * .5, 0, 0)
 
+    for (let i = 0; i < v.length; i += 3) {
+        uv.push(
+            .4 + v[i] / x3 * .2, 
+            .0 + .25 + v[i + 1] / y3 * .2
+        )
+    }
 
     return { v, c, uv }
 }

@@ -1,6 +1,6 @@
 import { _M, A3 } from "./_m";
 import { tileMapWall } from './tileMapWall'
-import { createTopElem_00 } from './topElem/topElem_00'
+import { createTopElem_00 } from './topElem00/topElem_00'
 import { createPilaster00 } from "./pilaster00/pilastre00";
 
 import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";

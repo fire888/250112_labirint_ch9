@@ -16,7 +16,7 @@ const TOP_PROFILE: [number, number][] = [
     [0, .33],
 ]
 
-export const createDoor_00 = (
+export const createDoor00 = (
     root: Root, 
     doorData: IHoleData,
 ) => {
@@ -32,7 +32,7 @@ export const createDoor_00 = (
     } = doorData
 
 
-    const R = w * .5
+    const R = w * .5 - .2
     const DS = .1
 
     const H_SQ = 1 // высота плоскости над дверью
