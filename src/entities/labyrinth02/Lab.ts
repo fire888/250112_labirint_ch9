@@ -28,7 +28,7 @@ export class Lab {
 
         console.log('[MESSAGE:] START EXAMPLES')
         for (let i = 0; i < 5; ++i) {
-            calculateLogicWall04(root, 20, 2 + Math.random() * 3, .3, i * 5)
+            calculateLogicWall04(root, 20, 2 + Math.random() * 20, .3, i * 5)
         }
 
         createExamplesAllWalls(root)
