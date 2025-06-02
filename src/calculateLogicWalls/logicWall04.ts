@@ -10,7 +10,9 @@ import { createPoias02 } from 'geometry/poias02/poias02';
 import { createDoor00 } from 'geometry/door00/door00';
 import { createWindow00 } from 'geometry/window00/window00';
 import { createHole00 } from 'geometry/hole00/hole00';
+import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
 import { _M } from 'geometry/_m';
+import { COLOR_BLUE_D } from 'constants/CONSTANTS';
 
 type ISingleFloorData = {
     w: number,
@@ -288,9 +290,6 @@ export const calculateLogicWall04 = (
         W_DOOR,
     }
 
-
-
-
     let currentH_Level = 0
     let i = 0
     while (currentH_Level < h - H_TOP_POIAS) {
@@ -333,6 +332,24 @@ export const calculateLogicWall04 = (
         v.push(...topPoias.v)
         uv.push(...topPoias.uv)
         c.push(...topPoias.c)
+    }
+
+    // TOP ELEMS 
+    {
+        for (let i = 0; i < COUNT_INNER_PILASTERS; ++i) {
+            const topElem = createTopElem_00(COLOR_BLUE_D, INNER_PILASTER_W, .9)
+            _M.translateVertices(
+                topElem.v, 
+                SIDE_PILASTER_W + 
+                ((1 + i) * SINGLE_SECTION_W) + 
+                INNER_PILASTER_W * (i + .5), 
+                h, 
+                0
+            )
+            v.push(...topElem.v)
+            uv.push(...topElem.uv)
+            c.push(...topElem.c)
+        }
     }
 
     _M.translateVertices(v, 0, 0, -40 - offsetZ)
