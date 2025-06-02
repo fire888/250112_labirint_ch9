@@ -12,7 +12,7 @@ import { createWindow00 } from 'geometry/window00/window00';
 import { createHole00 } from 'geometry/hole00/hole00';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
 import { _M } from 'geometry/_m';
-import { COLOR_BLUE_D } from 'constants/CONSTANTS';
+import { COLOR_BLUE_D, COLOR_DARK } from 'constants/CONSTANTS';
 
 type ISingleFloorData = {
     w: number,
@@ -247,7 +247,7 @@ export const calculateLogicWall04 = (
     h: number = 20, 
     d: number = .3, 
     offsetZ: number = 0
-): IWallData => {
+): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
@@ -272,7 +272,7 @@ export const calculateLogicWall04 = (
     const N_SECTION_DOOR = Math.floor(Math.random() * N)
     const W_DOOR = Math.min(SINGLE_SECTION_W - .6,  2 + Math.random() * 2)
 
-    const H_TOP_POIAS = 0.1 + Math.random()
+    const H_TOP_POIAS = 0.4 + Math.random()
 
     const floorData: ISingleFloorData = {
         w,
@@ -290,26 +290,32 @@ export const calculateLogicWall04 = (
         W_DOOR,
     }
 
-    let currentH_Level = 0
-    let i = 0
-    while (currentH_Level < h - H_TOP_POIAS) {
-        let floorH = 2.2 + Math.random() * 3
+    if (N > 0) {
+        let currentH_Level = 0
+        let i = 0
 
-        if (h - H_TOP_POIAS - currentH_Level - floorH < 3) {
-            floorH = h - H_TOP_POIAS - currentH_Level
+
+        while (currentH_Level < h - H_TOP_POIAS) {
+            
+            let floorH = 2.2 + Math.random() * 3
+
+            if (h - H_TOP_POIAS - currentH_Level - floorH < 3) {
+                floorH = h - H_TOP_POIAS - currentH_Level
+            }
+
+            floorData.h = floorH
+        
+            const r = createFloor(root, floorData, i)
+            _M.translateVertices(r.v, 0, currentH_Level, 0)
+            v.push(...r.v)
+            uv.push(...r.uv)
+            c.push(...r.c)
+
+            currentH_Level += floorH
+            ++i
         }
-
-        floorData.h = floorH
-       
-        const r = createFloor(root, floorData, i)
-        _M.translateVertices(r.v, 0, currentH_Level, 0)
-        v.push(...r.v)
-        uv.push(...r.uv)
-        c.push(...r.c)
-
-        currentH_Level += floorH
-        ++i
     }
+
 
     { // OUTER PILASTERS
         const leftP = createPilaster04(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
@@ -352,20 +358,20 @@ export const calculateLogicWall04 = (
         }
     }
 
-    _M.translateVertices(v, 0, 0, -40 - offsetZ)
-
-    const m = _M.createMesh({ 
-        v, 
-        uv,
-        c,
-        material: root.materials.walls00,
-    })
-    root.studio.add(m)
-
-    return {
-        w,
-        h,
-        d,
-        floors: [],
+    // BACK PART
+    {
+        const b = _M.createPolygon(
+            [w, 0, -d],
+            [0, 0, -d],
+            [0, h, -d],
+            [w, h, -d],
+        )
+        v.push(...b)
+        uv.push(
+            ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+        )
+        c.push(..._M.fillColorFace(COLOR_DARK))
     }
+
+    return { v, uv, c }
 }

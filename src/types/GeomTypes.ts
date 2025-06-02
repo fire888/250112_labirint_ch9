@@ -46,3 +46,5 @@ export type IArrayForBuffers = {
     h?: number
     d?: number 
 }
+
+export type IPerimeter = [number, number][]

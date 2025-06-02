@@ -1,5 +1,5 @@
 import { _M, A3 } from "../_m"
-export const createArea00 = (coords: [number, number][] = [], color: A3, uvTile: number[]) => {
+export const createArea00 = (coords: [number, number][] = [], color: A3, uvTile: number[], centerYOffset: number = 0) => {
 
     const filtered = []
     for (let i = 1; i < coords.length; ++i) {          
@@ -23,7 +23,7 @@ export const createArea00 = (coords: [number, number][] = [], color: A3, uvTile:
         const rV = [
             prev[0], 0, prev[1],
             curr[0], 0, curr[1],
-            center[0], 0, center[1],
+            center[0], centerYOffset, center[1],
         ]
         v.push(...rV)    
         uv.push(...uvTile)
