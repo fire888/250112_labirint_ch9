@@ -1,8 +1,9 @@
 import { Root } from '../index';
-import { IFloorData, IWallData, IHoleData, IArrayForBuffers } from 'types/GeomTypes';
+import { IFloorData, IWallData, IHoleData, IArrayForBuffers, ElemType, IDataForWall } from 'types/GeomTypes';
 import { createPilaster00 } from 'geometry/pilaster00/pilastre00';
-//import { createPilaster01 } from 'geometry/pilaster01/pilaster01';
+import { createPilaster01 } from 'geometry/pilaster01/pilaster01';
 import { createPilaster02 } from 'geometry/pilaster02/pilaster02';
+import { createPilaster03 } from 'geometry/pilaster03/pilaster03';
 import { createPilaster04 } from 'geometry/pilaster04/pilaster04';
 import { createPoias00 } from 'geometry/poias00/poias00';
 import { createPoias01 } from 'geometry/poias01/poias01';
@@ -243,10 +244,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
 
 export const calculateLogicWall04 = (
     root: Root, 
-    w: number = 20, 
-    h: number = 20, 
-    d: number = .3, 
-    offsetZ: number = 0
+    dataForBuldWall: IDataForWall
 ): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
@@ -254,6 +252,7 @@ export const calculateLogicWall04 = (
 
 
     /** CONSTANTS */
+    const { w, h, d, TYPE_SIDE_PILASTER, H_TOP_POIAS } = dataForBuldWall
 
     const W = Math.random() * 2 + 2
     const N = Math.floor(w / W)
@@ -271,8 +270,6 @@ export const calculateLogicWall04 = (
 
     const N_SECTION_DOOR = Math.floor(Math.random() * N)
     const W_DOOR = Math.min(SINGLE_SECTION_W - .6,  2 + Math.random() * 2)
-
-    const H_TOP_POIAS = 0.4 + Math.random()
 
     const floorData: ISingleFloorData = {
         w,
@@ -307,10 +304,16 @@ export const calculateLogicWall04 = (
         
             const r = createFloor(root, floorData, i)
             _M.translateVertices(r.v, 0, currentH_Level, 0)
-            v.push(...r.v)
-            uv.push(...r.uv)
-            c.push(...r.c)
 
+            for (let j = 0; j < r.v.length; ++j) {
+                v.push(r.v[j])
+            }
+            for (let j = 0; j < r.uv.length; ++j) {
+                uv.push(r.uv[j])
+            }
+            for (let j = 0; j < r.c.length; ++j) {
+                c.push(r.c[j])
+            }
             currentH_Level += floorH
             ++i
         }
@@ -318,17 +321,33 @@ export const calculateLogicWall04 = (
 
 
     { // OUTER PILASTERS
-        const leftP = createPilaster04(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
-        _M.translateVertices(leftP.v, SIDE_PILASTER_W * .5, 0, 0)
-        v.push(...leftP.v)
-        uv.push(...leftP.uv)
-        c.push(...leftP.c)
 
-        const rightP = createPilaster04(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
-        _M.translateVertices(rightP.v, w - SIDE_PILASTER_W * .5, 0, 0)
-        v.push(...rightP.v)
-        uv.push(...rightP.uv)
-        c.push(...rightP.c)
+        let constrPilaster = null
+        if (TYPE_SIDE_PILASTER === ElemType.PILASTER_00) {
+            constrPilaster = createPilaster00
+        } else if (TYPE_SIDE_PILASTER === ElemType.PILASTER_01) {
+            constrPilaster = createPilaster01
+        } else if (TYPE_SIDE_PILASTER === ElemType.PILASTER_02) {
+            constrPilaster = createPilaster02
+        } else if (TYPE_SIDE_PILASTER === ElemType.PILASTER_03) {
+            constrPilaster = createPilaster03
+        } else if (TYPE_SIDE_PILASTER === ElemType.PILASTER_04) {
+            constrPilaster = createPilaster04
+        }
+
+        if (constrPilaster) {
+            const leftP = constrPilaster(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
+            _M.translateVertices(leftP.v, SIDE_PILASTER_W * .5, 0, 0)
+            v.push(...leftP.v)
+            uv.push(...leftP.uv)
+            c.push(...leftP.c)
+
+            const rightP = constrPilaster(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
+            _M.translateVertices(rightP.v, w - SIDE_PILASTER_W * .5, 0, 0)
+            v.push(...rightP.v)
+            uv.push(...rightP.uv)
+            c.push(...rightP.c)
+        }
     }
 
     // TOP POIAS
