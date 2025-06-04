@@ -45,7 +45,6 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter) => {
             pilasterType = ElemType.PILASTER_04
         }
 
-
         const DATA_FOR_WALL: IDataForWall = {
             w: d,
             h: H,
@@ -61,15 +60,12 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter) => {
         for (let j = 0; j < r.v.length; ++j) {
             v.push(r.v[j])
         }
-        //v.push(...r.v)
         for (let j = 0; j < r.uv.length; ++j) {
             uv.push(r.uv[j])
         }
-        //uv.push(...r.uv)
         for (let j = 0; j < r.c.length; ++j) {
             c.push(r.c[j])
         }
-        //c.push(...r.c)
     }
 
     const centerYOffset = 2
