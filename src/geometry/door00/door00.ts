@@ -121,7 +121,7 @@ export const createDoor00 = (
     { // передняя пилястра
         const R1 = R + .2
         const R2 = R1 + .3
-        const D = .4
+        const D = .35
         const H = h + .2 + H_SQ + .3
 
         // перед
@@ -164,7 +164,7 @@ export const createDoor00 = (
     { // низ пилястры
         const R1 = R + .1
         const R2 = R + .2 + .3 + .05
-        const D = .42
+        const D = .405
         const H = .6
 
         // перед

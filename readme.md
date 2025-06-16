@@ -5,7 +5,9 @@ V -cap short walls
 V -cap pilasters top\bottom
 V -cap bottom windows left\right 
 V -house00 if 4 or less walls top poias not cap one angle
--door left/rigth parts intercepts with bottom profile
+V -door left/rigth parts intercepts with bottom profile
+-back side of roof 
+-back wibdows 
 
 
 
