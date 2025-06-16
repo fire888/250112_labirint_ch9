@@ -12,8 +12,9 @@ import { createDoor00 } from 'geometry/door00/door00';
 import { createWindow00 } from 'geometry/window00/window00';
 import { createHole00 } from 'geometry/hole00/hole00';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
-import { _M } from 'geometry/_m';
-import { COLOR_BLUE_D, COLOR_DARK } from 'constants/CONSTANTS';
+import { _M, A2, A3 } from 'geometry/_m';
+import { COLOR_BLUE_D, COLOR_BLUE_L, COLOR_DARK } from 'constants/CONSTANTS';
+import { tileMapWall } from "../geometry/tileMapWall"
 
 type ISingleFloorData = {
     w: number,
@@ -287,10 +288,27 @@ export const calculateLogicWall04 = (
         W_DOOR,
     }
 
+    // FILL VERY SHORT SECTION 
+    if (N === 0) {
+        const p1: number[] = [0, 0, 0, 0, h - H_TOP_POIAS, 0]
+        const p2: number[] = [0, 0, 0, 0, h - H_TOP_POIAS, 0]
+        const r = _M.fillPoligonsV3(
+            p1, 
+            p2,
+            w,
+            tileMapWall.breakMany,
+            COLOR_BLUE_D,
+            5,
+            false,           
+        )
+        v.push(...r.v)
+        uv.push(...r.uv)
+        c.push(...r.c)
+    }
+
     if (N > 0) {
         let currentH_Level = 0
         let i = 0
-
 
         while (currentH_Level < h - H_TOP_POIAS) {
             

@@ -24,6 +24,8 @@ import { createPoias01 } from "geometry/poias01/poias01";
 import { createPoias02 } from "geometry/poias02/poias02";
 import { createColumn00 } from "geometry/column00/column00";
 
+import { calculateLogicHouse00 } from "logicBuild/logicHouse00";
+
 import { COLOR_BLUE } from "constants/CONSTANTS";
 
 
@@ -266,4 +268,18 @@ export const createExamplesAllWalls = (root: Root) => {
         material: root.materials.walls00,
     })
     root.studio.add(m)
+
+
+    { // HOUSE 00
+       const perimeter: [number, number][] = [
+            [1, 1],
+            [1, 10],
+            [2, 11],
+            [15, 10],
+            [15, 1],
+            [1, 1],
+        ]
+        const m = calculateLogicHouse00(root, perimeter)
+        m.position.x = -30
+    }
 }

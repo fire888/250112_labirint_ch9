@@ -1,10 +1,11 @@
 TODO: 
 V -camera clip geometry
 V -clip top profiles buildings
-* -cap short walls
+V -cap short walls
 -cap pilasters top\bottom
 -cap bottom windows left\right 
-
+* -house00 if 4 or less walls top poias not cap one angle
+-door left/rigth parts intercepts with bottom profile
 
 
 

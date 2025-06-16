@@ -6,10 +6,11 @@ import { createArea00 } from "geometry/area00/area00"
 import { _M } from '../geometry/_m'
 import { COLOR_BLUE_D } from "constants/CONSTANTS"
 import { tileMapWall } from "geometry/tileMapWall"
+import * as THREE from "three" 
 
 let n = 0
 
-export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter) => {
+export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
     ++n
 
     const H = Math.random() * 12 + 3 
@@ -122,4 +123,6 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter) => {
         material: root.materials.walls00,
     })
     root.studio.add(m)
+
+    return m
 }

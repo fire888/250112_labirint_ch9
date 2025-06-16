@@ -100,43 +100,13 @@ export class Lab {
         console.log('[MESSAGE:] START WALLS')
         d = Date.now()
         {
-            // const v: number[] = []
-            // const uv: number[] = []
-            // const c: number[] = []
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].isDown) { 
                     continue;
                 }
-                //const random = Math.random()
+
                 calculateLogicHouse00(this._root, areasData[i].perimeterInner)
-                //v.push(...r.v)
-                //uv.push(...r.uv)
-                //c.push(...r.c)
-                // if (random < .5) {
-                //     const r = this._createHome(areasData[i].perimeterInner)
-                //     v.push(...r.v)
-                //     uv.push(...r.uv)
-                //     c.push(...r.c)
-                // } else {
-                //     const r = this._createHome_03(areasData[i].perimeterInner)
-                //     for (let i = 0; i < r.v.length; ++i) {
-                //         v.push(r.v[i])
-                //     }
-                //     for (let i = 0; i < r.uv.length; ++i) {
-                //         uv.push(r.uv[i])       
-                //     }
-                //     for (let i = 0; i < r.c.length; ++i) {
-                //          c.push(r.c[i])   
-                //     }
-                // }
             }
-            // const m = _M.createMesh({ 
-            //     v, 
-            //     uv,
-            //     c,
-            //     material: root.materials.walls00,
-            // })
-            // this._root.studio.add(m)
         }
         console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
 
@@ -202,104 +172,6 @@ export class Lab {
         console.log('[TIME:] COMPLETE AREAS',((Date.now() - d) / 1000).toFixed(2))
     }
 
-    // _createHome (perimiter: [number, number][]) {
-    //     const v: number[] = [] 
-    //     const uv: number[] = [] 
-    //     const c: number[] = []
-
-    //     let savedAngle = null
-    //     let savedStartAngle = null 
-
-    //     const H = Math.random() * 10
-
-    //     for (let i = 1; i < perimiter.length; ++i) {
-    //         const prev = perimiter[i - 1]
-    //         const cur =  perimiter[i]
-
-    //         /** проверяем что следующая точка не лежит на предыдущей */
-    //         if (cur[0] === prev[0] && cur[1] === prev[1]) {
-    //             continue;
-    //         }
-
-    //         // create wall
-    //         const d = _M.dist(prev, cur)
-    //         const r = createWall_01(d, H)
-    //         const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
-    //         if (i === 1) {
-    //             savedStartAngle = angle
-    //         }
-    //         _M.rotateVerticesY(r.v, -angle)
-    //         _M.translateVertices(r.v, prev[0], 0, prev[1])
-    //         v.push(...r.v)
-    //         uv.push(...r.uv)
-    //         c.push(...r.c)
-
-    //         /** cap angles */
-    //         if (savedAngle !== null) {
-    //             const r = createAngleWall_01([prev[0], 0, prev[1]], -savedAngle, -angle, H)
-    //             v.push(...r.v)
-    //             c.push(...r.c)
-    //             uv.push(...r.uv)
-    //         }
-
-    //         if (i === perimiter.length - 1 && savedStartAngle !== null) {
-    //             const r = createAngleWall_01([cur[0], 0, cur[1]], -angle, -savedStartAngle, H)
-    //             v.push(...r.v)
-    //             c.push(...r.c)
-    //             uv.push(...r.uv)
-    //         }
-        
-    //         savedAngle = angle    
-    //     }
-
-    //     return { v, uv, c }
-    // }
-
-    // _createHome_03 (perimeterInner: [number, number][]) {
-    //     const H = 1 + Math.random() * 5
-
-    //     const v: number[] = [] 
-    //     const uv: number[] = [] 
-    //     const c: number[] = []
-
-    //     let savedStartAngle = null
-    //     let savedAngle = null
-
-    //     for (let i = 1; i < perimeterInner.length; ++i) {
-    //         const prev = perimeterInner[i - 1]
-    //         const curr = perimeterInner[i]
-    //         const a = _M.angleFromCoords(curr[0] - prev[0], curr[1] - prev[1])
-    //         const d = _M.dist(curr, prev)
-    //         const r = createWall_03(this._root, d, H)
-    //         _M.rotateVerticesY(r.v, -a)
-    //         _M.translateVertices(r.v, prev[0], 0, prev[1])
-    //         v.push(...r.v)
-    //         c.push(...r.c)
-    //         uv.push(...r.uv)
-
-    //         /** cap angles */
-    //         if (savedAngle !== null) {
-    //             const r = createAngleWall_03([prev[0], 0, prev[1]], -savedAngle, -a, H)
-    //             v.push(...r.v)
-    //             c.push(...r.c)
-    //             uv.push(...r.uv)
-    //         }
-
-    //         if (i === perimeterInner.length - 1 && savedStartAngle !== null) {
-    //             const r = createAngleWall_03([curr[0], 0, curr[1]], -a, -savedStartAngle, H)
-    //             v.push(...r.v)
-    //             c.push(...r.c)
-    //             uv.push(...r.uv)
-    //         }
-            
-    //         savedAngle = a
-    //         if (i === 1) savedStartAngle = a
-
-    //     }
-    //     return { v, c, uv }
-    // }
-
-
     _createArea (areaData: any) {
         const v: number[] = []
         const uv: number[] = []
@@ -309,34 +181,6 @@ export class Lab {
 
         const offsetPoints = offset(perimeter, 1.5, this._root)
         const offsetPoints2 = offset(perimeter, 1.7, this._root)
-
-        // let Y = 1
-        // for (let i = 0; i < offsetPoints.offsetLines.length; ++i) {
-        //     const p = offsetPoints.offsetLines[i]
-
-        //     // const l = _M.createLabel('s' + i + '', [1, 1, 1], 5)
-        //     // l.position.set(p[0], Y, p[1])
-        //     // this._root.studio.add(l)
-
-        //     // const l1 = _M.createLabel('e' + i + '', [1, 1, 1], 5)
-        //     // l1.position.set(p[2], Y, p[3])
-        //     // Y += .5
-        //     // this._root.studio.add(l1)
-        // }
-
-        // let YY = 1
-        // for (let i = 0; i < offsetPoints.existsLines.length; ++i) {
-        //     const p = offsetPoints.existsLines[i]
-
-        //     // const l = _M.createLabel('s' + i, [1, .5, .5], 5)
-        //     // l.position.set(p[0], YY, p[1])
-        //     // this._root.studio.add(l)
-
-        //     // const l1 = _M.createLabel("e" + i + '', [1, .5, 1], 5)
-        //     // l1.position.set(p[2], YY, p[3])
-        //     // YY += .6
-        //     // this._root.studio.add(l1)
-        // }
 
         const H = Math.random() * 5 -.2 
 
