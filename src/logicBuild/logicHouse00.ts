@@ -4,7 +4,7 @@ import { calculateLogicWall04 } from './logicWall04'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { createArea00 } from "geometry/area00/area00"
 import { _M } from '../geometry/_m'
-import { COLOR_BLUE_D } from "constants/CONSTANTS"
+import { COLOR_BLUE_D, COLOR_DARK } from "constants/CONSTANTS"
 import { tileMapWall } from "geometry/tileMapWall"
 import * as THREE from "three" 
 
@@ -109,12 +109,23 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         prevWallAngle = angle
     }
 
+    // roof
     const centerYOffset = 2
     const area = createArea00(perimeter, COLOR_BLUE_D, tileMapWall.linesTree, centerYOffset)           
     _M.translateVertices(area.v, 0, H, 0)
     v.push(...area.v)
     c.push(...area.c)
     uv.push(...area.uv)
+
+    // roof bottom side
+    {
+        const perimeterReverse = perimeter.slice().reverse()
+        const area = createArea00(perimeterReverse, COLOR_DARK, tileMapWall.emptyTree, 0)           
+        _M.translateVertices(area.v, 0, H, 0)
+        v.push(...area.v)
+        c.push(...area.c)
+        uv.push(...area.uv)
+    }
 
     const m = _M.createMesh({ 
         v, 
