@@ -34,13 +34,40 @@ export const createPilaster01 = (root: Root, w: number, h: number, d: number = .
         pilastreL.push(-pilastreProfV3[i + 2], pilastreProfV3[i + 1], pilastreProfV3[i + 2])
     }
     
-    
     {
         const r = _M.fillPoligonsV3(pilastreL, pilastreR, w, tileMapWall.noise, COLOR_BLUE_D, 1, true)
         _M.translateVertices(r.v, -w * .5, 0, d)
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)
+
+        { // top center
+            v.push(
+                0, h, 0,
+                -r.v[r.v.length - 6], h, pilastreR[pilastreR.length - 1] + d,
+                r.v[r.v.length - 6], h, pilastreR[pilastreR.length - 1] + d,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
+
+        { // bottom center
+            v.push(
+                0, 0, 0,
+                -r.v[0], 0, pilastreR[2] + d,
+                r.v[0], 0, pilastreL[2] + d,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
     }
     
     {
@@ -50,6 +77,34 @@ export const createPilaster01 = (root: Root, w: number, h: number, d: number = .
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)
+
+        { // bottom left
+            v.push(
+                0, 0, 0,
+                r.v[0], 0, pilastreR[2] + d,
+                r.v[0], 0, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
+
+        { // top left
+            v.push(
+                r.v[r.v.length - 3], h, pilastreL[pilastreL.length - 1] + d,
+                0, h, 0,
+                r.v[r.v.length - 3], h, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
     }
     
     {
@@ -59,7 +114,36 @@ export const createPilaster01 = (root: Root, w: number, h: number, d: number = .
         v.push(...r.v)
         c.push(...r.c)
         uv.push(...r.uv)
+
+        { // bottom right
+            v.push(
+                r.v[0], 0, pilastreR[2] + d,
+                0, 0, 0,
+                r.v[0], 0, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
+
+        { // top right
+            v.push(
+                0, h, 0,
+                r.v[r.v.length - 3], h, pilastreL[pilastreL.length - 1] + d,
+                r.v[r.v.length - 3], h, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
     }
+    
     
     return { v, c, uv }
 }

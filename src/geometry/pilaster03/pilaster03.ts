@@ -54,6 +54,35 @@ export const createPilaster03 = (root: Root, w: number, h: number, d: number): I
     v.push(...r.v)
     uv.push(...r.uv)
     c.push(...r.c)
+
+    { // top center
+        v.push(
+            0, h, 0,
+            -r.v[r.v.length - 6], h, pathL[pathL.length - 1] + d,
+            r.v[r.v.length - 6], h, pathL[pathL.length - 1] + d,
+        )
+        c.push(
+            ...COLOR_BLUE_D,
+            ...COLOR_BLUE_D,
+            ...COLOR_BLUE_D,
+        )   
+        uv.push(...tileMapWall.noiseTree)  
+    }
+
+    { // bottom center
+        v.push(
+            0, 0, 0,
+            -r.v[0], 0, pathL[2] + d,
+            r.v[0], 0, pathL[2] + d,
+        )
+        c.push(
+            ...COLOR_BLUE_D,
+            ...COLOR_BLUE_D,
+            ...COLOR_BLUE_D,
+        )   
+        uv.push(...tileMapWall.noiseTree)  
+    }
+
     /** left */
     {
         const r = _M.fillPoligonsV3(path0, pathR, d, tileMapWall.noise, C1)
@@ -62,7 +91,37 @@ export const createPilaster03 = (root: Root, w: number, h: number, d: number): I
         v.push(...r.v)
         uv.push(...r.uv)
         c.push(...r.c)
+
+        { // bottom left
+            v.push(
+                0, 0, 0,
+                r.v[0], 0, pathR[2] + d,
+                r.v[0], 0, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
+
+        { // top left
+            v.push(
+                r.v[r.v.length - 3], h, pathL[pathL.length - 1] + d,
+                0, h, 0,
+                r.v[r.v.length - 3], h, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
+
     }
+
     /** right */
     {
         const r = _M.fillPoligonsV3(pathL, path0, d, tileMapWall.noise, C1)
@@ -71,7 +130,35 @@ export const createPilaster03 = (root: Root, w: number, h: number, d: number): I
         v.push(...r.v)
         uv.push(...r.uv)
         c.push(...r.c)
+
+        { // bottom right
+            v.push(
+                r.v[0], 0, pathL[2] + d,
+                0, 0, 0,
+                r.v[0], 0, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
+
+        { // top right
+            v.push(
+                0, h, 0,
+                r.v[r.v.length - 3], h, pathL[pathL.length - 1] + d,
+                r.v[r.v.length - 3], h, 0,
+            )
+            c.push(
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+                ...COLOR_BLUE_D,
+            )   
+            uv.push(...tileMapWall.noiseTree)  
+        }
     }
-      
+ 
     return { v, c, uv }
 }

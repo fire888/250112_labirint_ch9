@@ -1,14 +1,9 @@
 import { _M, A3 } from "../_m";
 import { IArrayForBuffers } from "types/GeomTypes";
 import { Root } from "index";
-import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
 import { createPilaster01 } from "geometry/pilaster01/pilaster01";
 import { createPilaster02 } from "geometry/pilaster02/pilaster02";
 import { createColumn00 } from "geometry/column00/column00";
-
-const C1 = COLOR_BLUE_D
-const C2 = COLOR_BLUE
-
 
 export const createPilaster00 = (root: Root, w: number, h: number, d: number): IArrayForBuffers => {
     const v: number[] = []

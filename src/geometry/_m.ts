@@ -608,6 +608,17 @@ export const _M = {
                     c.push(..._M.fillColorFace(color))
                     uv.push(...uvTile)
                 }
+
+                if (save && j === path.length - 1) { // cap top
+                    v.push(
+                        curr[j][0], curr[j][1], curr[j][2],
+                        0, curr[j][1], 0, 
+                        save[j][0], save[j][1], save[j][2],
+
+                    ) 
+                    c.push(...color, ...color, ...color)
+                    uv.push(0, 0, 0, 0, 0, 0)
+                }
             }
             save = curr
             if (i === 0) {
@@ -624,6 +635,16 @@ export const _M = {
                     ))
                     c.push(..._M.fillColorFace(color))
                     uv.push(...uvTile)
+
+                    if (save && j === path.length - 1) { // cap top
+                        v.push(
+                            0, curr[j][1], 0, 
+                            curr[j][0], curr[j][1], curr[j][2],
+                            saveStart[j][0], saveStart[j][1], saveStart[j][2],
+                        ) 
+                        c.push(...color, ...color, ...color)
+                        uv.push(0, 0, 0, 0, 0, 0)
+                    }
                 }
             }
         }

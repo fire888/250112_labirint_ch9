@@ -15,12 +15,12 @@ export const createColumn00 = (root: Root, w: number, h: number, n: number = 8):
     }
 
     const PATH: [number, number][] = [
-            [W + .05, 0],
-            [W + .05, .16],
-            [W, 0.23],
-            [W, h - .2],
-            [W + .09, h - .15],
-            [W + .09, h], 
+        [W + .05, 0],
+        [W + .05, .16],
+        [W, 0.23],
+        [W, h - .2],
+        [W + .09, h - .15],
+        [W + .09, h],
     ]
 
     const r = _M.lathePath(
