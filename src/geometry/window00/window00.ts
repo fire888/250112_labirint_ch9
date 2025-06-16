@@ -83,13 +83,23 @@ export const createWindow00 = (root: Root, windowData: IHoleData) => {
             [hW - R, B, 0],
             [0, B, 0],
         ), 
+
+        // right cap
+        ..._M.createPolygon(
+            [hW - R, B, 0],
+            [hW - R, B, D0],
+            [hW - R, 0, D0],
+            [hW - R, 0, 0],
+        ), 
     )
     uv.push(
         ...tileMapWall.noise,
         ...tileMapWall.noise,
         ...tileMapWall.noise,
+        ...tileMapWall.noise,
     )
     c.push(
+        ..._M.fillColorFace(COLOR_BLUE_L),
         ..._M.fillColorFace(COLOR_BLUE_L),
         ..._M.fillColorFace(COLOR_BLUE_L),
         ..._M.fillColorFace(COLOR_BLUE_L),
