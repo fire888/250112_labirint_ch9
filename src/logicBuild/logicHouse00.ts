@@ -22,7 +22,7 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
 
     const H_TOP_POIAS = 0.4 + Math.random()
 
-    let prevWallAngle = 0
+    let prevWallAngle = null
     for (let i = 1; i < perimeter.length; ++i) {
         const prev = perimeter[i - 1]
         const cur =  perimeter[i]
@@ -74,17 +74,17 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         }
 
         // ANGLE CONNECT TOP POIAS WITH PREVIOUS WALL 
-        if (prevWallAngle) {
+        if (prevWallAngle !== null) {
             const poias = createAnglePoias01(root, -prevWallAngle, -angle, H_TOP_POIAS, .5)
             _M.translateVertices(poias.v, prev[0], H - H_TOP_POIAS, prev[1])
             for (let j = 0; j < poias.v.length; ++j) {
-                 v.push(poias.v[j])
+                v.push(poias.v[j])
             }
             for (let j = 0; j < poias.uv.length; ++j) {
-                 uv.push(poias.uv[j])
+                uv.push(poias.uv[j])
             }
             for (let j = 0; j < poias.c.length; ++j) {
-                 c.push(poias.c[j])
+                c.push(poias.c[j])
             }
         } 
         // FIRST CAP ANGLE TOP POIAS WITH LAST WALL

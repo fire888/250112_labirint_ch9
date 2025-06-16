@@ -275,7 +275,7 @@ export const createExamplesAllWalls = (root: Root) => {
             [1, 1],
             [1, 10],
             [2, 11],
-            [15, 10],
+            [17, 11],
             [15, 1],
             [1, 1],
         ]
