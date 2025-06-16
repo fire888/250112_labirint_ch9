@@ -48,6 +48,7 @@ export type IDataForWall = {
     h: number,
     d: number,
     H_TOP_POIAS: number,
+    TYPE_TOP_POIAS: ElemType,
     TYPE_SIDE_PILASTER: ElemType,
 }
 

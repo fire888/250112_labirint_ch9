@@ -45,7 +45,7 @@ export class Studio {
     init (root: Root) {
         this._root = root
         this.containerDom = document.getElementById('container-game')
-        this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
+        this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, .1, 1000)
         this.camera.position.set(1, 30, 70)
         this.camera.lookAt(0, 1, 0)
 

@@ -22,17 +22,8 @@ const TOP_PROFILE =
     [0,1.3]
 ]
 
-const n = []
-for (let i = 0; i < TOP_PROFILE.length; ++i) {
-    n.push([TOP_PROFILE[i][0] - .1, TOP_PROFILE[i][1]])
-}
-
-export const createPoias01 = (root: Root, w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
-    const v: number[] = []
-    const uv: number[] = []
-    const c: number[] = []
-
-    let profile = TOP_PROFILE
+const modifyProfile = (h: number = 1.3, d: number = 0): number[] => {
+        let profile = TOP_PROFILE
     if (h !== 1.3) {
         profile = []
         for (let i = 0; i < TOP_PROFILE.length; ++i) {
@@ -56,15 +47,41 @@ export const createPoias01 = (root: Root, w: number, h: number = 1.3, d: number 
         profile = profileD
     }
 
-    {
-        const copy = [...profile]
-        const converted = _M.convertSimpleProfileToV3(profile)
-        const r = _M.fillPoligonsV3(converted, converted, w, tileMapWall.noise, COLOR_BLUE_D, .5, true)
-        v.push(...r.v)
-        c.push(...r.c)
-        uv.push(...r.uv)
-    }
+    const converted = _M.convertSimpleProfileToV3(profile)
 
+    return converted
+}
+
+
+export const createPoias01 = (root: Root, w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
+    const v: number[] = []
+    const uv: number[] = []
+    const c: number[] = []
+
+    const converted = modifyProfile(h, d) 
+
+    const r = _M.fillPoligonsV3(converted, converted, w, tileMapWall.noise, COLOR_BLUE_D, .5, true)
+    v.push(...r.v)
+    c.push(...r.c)
+    uv.push(...r.uv)
 
     return { v, uv, c }
+}
+
+export const createAnglePoias01 = (
+    root: Root, 
+    angle1: number, 
+    angle2: number, 
+    h: number = 1.3, 
+    d: number = 0
+): IArrayForBuffers => {
+    const profileLeft = modifyProfile(h, d)
+    const profileRight = [...profileLeft]
+
+    _M.rotateVerticesY(profileLeft, angle1)
+    _M.rotateVerticesY(profileRight, angle2)
+
+    const r =_M.fillPoligonsV3(profileLeft, profileRight, 0, tileMapWall.noise, COLOR_BLUE_D, d, false)
+
+    return r
 }

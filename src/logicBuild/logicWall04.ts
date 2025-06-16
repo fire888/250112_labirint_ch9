@@ -252,7 +252,7 @@ export const calculateLogicWall04 = (
 
 
     /** CONSTANTS */
-    const { w, h, d, TYPE_SIDE_PILASTER, H_TOP_POIAS } = dataForBuldWall
+    const { w, h, d, TYPE_SIDE_PILASTER, H_TOP_POIAS, TYPE_TOP_POIAS } = dataForBuldWall
 
     const W = Math.random() * 2 + 2
     const N = Math.floor(w / W)
@@ -352,11 +352,19 @@ export const calculateLogicWall04 = (
 
     // TOP POIAS
     {
-        const topPoias = createPoias01(root, w, H_TOP_POIAS, d + .2)
-        _M.translateVertices(topPoias.v, 0, h - H_TOP_POIAS, 0)
-        v.push(...topPoias.v)
-        uv.push(...topPoias.uv)
-        c.push(...topPoias.c)
+        let topPoiasConstructor = null
+        if (TYPE_TOP_POIAS === ElemType.POIAS_01) {
+            topPoiasConstructor = createPoias01
+        }
+        if (topPoiasConstructor) {
+            const topPoias = topPoiasConstructor(root, w, H_TOP_POIAS, d + .2)
+            _M.translateVertices(topPoias.v, 0, h - H_TOP_POIAS, 0)
+            v.push(...topPoias.v)
+            uv.push(...topPoias.uv)
+            c.push(...topPoias.c)
+        } else {
+            console.log('NO TOP POIAS CONSTRUCTOR')
+        }
     }
 
     // TOP ELEMS 
