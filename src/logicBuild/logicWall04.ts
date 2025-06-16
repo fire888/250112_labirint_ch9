@@ -74,6 +74,24 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             v.push(...innerP.v)
             uv.push(...innerP.uv)
             c.push(...innerP.c)
+
+            // back wall Fill
+            {
+                const r = _M.createPolygon(
+                    [INNER_PILASTER_W * .5, 0, 0],
+                    [-INNER_PILASTER_W * .5, 0, 0],
+                    [-INNER_PILASTER_W * .5, h, 0],
+                    [INNER_PILASTER_W * .5, h, 0],
+                )
+                _M.translateVertices(r, 
+                    SIDE_PILASTER_W + SINGLE_SECTION_W * (i + 1) + INNER_PILASTER_W * (i + .5), 
+                    0, 
+                    -.3 - .2,
+                )
+                v.push(...r)
+                uv.push(...tileMapWall.empty)
+                c.push(..._M.fillColorFace([0, 0, 0]))
+            }
         }
     }
 
@@ -178,6 +196,46 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             v.push(...holeDoor.v)
             uv.push(...holeDoor.uv)     
             c.push(...holeDoor.c)
+
+            // BACK HOLE DOOR
+            const holeWindowBack = createHole00(root, {
+                w: W_DOOR,
+                h: H_DOOR,
+                d,
+                offsetY: 0,
+                offsetX: 0,
+                width: SINGLE_SECTION_W,
+                height: h,
+            })
+            _M.translateVertices(
+                holeWindowBack.v,
+                SIDE_PILASTER_W + 
+                N_SECTION_DOOR * SINGLE_SECTION_W + 
+                N_SECTION_DOOR * INNER_PILASTER_W + 
+                SINGLE_SECTION_W * .5, 
+                0, 
+                -.3 - .2,
+            )
+            for (let i = 0; i < holeWindowBack.v.length; i += 9) {
+                const tmp0 = holeWindowBack.v[i + 3]
+                const tmp1 = holeWindowBack.v[i + 4]
+                const tmp2 = holeWindowBack.v[i + 5]
+                holeWindowBack.v[i + 3] = holeWindowBack.v[i]
+                holeWindowBack.v[i + 4] = holeWindowBack.v[i + 1]
+                holeWindowBack.v[i + 5] = holeWindowBack.v[i + 2]
+                holeWindowBack.v[i] = tmp0
+                holeWindowBack.v[i + 1] = tmp1
+                holeWindowBack.v[i + 2] = tmp2
+            }
+            for (let i = 0; i < holeWindowBack.uv.length; i += 1) {
+                holeWindowBack.uv[i] = 0
+            }
+            for (let i = 0; i < holeWindowBack.c.length; i += 1) {
+                holeWindowBack.c[i] = 0
+            }
+            v.push(...holeWindowBack.v)
+            uv.push(...holeWindowBack.uv)     
+            c.push(...holeWindowBack.c)
         }
     }
 
@@ -236,6 +294,46 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             v.push(...holeWindow.v)
             uv.push(...holeWindow.uv)     
             c.push(...holeWindow.c)
+
+            // BACK HOLE WINDOW
+            const holeWindowBack = createHole00(root, {
+                w: wWindow,
+                h: hWindow,
+                d,
+                offsetY: bottomOffsetY + H_POIAS_BOTTOM,
+                offsetX: 0,
+                width: SINGLE_SECTION_W,
+                height: h,
+            })
+            _M.translateVertices(
+                holeWindowBack.v,
+                SIDE_PILASTER_W +   
+                i * SINGLE_SECTION_W + 
+                i * INNER_PILASTER_W + 
+                SINGLE_SECTION_W * .5,
+                0, 
+                -.3 - .2,
+            )
+            for (let i = 0; i < holeWindowBack.v.length; i += 9) {
+                const tmp0 = holeWindowBack.v[i + 3]
+                const tmp1 = holeWindowBack.v[i + 4]
+                const tmp2 = holeWindowBack.v[i + 5]
+                holeWindowBack.v[i + 3] = holeWindowBack.v[i]
+                holeWindowBack.v[i + 4] = holeWindowBack.v[i + 1]
+                holeWindowBack.v[i + 5] = holeWindowBack.v[i + 2]
+                holeWindowBack.v[i] = tmp0
+                holeWindowBack.v[i + 1] = tmp1
+                holeWindowBack.v[i + 2] = tmp2
+            }
+            for (let i = 0; i < holeWindowBack.uv.length; i += 1) {
+                holeWindowBack.uv[i] = 0
+            }
+            for (let i = 0; i < holeWindowBack.c.length; i += 1) {
+                holeWindowBack.c[i] = 0
+            }
+            v.push(...holeWindowBack.v)
+            uv.push(...holeWindowBack.uv)     
+            c.push(...holeWindowBack.c)
         }
     }
 
@@ -304,6 +402,21 @@ export const calculateLogicWall04 = (
         v.push(...r.v)
         uv.push(...r.uv)
         c.push(...r.c)
+
+        // fill backSide
+        {
+            const b = _M.createPolygon(
+                [w, 0, -d],
+                [0, 0, -d],
+                [0, h, -d],
+                [w, h, -d],
+            )
+            v.push(...b)
+            uv.push(
+                ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+            )
+            c.push(..._M.fillColorFace([0, 0, 0]))
+        }
     }
 
     if (N > 0) {
@@ -337,9 +450,7 @@ export const calculateLogicWall04 = (
         }
     }
 
-
     { // OUTER PILASTERS
-
         let constrPilaster = null
         if (TYPE_SIDE_PILASTER === ElemType.PILASTER_00) {
             constrPilaster = createPilaster00
@@ -365,6 +476,35 @@ export const calculateLogicWall04 = (
             v.push(...rightP.v)
             uv.push(...rightP.uv)
             c.push(...rightP.c)
+
+            // fill backSide left
+            {
+                const b = _M.createPolygon(
+                    [SIDE_PILASTER_W, 0, -.5],
+                    [0, 0, -.5],
+                    [0, h, -.5],
+                    [SIDE_PILASTER_W, h, -.5],
+                )
+                v.push(...b)
+                uv.push(
+                    ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+                )
+                c.push(..._M.fillColorFace([0, 0, 0]))
+            }
+            // fill backSide
+            {
+                const b = _M.createPolygon(
+                    [w, 0, -.5],
+                    [w - SIDE_PILASTER_W, 0, -.5],
+                    [w - SIDE_PILASTER_W, h, -.5],
+                    [w, h, -.5],
+                )
+                v.push(...b)
+                uv.push(
+                    ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+                )
+                c.push(..._M.fillColorFace([0, 0, 0]))
+            }
         }
     }
 
@@ -382,6 +522,21 @@ export const calculateLogicWall04 = (
             c.push(...topPoias.c)
         } else {
             console.log('NO TOP POIAS CONSTRUCTOR')
+        }
+
+        // BACK TOP POIAS
+        {
+            const b = _M.createPolygon(
+                [w, h - H_TOP_POIAS, -.5],
+                [0, h - H_TOP_POIAS, -.5],
+                [0, h, -.5],
+                [w, h, -.5],
+            )
+            v.push(...b)
+            uv.push(
+                ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+            )
+            c.push(..._M.fillColorFace([0, 0, 0]))
         }
     }
 
@@ -403,20 +558,20 @@ export const calculateLogicWall04 = (
         }
     }
 
-    // BACK PART
-    {
-        const b = _M.createPolygon(
-            [w, 0, -d],
-            [0, 0, -d],
-            [0, h, -d],
-            [w, h, -d],
-        )
-        v.push(...b)
-        uv.push(
-            ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
-        )
-        c.push(..._M.fillColorFace(COLOR_DARK))
-    }
+    // // BACK PART
+    // {
+    //     const b = _M.createPolygon(
+    //         [w, 0, -d],
+    //         [0, 0, -d],
+    //         [0, h, -d],
+    //         [w, h, -d],
+    //     )
+    //     v.push(...b)
+    //     uv.push(
+    //         ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+    //     )
+    //     c.push(..._M.fillColorFace(COLOR_DARK))
+    // }
 
     return { v, uv, c }
 }

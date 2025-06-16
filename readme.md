@@ -7,9 +7,9 @@ V -cap bottom windows left\right
 V -house00 if 4 or less walls top poias not cap one angle
 V -door left/rigth parts intercepts with bottom profile
 V -back side of roof 
--back windows
--make first floor 
-
+V -back windows
+V -make first floor 
+-refactoring depth of whalls
 
 
 

@@ -13,6 +13,7 @@ const DEFAULT_WINDOW_DATA: IHoleData = {
 
 export const createWindow00 = (root: Root, windowData: IHoleData) => {
     const { w, h, d } = { ...DEFAULT_WINDOW_DATA, ...windowData }
+    const DD = -.5
 
     const hW = -w * .5
 
@@ -26,21 +27,21 @@ export const createWindow00 = (root: Root, windowData: IHoleData) => {
         ..._M.createPolygon(
             [hW, 0, 0],
             [0, 0, 0],
-            [0, 0, -d],
-            [hW, 0, -d],
+            [0, 0, DD],
+            [hW, 0, DD],
         ),
         // top
         ..._M.createPolygon(
             [0, h, 0],
             [hW, h, 0],
-            [hW, h, -d],
-            [0, h, -d],
+            [hW, h, DD],
+            [0, h, DD],
         ),
         // left 
         ..._M.createPolygon(
             [hW, 0, 0],
-            [hW, 0, -d],
-            [hW, h, -d],
+            [hW, 0, DD],
+            [hW, h, DD],
             [hW, h, 0],
         )
     )
@@ -104,9 +105,6 @@ export const createWindow00 = (root: Root, windowData: IHoleData) => {
         ..._M.fillColorFace(COLOR_BLUE_L),
         ..._M.fillColorFace(COLOR_BLUE_L),
     )
-
-
-
 
     _M.appendMirrorX(v, c, uv)
 

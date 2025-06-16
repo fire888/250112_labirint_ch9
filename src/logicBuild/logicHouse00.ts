@@ -127,6 +127,15 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         uv.push(...area.uv)
     }
 
+    // first floor
+    {
+        const area = createArea00(perimeter, COLOR_DARK, tileMapWall.emptyTree, 0)           
+        _M.translateVertices(area.v, 0, .01, 0)
+        v.push(...area.v)
+        c.push(...area.c)
+        uv.push(...area.uv)
+    }
+
     const m = _M.createMesh({ 
         v, 
         uv,

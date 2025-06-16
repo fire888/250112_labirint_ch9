@@ -86,4 +86,12 @@ export const tileMapWall = {
         1 * D, 2 * D,
     ],
     'emptyTree': [0, 0, 0, 0, 0, 0],
+    'empty': [
+        0, 0, 
+        0, 0, 
+        0, 0, 
+        0, 0, 
+        0, 0, 
+        0, 0,
+    ],
 } 
