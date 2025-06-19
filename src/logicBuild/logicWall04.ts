@@ -477,34 +477,34 @@ export const calculateLogicWall04 = (
             uv.push(...rightP.uv)
             c.push(...rightP.c)
 
-            // fill backSide left
-            {
-                const b = _M.createPolygon(
-                    [SIDE_PILASTER_W, 0, -.5],
-                    [0, 0, -.5],
-                    [0, h, -.5],
-                    [SIDE_PILASTER_W, h, -.5],
-                )
-                v.push(...b)
-                uv.push(
-                    ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
-                )
-                c.push(..._M.fillColorFace([0, 0, 0]))
-            }
-            // fill backSide
-            {
-                const b = _M.createPolygon(
-                    [w, 0, -.5],
-                    [w - SIDE_PILASTER_W, 0, -.5],
-                    [w - SIDE_PILASTER_W, h, -.5],
-                    [w, h, -.5],
-                )
-                v.push(...b)
-                uv.push(
-                    ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
-                )
-                c.push(..._M.fillColorFace([0, 0, 0]))
-            }
+            // // fill backSide left
+            // {
+            //     const b = _M.createPolygon(
+            //         [SIDE_PILASTER_W, 0, -.5],
+            //         [0, 0, -.5],
+            //         [0, h, -.5],
+            //         [SIDE_PILASTER_W, h, -.5],
+            //     )
+            //     v.push(...b)
+            //     uv.push(
+            //         ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+            //     )
+            //     c.push(..._M.fillColorFace([0, 0, 0]))
+            // }
+            // // fill backSide
+            // {
+            //     const b = _M.createPolygon(
+            //         [w, 0, -.5],
+            //         [w - SIDE_PILASTER_W, 0, -.5],
+            //         [w - SIDE_PILASTER_W, h, -.5],
+            //         [w, h, -.5],
+            //     )
+            //     v.push(...b)
+            //     uv.push(
+            //         ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
+            //     )
+            //     c.push(..._M.fillColorFace([0, 0, 0]))
+            // }
         }
     }
 

@@ -16,9 +16,6 @@ import { log, STYLE_KEYS } from "helpers/logger";
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
 
-const COLOR_PERIM = _M.hexToNormalizedRGB('1c1937')
-const AREA_FOR_DOWN = 60
-
 export class Lab {
     _root: Root
     constructor() {}
@@ -47,8 +44,6 @@ export class Lab {
 
             const area = _M.area(scheme[i].area)
             const center = _M.center(scheme[i].area) 
-            
-
 
             areasData.push({
                 center,
@@ -95,7 +90,6 @@ export class Lab {
         //     }
         // ] 
 
-
         // /** walls */
         console.log('[MESSAGE:] START WALLS')
         d = Date.now()
@@ -104,6 +98,9 @@ export class Lab {
                 if (areasData[i].isDown) { 
                     continue;
                 }
+
+
+
 
                 calculateLogicHouse00(this._root, areasData[i].perimeterInner)
             }
