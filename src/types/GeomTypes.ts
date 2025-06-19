@@ -1,3 +1,9 @@
+export enum SegmentType {
+    HOUSE_00 = 'HOUSE_00',
+    AREA_00 = 'AREA_00',
+    STRUCTURE_00 = 'STRUCTURE_00',
+}
+
 export enum ElemType {
     WINDOW_00 = 'WINDOW_00',
     DOOR_00 = 'DOOR_00',

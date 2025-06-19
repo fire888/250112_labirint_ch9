@@ -569,7 +569,6 @@ export const _M = {
                         uv.push(...uvData)
                         c.push(..._M.fillColorFace(color))
                     }
-
                 }
             }
         }

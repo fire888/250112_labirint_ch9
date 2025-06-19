@@ -53,7 +53,7 @@ export class ControlsSystem {
                 ui.toggleVisibleLock(false) 
 
                 if (root.studio.fog) {
-                    root.studio.scene.fog = root.studio.fog
+                    //root.studio.scene.fog = root.studio.fog
                 }
             })
         }

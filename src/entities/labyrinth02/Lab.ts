@@ -2,10 +2,9 @@ import { Root } from "../../index";
 import * as THREE from "three";
 import { _M, A3 } from "../../geometry/_m";
 import { createScheme} from "./scheme"
-import { createWall_01, createAngleWall_01 } from "geometry/wall01"
-import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
-import { createWall_03, createAngleWall_03 } from "geometry/wall03";
-import { calculateLogicWall04 } from "logicBuild/logicWall04";
+import { 
+    createWall_02, 
+} from 'geometry/wall02_down'
 import { calculateLogicHouse00 } from "logicBuild/logicHouse00";
 import { createCurb00 } from "geometry/bevel00/curb00";
 import { createArea00 } from "geometry/area00/area00";
@@ -13,6 +12,9 @@ import { offset, } from "./offset";
 import { createExamplesAllWalls } from "./examplesWalls";
 import { tileMapWall } from "geometry/tileMapWall";
 import { log, STYLE_KEYS } from "helpers/logger";
+import { checkTypeSegment } from "logicBuild/logicSegment";
+import { SegmentType } from "types/GeomTypes";
+import { COLOR_BLUE_D } from "constants/CONSTANTS";
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
 
@@ -25,11 +27,7 @@ export class Lab {
         let d = Date.now()
 
         console.log('[MESSAGE:] START EXAMPLES')
-        for (let i = 0; i < 5; ++i) {
-            // calculateLogicWall04(root, 20, 2 + Math.random() * 20, .3, i * 5)
-        }
-
-        createExamplesAllWalls(root)
+        //createExamplesAllWalls(root)
         console.log('[TIME:] COMPLETE EXAMPLES:', ((Date.now() - d) / 1000).toFixed(2))
         
         console.log('[MESSAGE:] START SCHEME')
@@ -39,18 +37,16 @@ export class Lab {
         const areasData = []
 
         for (let i = 0; i < scheme.length; ++i) {
-            const random = Math.random() 
-            const isDown = false//random < .2 
-
             const area = _M.area(scheme[i].area)
             const center = _M.center(scheme[i].area) 
+            const typeSegment = checkTypeSegment(scheme[i].offset)
 
             areasData.push({
                 center,
                 area,
                 perimeter: scheme[i].area,
                 perimeterInner: scheme[i].offset,
-                isDown,
+                typeSegment,
             })
 
             /** label */
@@ -95,14 +91,10 @@ export class Lab {
         d = Date.now()
         {
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].isDown) { 
-                    continue;
+                if (areasData[i].typeSegment === SegmentType.HOUSE_00) {
+                    const m = calculateLogicHouse00(this._root, areasData[i].perimeterInner)
+                    m.position.y = .1
                 }
-
-
-
-
-                calculateLogicHouse00(this._root, areasData[i].perimeterInner)
             }
         }
         console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
@@ -116,7 +108,7 @@ export class Lab {
             const c: number[] = [] 
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].isDown) { 
+                if (areasData[i].typeSegment !== SegmentType.HOUSE_00) {
                     continue;
                 }
 
@@ -137,12 +129,41 @@ export class Lab {
                 //material: root.materials.road
                 material: root.materials.walls00,
             })
+            m.position.y = .1
             this._root.studio.add(m)
         }
         console.log('[TIME:] COMPLETE ROADS', ((Date.now() - d) / 1000).toFixed(2))
 
         /** areas */
-        console.log('[MESSAGE:] START AREAS')
+        // console.log('[MESSAGE:] START AREAS')
+        // d = Date.now()
+        // {
+        //     const v: number[] = []
+        //     const uv: number[] = []
+        //     const c: number[] = []
+
+        //     for (let i = 0; i < areasData.length; ++i) {
+        //         if (areasData[i].typeSegment !== SegmentType.AREA_00) {
+        //             continue;
+        //         }
+        //         const r = this._createArea(areasData[i])
+        //         v.push(...r.v)
+        //         uv.push(...r.uv)
+        //         c.push(...r.c)
+        //     }
+        //     const m = _M.createMesh({ 
+        //         v,
+        //         uv,
+        //         c, 
+        //         material: root.materials.walls00,
+        //     })
+        //     this._root.studio.add(m)
+        // }
+        //console.log('[TIME:] COMPLETE AREAS',((Date.now() - d) / 1000).toFixed(2))
+
+
+        /** empty areas */
+        console.log('[MESSAGE:] START AREAS EMPTY')
         d = Date.now()
         {
             const v: number[] = []
@@ -150,23 +171,53 @@ export class Lab {
             const c: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (!areasData[i].isDown) { 
+                if (areasData[i].typeSegment !== SegmentType.AREA_00) {
                     continue;
                 }
-                const r = this._createArea(areasData[i])
+                const r = createArea00(areasData[i].perimeter, COLOR_FLOOR, tileMapWall.stoneTree)
                 v.push(...r.v)
-                uv.push(...r.uv)
-                c.push(...r.c)
             }
+
+            let minX = Infinity
+            let maxX = -Infinity
+            let minZ = Infinity
+            let maxZ = -Infinity
+
+            for (let j = 0; j < v.length; j += 3) {
+                if (minX > v[j]) {
+                    minX = v[j]
+                }
+                if (maxX < v[j]) {
+                    maxX = v[j]
+                }
+                if (minZ > v[j + 2]) {
+                    minZ = v[j + 2]
+                }
+                if (maxZ < v[j + 2]) {
+                    maxZ = v[j + 2]
+                }
+            }
+            const lx = maxX - minX
+            const lz = maxZ - minZ
+
+            const uv1: number[] = []
+            for (let j = 0; j < v.length; j += 3) {
+                const x = (v[j] - minX) / lx
+                const z = (v[j + 2] - minZ) / lz
+                uv1.push(z, x)
+            }
+
+            uv.push(...uv1)
+
             const m = _M.createMesh({ 
                 v,
                 uv,
                 c, 
-                material: root.materials.walls00,
+                material: root.materials.desert,
             })
             this._root.studio.add(m)
         }
-        console.log('[TIME:] COMPLETE AREAS',((Date.now() - d) / 1000).toFixed(2))
+        console.log('[TIME:] COMPLETE AREAS EMPTY', ((Date.now() - d) / 1000).toFixed(2))
     }
 
     _createArea (areaData: any) {
@@ -330,6 +381,22 @@ export class Lab {
                 uv.push(...r.uv)
                 c.push(...r.c)
             }
+            
+            // create side road
+            v.push(
+                ..._M.createPolygon(
+                    [outerI[0], 0, outerI[1]],
+                    [outerI[0], -.1, outerI[1]],
+                    [outerI[2], -.1, outerI[3]],
+                    [outerI[2], 0, outerI[3]],
+                )
+            )
+            uv.push(
+                ...tileMapWall.stoneLong
+            )
+            c.push(
+                ..._M.fillColorFace(COLOR_BLUE_D)
+            )
         }
         return { v, uv, c }
     }
