@@ -3,10 +3,15 @@ import { IPerimeter, IDataForWall, ElemType } from "types/GeomTypes"
 import { calculateLogicWall04 } from './logicWall04'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { createArea00 } from "geometry/area00/area00"
-import { _M } from '../geometry/_m'
+import { _M, A3 } from '../geometry/_m'
 import { COLOR_BLUE_D, COLOR_DARK } from "constants/CONSTANTS"
-import { tileMapWall } from "geometry/tileMapWall"
+import { tileMapWall, } from "geometry/tileMapWall"
 import * as THREE from "three" 
+import { 
+    IdataForFillWall, 
+    IdataForFillWall_TMP, 
+    addTypeFullIdataForFillWall 
+} from "types/GeomTypes"
 
 let n = 0
 
@@ -23,6 +28,10 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
     const H_TOP_POIAS = 0.4 + Math.random()
 
     let prevWallAngle = null
+    let prevWidthSidePilaster = null
+
+    const wallsData: IdataForFillWall[] = []
+
     for (let i = 1; i < perimeter.length; ++i) {
         const prev = perimeter[i - 1]
         const cur =  perimeter[i]
@@ -32,7 +41,16 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
             continue;
         }
 
+        const wallDataSheme_tmp: IdataForFillWall_TMP = {
+            buffer: [],
+            w: 0,
+            h: 0,
+            d: 0,
+            indicies: {}
+        }
+
         const d = _M.dist(prev, cur)
+        wallDataSheme_tmp.w = d
 
         const ranPilastreType = Math.random()
         let sidePilasterType: ElemType = ElemType.PILASTER_01
@@ -47,8 +65,23 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         } else {
             sidePilasterType = ElemType.PILASTER_04
         }
+        const SIDE_PILASTER_W = 0.3 + Math.random() * 0.5
+
+        // SAVE TO SCHEME
+        wallDataSheme_tmp.buffer.push(0, 0, 0)
+        wallDataSheme_tmp.indicies[`field_wall_start`] = 0
+        wallDataSheme_tmp.buffer.push(d, 0, 0)
+        wallDataSheme_tmp.indicies[`field_wall_end`] = 1
+        wallDataSheme_tmp.buffer.push(1, 0, -.5)
+        wallDataSheme_tmp.indicies[`field_wall_innerStart`] = 2
+        wallDataSheme_tmp.buffer.push(d - 1, 0, -.5)
+        wallDataSheme_tmp.indicies[`field_wall_innerEnd`] = 3
 
         const TYPE_TOP_POIAS = ElemType.POIAS_01
+        wallDataSheme_tmp.TYPE_TOP_POIAS = ElemType.POIAS_01
+        wallDataSheme_tmp.H_TOP_POIAS = H_TOP_POIAS
+        wallDataSheme_tmp.TYPE_SIDE_PILASTER = sidePilasterType
+        wallDataSheme_tmp.SIDE_PILASTER_W = SIDE_PILASTER_W
 
         const DATA_FOR_WALL: IDataForWall = {
             w: d,
@@ -57,10 +90,14 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
             H_TOP_POIAS,
             TYPE_TOP_POIAS,
             TYPE_SIDE_PILASTER: sidePilasterType,
+            SIDE_PILASTER_W,
         }
 
         const r = calculateLogicWall04(root, DATA_FOR_WALL)
         const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
+
+        wallDataSheme_tmp.angle = angle
+
         _M.rotateVerticesY(r.v, -angle)
         _M.translateVertices(r.v, prev[0], 0, prev[1])
         for (let j = 0; j < r.v.length; ++j) {
@@ -72,6 +109,8 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         for (let j = 0; j < r.c.length; ++j) {
             c.push(r.c[j])
         }
+        _M.rotateVerticesY(wallDataSheme_tmp.buffer, -angle)
+        _M.translateVertices(wallDataSheme_tmp.buffer, prev[0], 0, prev[1])
 
         // ANGLE CONNECT TOP POIAS WITH PREVIOUS WALL 
         if (prevWallAngle !== null) {
@@ -103,6 +142,60 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
             }
             for (let j = 0; j < poias.c.length; ++j) {
                  c.push(poias.c[j])
+            }
+        }
+
+        const wallData1: IdataForFillWall = addTypeFullIdataForFillWall(wallDataSheme_tmp)
+        wallsData.push(wallData1)
+
+        // CAP INNER CORNERS
+        if (wallsData.length > 1) {
+            const prevWall = wallsData[wallsData.length - 2] 
+            const currWall = wallsData[wallsData.length - 1]
+            
+            const p1: A3 = [
+                prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3],
+                0,
+                prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3 + 2],
+            ]
+            const p0: A3 = [
+                currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3],
+                0,
+                currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3 + 2],
+            ]
+            const p2: A3 = [...p1]
+            p2[1] = H
+
+            const p3: A3 = [...p0]
+            p3[1] = H
+
+            v.push(..._M.createPolygon(p0, p1, p2, p3))
+            uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
+            c.push(..._M.fillColorFace(COLOR_DARK))
+
+            if (i === perimeter.length - 1) {
+                const prevWall = wallsData[wallsData.length - 1] 
+                const currWall = wallsData[0]
+                
+                const p1: A3 = [
+                    prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3],
+                    0,
+                    prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3 + 2],
+                ]
+                const p0: A3 = [
+                    currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3],
+                    0,
+                    currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3 + 2],
+                ]
+                const p2: A3 = [...p1]
+                p2[1] = H
+
+                const p3: A3 = [...p0]
+                p3[1] = H
+
+                v.push(..._M.createPolygon(p0, p1, p2, p3))
+                uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
+                c.push(..._M.fillColorFace(COLOR_DARK))
             }
         }
 

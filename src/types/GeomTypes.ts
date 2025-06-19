@@ -50,6 +50,7 @@ export type IDataForWall = {
     H_TOP_POIAS: number,
     TYPE_TOP_POIAS: ElemType,
     TYPE_SIDE_PILASTER: ElemType,
+    SIDE_PILASTER_W: number,
 }
 
 export type IArrayForBuffers = {
@@ -62,3 +63,37 @@ export type IArrayForBuffers = {
 }
 
 export type IPerimeter = [number, number][]
+
+export type IdataForFillWall = {
+    buffer: number[],
+    w: number,
+    h: number,
+    d: number,
+    angle: number,
+    TYPE_TOP_POIAS: ElemType,
+    H_TOP_POIAS: number,
+    TYPE_SIDE_PILASTER: ElemType,
+    SIDE_PILASTER_W: number,
+    indicies: {
+        [key: string]: number
+    }
+}
+export type IdataForFillWall_TMP = Partial<IdataForFillWall>
+
+
+const isFullIdataForFillWall = (x: Partial<IdataForFillWall>): x is IdataForFillWall => {
+  return Array.isArray(x.buffer) &&
+         typeof x.w === 'number' &&
+         typeof x.h === 'number' &&
+         typeof x.d === 'number';
+}
+
+export const addTypeFullIdataForFillWall = (draft: Partial<IdataForFillWall>): IdataForFillWall => {
+    if (isFullIdataForFillWall(draft)) {
+        const wall: IdataForFillWall = draft;
+        return wall
+    } else {
+        throw new Error('wall draft is incomplete');
+    }
+} 
+

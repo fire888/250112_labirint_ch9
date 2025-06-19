@@ -11,7 +11,7 @@ V -back windows
 V -make first floor 
 -refactoring depth of whalls
 -if ond of angles less 30 drop house
--cap inner angles
+V -cap inner angles
 
 
 

@@ -100,7 +100,6 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
         H_POIAS_BOTTOM = 0.15 + Math.random() * 1
     }
     { // POIAS BOTTOM
-
        // calculate Breaks By DOORS 
         const breakPoiasParts = [] 
         let START_POIAS_X = SIDE_PILASTER_W
@@ -349,14 +348,18 @@ export const calculateLogicWall04 = (
     const uv: number[] = []
     const c: number[] = []
 
-
-    /** CONSTANTS */
-    const { w, h, d, TYPE_SIDE_PILASTER, H_TOP_POIAS, TYPE_TOP_POIAS } = dataForBuldWall
+    const { 
+        w, 
+        h, 
+        d, 
+        TYPE_SIDE_PILASTER, 
+        H_TOP_POIAS, 
+        TYPE_TOP_POIAS,
+        SIDE_PILASTER_W, 
+    } = dataForBuldWall
 
     const W = Math.random() * 2 + 2
     const N = Math.floor(w / W)
-
-    const SIDE_PILASTER_W = 0.3 + Math.random() * 0.5
 
     const WORK_WALL_W = w - SIDE_PILASTER_W * 2
 
@@ -476,35 +479,6 @@ export const calculateLogicWall04 = (
             v.push(...rightP.v)
             uv.push(...rightP.uv)
             c.push(...rightP.c)
-
-            // // fill backSide left
-            // {
-            //     const b = _M.createPolygon(
-            //         [SIDE_PILASTER_W, 0, -.5],
-            //         [0, 0, -.5],
-            //         [0, h, -.5],
-            //         [SIDE_PILASTER_W, h, -.5],
-            //     )
-            //     v.push(...b)
-            //     uv.push(
-            //         ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
-            //     )
-            //     c.push(..._M.fillColorFace([0, 0, 0]))
-            // }
-            // // fill backSide
-            // {
-            //     const b = _M.createPolygon(
-            //         [w, 0, -.5],
-            //         [w - SIDE_PILASTER_W, 0, -.5],
-            //         [w - SIDE_PILASTER_W, h, -.5],
-            //         [w, h, -.5],
-            //     )
-            //     v.push(...b)
-            //     uv.push(
-            //         ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
-            //     )
-            //     c.push(..._M.fillColorFace([0, 0, 0]))
-            // }
         }
     }
 
