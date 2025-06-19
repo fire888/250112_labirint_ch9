@@ -370,7 +370,7 @@ export const calculateLogicWall04 = (
     const FULL_SECTIONS_W = WORK_WALL_W - FULL_W_INNER_PILASTERS
     const SINGLE_SECTION_W = FULL_SECTIONS_W / N
 
-    const N_SECTION_DOOR = Math.floor(Math.random() * N)
+    const N_SECTION_DOOR = SINGLE_SECTION_W < 2 ? 500 :Math.floor(Math.random() * N)
     const W_DOOR = Math.min(SINGLE_SECTION_W - .6,  2 + Math.random() * 2)
 
     const floorData: ISingleFloorData = {
@@ -432,6 +432,9 @@ export const calculateLogicWall04 = (
 
             if (h - H_TOP_POIAS - currentH_Level - floorH < 3) {
                 floorH = h - H_TOP_POIAS - currentH_Level
+            }
+            if (i === 0 && floorH < 3) { // remove door
+                floorData.N_SECTION_DOOR = 500
             }
 
             floorData.h = floorH

@@ -28,7 +28,7 @@ export const pipelineInit = async (root: Root) => {
     materials.init(root)
 
     studio.init(root)
-    studio.addAxisHelper()
+    //studio.addAxisHelper()
     ticker.on(studio.render.bind(studio))
 
     ui.init(root)

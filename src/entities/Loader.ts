@@ -1,4 +1,4 @@
-import { Texture, TextureLoader, AudioLoader } from 'three'
+import { Texture, TextureLoader, AudioLoader, CubeTextureLoader, CubeTexture } from 'three'
 import mapEnv from "../assets/env.webp"
 import sky from '../assets/sky.webp'
 import sprite from '../assets/sprite.webp'
@@ -11,6 +11,13 @@ import roadImg from '../assets/road.jpg'
 import lightMap from '../assets/tiles.jpg'
 import wallTile from '../assets/tiles_wall.jpg'
 import noise00 from '../assets/noise00.jpg'
+
+import nx from '../assets/sky/nx.jpg'
+import ny from '../assets/sky/ny.jpg'
+import nz from '../assets/sky/nz.jpg'
+import px from '../assets/sky/px.jpg'
+import py from '../assets/sky/py.jpg'
+import pz from '../assets/sky/pz.jpg'
 
 type Assets = {
     mapEnv: Texture,
@@ -25,6 +32,7 @@ type Assets = {
     lightMap: Texture,
     mapWall_01: Texture,
     noise00: Texture,
+    cubeSky: CubeTexture,
 }
 type ResultLoad = {
     key: keyof Assets,
@@ -33,6 +41,7 @@ type ResultLoad = {
 
 export class LoaderAssets {
     _textureLoader: TextureLoader = new TextureLoader()
+    _cubeTextureLoader: CubeTextureLoader = new CubeTextureLoader()
     assets: Assets = {
         mapEnv: null,
         sky: null,
@@ -46,6 +55,7 @@ export class LoaderAssets {
         lightMap: null,
         mapWall_01: null,
         noise00: null,
+        cubeSky: null,
     }
 
     init () {}
@@ -70,6 +80,14 @@ export class LoaderAssets {
                 })
             }
 
+            const loadCubeTexture = (key: keyof Assets, src: string[]) => {
+                return new Promise<ResultLoad>(res => {
+                    this._cubeTextureLoader.load(src, cubeTexture => {
+                        res({ key, texture: cubeTexture })
+                    })
+                })
+            }
+
             const promises = [
                 loadTexture('mapEnv', mapEnv),
                 loadTexture('sky', sky),
@@ -85,6 +103,8 @@ export class LoaderAssets {
                 loadTexture('lightMap', lightMap),
                 loadTexture('mapWall_01', wallTile),
                 loadTexture('noise00', noise00),
+
+                loadCubeTexture('cubeSky', [px, nx, py, ny, pz, nz]),
             ]
 
             Promise.all(promises).then(result => {

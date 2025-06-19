@@ -15,7 +15,9 @@ import {
 import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { Root } from "../index";
-
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { Saturate3 } from '../shaders/satutate'
 
 
 const params = {
@@ -41,6 +43,8 @@ export class Studio {
     _root: Root
     spotLight: SpotLight
     amb: THREE.AmbientLight 
+    renderPass: RenderPass
+    shader: ShaderPass
 
     init (root: Root) {
         this._root = root
@@ -49,7 +53,7 @@ export class Studio {
         this.camera.position.set(1, 30, 70)
         this.camera.lookAt(0, 1, 0)
 
-        this.spotLight = new SpotLight( 0xffffff, 1000 )
+        this.spotLight = new SpotLight(0xffffff, 10)
         this.spotLight.intensity = 1
         this.spotLight.position.set(0, 3, 5);
         this.spotLight.angle = Math.PI * .2;
@@ -66,14 +70,20 @@ export class Studio {
         this.scene.add(this.spotLight)
         this.scene.add(this.camera)
 ;
-        root.loader.assets.mapEnv.mapping = EquirectangularReflectionMapping;
-        root.loader.assets.mapEnv.colorSpace = SRGBColorSpace;
+        //root.loader.assets.mapEnv.mapping = EquirectangularReflectionMapping;
+        //root.loader.assets.mapEnv.colorSpace = SRGBColorSpace;
 
-        this.scene.background = root.loader.assets.mapEnv
-        this.envMap = root.loader.assets.noise00
+        //root.loader.assets.cubeSky.mapping = EquirectangularReflectionMapping;
+        root.loader.assets.cubeSky.colorSpace = SRGBColorSpace;
+
+        //this.scene.background = root.loader.assets.mapEnv
+        this.scene.background = root.loader.assets.cubeSky
+        //this.envMap = root.loader.assets.noise00
+        this.envMap = root.loader.assets.cubeSky
         this.fog = new THREE.Fog(0x2b2241, 1, 50)
 
-        this.amb = new THREE.AmbientLight(0xFFFFFF, 2)
+        //this.amb = new THREE.AmbientLight(0xFFFFFF, 2)
+        this.amb = new THREE.AmbientLight(0xFFFFFF, 3)
         this.scene.add(this.amb)
 
         this.dirLight = new DirectionalLight( 0xffffff, 10 )
@@ -86,6 +96,13 @@ export class Studio {
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.containerDom.appendChild(this.renderer.domElement)
 
+        this.composer = new EffectComposer(this.renderer)
+        this.renderPass = new RenderPass(this.scene, this.camera)
+        this.composer.addPass(this.renderPass)
+        this.shader = new ShaderPass(Saturate3)
+        this.composer.addPass(this.shader)
+        
+
         window.addEventListener( 'resize', this.onWindowResize.bind(this))
         this.onWindowResize()
     }
@@ -93,7 +110,8 @@ export class Studio {
     render () {
         this.camera.getWorldPosition(this.spotLight.position)
         this.spotLight.position.y += .1
-        this.renderer.render(this.scene, this.camera)
+        //this.renderer.render(this.scene, this.camera)
+        this.composer.render(140)
     }
 
     onWindowResize() {

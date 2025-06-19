@@ -15,9 +15,12 @@ export class Materials {
             map: root.loader.assets.mapWall_01,
             bumpMap: root.loader.assets.mapWall_01,
             bumpScale: 3,
-            shininess: 5,
+            //shininess: 5,
+            //shininess: .5,
             specular: 0x5c7974,
             vertexColors: true,
+            envMap: root.loader.assets.cubeSky,
+            reflectivity: .6 
         }) 
 
         this.road = new THREE.MeshPhongMaterial({ 

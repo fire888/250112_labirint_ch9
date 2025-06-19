@@ -10,8 +10,14 @@ V -back side of roof
 V -back windows
 V -make first floor 
 -refactoring depth of whalls
--if ond of angles less 30 drop house
+V -if ond of angles less 30 drop house
 V -cap inner angles
+-design light
+-texture roofs
+-texture inner houses
+-roads connect left\right sides
+V -skip small and short doors
+V -add texture sky 
 
 
 
