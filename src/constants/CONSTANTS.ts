@@ -13,6 +13,7 @@ export const CONSTANTS = {
     PLAYER_START_POS,
 }
 
+export const COLOR_WINDOW_INNER_D: A3 = [.25, .25, .5]
 export const COLOR_WHITE: A3 = _M.hexToNormalizedRGB('444444') 
 //export const COLOR_BLUE_L: A3 = _M.hexToNormalizedRGB('545074') 
 export const COLOR_BLUE_L: A3 = _M.hexToNormalizedRGB('a6b8ba') 

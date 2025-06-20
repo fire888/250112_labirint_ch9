@@ -15,9 +15,11 @@ V -cap inner angles
 -design light
 -texture roofs
 -texture inner houses
--roads connect left\right sides
+V -roads connect left\right sides
 V -skip small and short doors
 V -add texture sky 
+V -window inner dark
+- 
 
 
 

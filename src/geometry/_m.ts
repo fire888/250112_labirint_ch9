@@ -669,6 +669,7 @@ export const _M = {
 
     appendMirrorX: (v: number[], c: number[], uv: number[]) => {
         const copyV = []
+        const copyC = []
         for (let i = 0; i < v.length; i += 18) {
             const p0 = [-v[i], v[i + 1], v[i + 2]]
             const p1 = [-v[i + 3], v[i + 4], v[i + 5]]
@@ -680,13 +681,56 @@ export const _M = {
             copyV.push(...p1)
             copyV.push(...p5)
             copyV.push(...p4)
+
+            const c0 = [c[i], c[i + 1], c[i + 2]]
+            const c1 = [c[i + 3], c[i + 4], c[i + 5]]
+            const c4 = [c[i + 12], c[i + 13], c[i + 14]]    
+            const c5 = [c[i + 15], c[i + 16], c[i + 17]]
+            copyC.push(...c1)
+            copyC.push(...c0)
+            copyC.push(...c5)
+            copyC.push(...c1)
+            copyC.push(...c5)
+            copyC.push(...c4)
         }
-        const copyC = [...c]
         const copyUV = [...uv]
 
         v.push(...copyV)
         c.push(...copyC)
         uv.push(...copyUV)
     },
+
+    fillUvByPositionsXZ (v: number[]) {
+        let minX = Infinity
+        let maxX = -Infinity
+        let minZ = Infinity
+        let maxZ = -Infinity
+
+        for (let j = 0; j < v.length; j += 3) {
+            if (minX > v[j]) {
+                minX = v[j]
+            }
+            if (maxX < v[j]) {
+                maxX = v[j]
+            }
+            if (minZ > v[j + 2]) {
+                minZ = v[j + 2]
+            }
+            if (maxZ < v[j + 2]) {
+                maxZ = v[j + 2]
+            }
+        }
+        const lx = maxX - minX
+        const lz = maxZ - minZ
+
+        const uv1: number[] = []
+        for (let j = 0; j < v.length; j += 3) {
+            const x = (v[j] - minX) / lx
+            const z = (v[j + 2] - minZ) / lz
+            uv1.push(z, x)
+        }
+
+        return uv1
+    }
 }
 

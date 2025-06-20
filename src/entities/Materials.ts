@@ -23,16 +23,25 @@ export class Materials {
             reflectivity: .6 
         }) 
 
+        {
+            const map = root.loader.assets.roadImg
+            map.wrapS = THREE.RepeatWrapping
+            map.wrapT = THREE.RepeatWrapping
+            map.repeat.set(40, 40)
+        }
+
         this.road = new THREE.MeshPhongMaterial({ 
-            color: 0x333377,
+            color: 0x000000,
             map: root.loader.assets.roadImg,
             //map: this._root.loader.assets.lightMap,
             bumpMap: root.loader.assets.roadImg,
-            bumpScale: 3,
-            shininess: 10,
-            specular: 0x5c7974,
+            bumpScale: 7,
+            shininess: 6,
+            //shininess: 10,
+            specular: 0x555566,
             //aoMap: this._root.loader.assets.roadImg,
             //aoMapIntensity: 100,
+            vertexColors: true,
         })
 
         const map = root.loader.assets.noise00

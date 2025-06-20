@@ -16,7 +16,8 @@ import { checkTypeSegment } from "logicBuild/logicSegment";
 import { SegmentType } from "types/GeomTypes";
 import { COLOR_BLUE_D } from "constants/CONSTANTS";
 
-const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
+//const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
+const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('000000') 
 
 export class Lab {
     _root: Root
@@ -119,15 +120,15 @@ export class Lab {
 
                 const r = this._fillRoad(offsetLines, existsLines)
                 v.push(...r.v)
-                uv.push(...r.uv)
                 c.push(...r.c)
             }
+
+            const uv1 = _M.fillUvByPositionsXZ(v)
             const m = _M.createMesh({ 
                 v,
-                uv,
+                uv: uv1,
                 c,
-                //material: root.materials.road
-                material: root.materials.walls00,
+                material: root.materials.road
             })
             m.position.y = .1
             this._root.studio.add(m)
@@ -178,35 +179,7 @@ export class Lab {
                 v.push(...r.v)
             }
 
-            let minX = Infinity
-            let maxX = -Infinity
-            let minZ = Infinity
-            let maxZ = -Infinity
-
-            for (let j = 0; j < v.length; j += 3) {
-                if (minX > v[j]) {
-                    minX = v[j]
-                }
-                if (maxX < v[j]) {
-                    maxX = v[j]
-                }
-                if (minZ > v[j + 2]) {
-                    minZ = v[j + 2]
-                }
-                if (maxZ < v[j + 2]) {
-                    maxZ = v[j + 2]
-                }
-            }
-            const lx = maxX - minX
-            const lz = maxZ - minZ
-
-            const uv1: number[] = []
-            for (let j = 0; j < v.length; j += 3) {
-                const x = (v[j] - minX) / lx
-                const z = (v[j + 2] - minZ) / lz
-                uv1.push(z, x)
-            }
-
+            const uv1 = _M.fillUvByPositionsXZ(v) 
             uv.push(...uv1)
 
             const m = _M.createMesh({ 
@@ -349,8 +322,6 @@ export class Lab {
             return
         }
 
-
-
         const v: number[] = [] 
         const uv: number[] = [] 
         const c: number[] = []
@@ -369,19 +340,19 @@ export class Lab {
                     [innerI[0], innerI[1]], 
                     [outerI[0], outerI[1]], 
                     [outerI[2], outerI[3]],
-
-
-                    
-                    tileMapWall.stoneLong,
+                    [
+                        0, 0, 1, 0, 1, 1,
+                        0, 0, 1, 1, 0, 1,
+                    ],
                     0,
                     5,
                     COLOR_FLOOR,
                 )
                 v.push(...r.v)    
-                uv.push(...r.uv)
+                //uv.push(...r.uv)
                 c.push(...r.c)
             }
-            
+
             // create side road
             v.push(
                 ..._M.createPolygon(
@@ -391,11 +362,8 @@ export class Lab {
                     [outerI[2], 0, outerI[3]],
                 )
             )
-            uv.push(
-                ...tileMapWall.stoneLong
-            )
             c.push(
-                ..._M.fillColorFace(COLOR_BLUE_D)
+                ..._M.fillColorFace(COLOR_FLOOR)
             )
         }
         return { v, uv, c }
