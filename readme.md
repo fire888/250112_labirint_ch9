@@ -9,21 +9,19 @@ V -door left/rigth parts intercepts with bottom profile
 V -back side of roof 
 V -back windows
 V -make first floor 
--refactoring depth of whalls
+V -refactoring depth of whalls
 V -if ond of angles less 30 drop house
 V -cap inner angles
 -design light
 -texture roofs
--texture inner houses
 V -roads connect left\right sides
 V -skip small and short doors
 V -add texture sky 
 V -window inner dark
 -bug fill poligons roads
--inner offsets walls angle scrop
--make wallsData logic before fill poligins 
-
-
+V -inner offsets walls angle scrop
+V -make wallsData logic before fill poligins 
+-colonnades without walls
 
 
 NODE v20.11.0

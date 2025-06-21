@@ -32,9 +32,9 @@ export const checkTypeSegment = (perimeter: [number, number][]) => {
 
     
     let type = SegmentType.HOUSE_00
-    if (isSmallAngle || isWallShort) { 
-        type = SegmentType.AREA_00
-    }
+    //if (isSmallAngle || isWallShort) { 
+    //    type = SegmentType.AREA_00
+    //}
 
     return type
 }

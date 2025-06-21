@@ -15,6 +15,9 @@ import {
 
 let n = 0
 
+//const D = .1
+const D = .5
+
 export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
     ++n
 
@@ -27,11 +30,9 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
 
     const H_TOP_POIAS = 0.4 + Math.random()
 
-    let prevWallAngle = null
+    const INNER_WALLS_OFFSET = .4 
 
-    const INNER_WALLS_OFFSET = 1 
-
-    const wallsData: IdataForFillWall[] = []
+    const wallsData_TMP: IdataForFillWall_TMP[] = []
 
     for (let i = 1; i < perimeter.length; ++i) {
         const prev = perimeter[i - 1]
@@ -45,9 +46,11 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         const wallDataSheme_tmp: IdataForFillWall_TMP = {
             buffer: [],
             w: 0,
-            h: 0,
-            d: 0,
-            indicies: {}
+            h: H,
+            d: D,
+            indicies: {},
+            X: prev[0],
+            Z: prev[1],
         }
 
         const d = _M.dist(prev, cur)
@@ -73,36 +76,65 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         wallDataSheme_tmp.indicies[`field_wall_start`] = 0
         wallDataSheme_tmp.buffer.push(d, 0, 0)
         wallDataSheme_tmp.indicies[`field_wall_end`] = 1
-        wallDataSheme_tmp.buffer.push(INNER_WALLS_OFFSET + .8, 0, -.5)
-        wallDataSheme_tmp.indicies[`field_wall_innerStart`] = 2
-        wallDataSheme_tmp.buffer.push(d - INNER_WALLS_OFFSET - .8, 0, -.5)
-        wallDataSheme_tmp.indicies[`field_wall_innerEnd`] = 3
+        // wallDataSheme_tmp.buffer.push(INNER_WALLS_OFFSET + .8, 0, -.5)
+        // wallDataSheme_tmp.indicies[`field_wall_innerStart`] = 2
+        // wallDataSheme_tmp.buffer.push(d - INNER_WALLS_OFFSET - .8, 0, -.5)
+        // wallDataSheme_tmp.indicies[`field_wall_innerEnd`] = 3
 
-        const TYPE_TOP_POIAS = ElemType.POIAS_01
         wallDataSheme_tmp.TYPE_TOP_POIAS = ElemType.POIAS_01
         wallDataSheme_tmp.H_TOP_POIAS = H_TOP_POIAS
         wallDataSheme_tmp.TYPE_SIDE_PILASTER = sidePilasterType
         wallDataSheme_tmp.SIDE_PILASTER_W = SIDE_PILASTER_W
 
-        const DATA_FOR_WALL: IDataForWall = {
-            w: d,
-            h: H,
-            d: .3,
-            H_TOP_POIAS,
-            TYPE_TOP_POIAS,
-            TYPE_SIDE_PILASTER: sidePilasterType,
-            SIDE_PILASTER_W,
-            INNER_WALL_START_OFFSET: INNER_WALLS_OFFSET,
-            INNER_WALL_END_OFFSET: INNER_WALLS_OFFSET,
-        }
-
-        const r = calculateLogicWall04(root, DATA_FOR_WALL)
         const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
-
         wallDataSheme_tmp.angle = angle
 
+        wallsData_TMP.push(wallDataSheme_tmp)
+    }
+
+    for (let i = 0; i < wallsData_TMP.length; ++i) {
+        const prevW = wallsData_TMP[i - 1] ? wallsData_TMP[i - 1] : wallsData_TMP[wallsData_TMP.length - 1]
+        const currW = wallsData_TMP[i]
+        const nextW = wallsData_TMP[i + 1] ? wallsData_TMP[i + 1] : wallsData_TMP[0]
+        
+        const startConnectedAngle = currW.angle - prevW.angle
+        const startOffset = Math.abs(startConnectedAngle / Math.PI * .3) < 1 
+            ? 0 
+            : Math.abs(Math.PI / startConnectedAngle) * 320
+        
+        const endConnectedAngle = nextW.angle - currW.angle
+        const endOffset = Math.abs(endConnectedAngle / Math.PI * .3) < 1 
+            ? 0 
+            : Math.abs(Math.PI / endConnectedAngle) * 320
+
+        currW.INNER_WALL_START_OFFSET = startOffset
+        currW.INNER_WALL_END_OFFSET = endOffset
+
+        currW.buffer.push(currW.SIDE_PILASTER_W, 0, -D)
+        currW.indicies[`field_wall_innerStart`] = 2
+        currW.buffer.push(currW.w - currW.SIDE_PILASTER_W, 0, -D)
+        currW.indicies[`field_wall_innerEnd`] = 3
+
+        _M.rotateVerticesY(currW.buffer, -currW.angle)
+        _M.translateVertices(currW.buffer, currW.X, 0, currW.Z)
+    }
+
+    const wallsData: IdataForFillWall[] = []
+    for (let i = 0; i < wallsData_TMP.length; ++i) {
+        const wallDataSheme = wallsData_TMP[i]
+        const wallData = addTypeFullIdataForFillWall(wallDataSheme)
+        wallsData.push(wallData)
+    }
+
+    console.log('WWW', wallsData)
+
+    for (let i = 0; i < wallsData.length; ++i) {
+        const r = calculateLogicWall04(root, wallsData[i])
+
+        const { angle, X, Z, buffer, indicies } = wallsData[i]
+
         _M.rotateVerticesY(r.v, -angle)
-        _M.translateVertices(r.v, prev[0], 0, prev[1])
+        _M.translateVertices(r.v, X, 0, Z)
         for (let j = 0; j < r.v.length; ++j) {
             v.push(r.v[j])
         }
@@ -112,97 +144,43 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         for (let j = 0; j < r.c.length; ++j) {
             c.push(r.c[j])
         }
-        _M.rotateVerticesY(wallDataSheme_tmp.buffer, -angle)
-        _M.translateVertices(wallDataSheme_tmp.buffer, prev[0], 0, prev[1])
+
+        const prevWallAngle = wallsData[i - 1] ? wallsData[i - 1].angle : wallsData[wallsData.length - 1].angle
+        const prevWall = wallsData[i - 1] ? wallsData[i - 1] : wallsData[wallsData.length - 1]
 
         // ANGLE CONNECT TOP POIAS WITH PREVIOUS WALL 
-        if (prevWallAngle !== null) {
-            const poias = createAnglePoias01(root, -prevWallAngle, -angle, H_TOP_POIAS, .5)
-            _M.translateVertices(poias.v, prev[0], H - H_TOP_POIAS, prev[1])
-            for (let j = 0; j < poias.v.length; ++j) {
-                v.push(poias.v[j])
-            }
-            for (let j = 0; j < poias.uv.length; ++j) {
-                uv.push(poias.uv[j])
-            }
-            for (let j = 0; j < poias.c.length; ++j) {
-                c.push(poias.c[j])
-            }
-        } 
-        // FIRST CAP ANGLE TOP POIAS WITH LAST WALL
-        if (i === 1) {
-            const prev2 = perimeter[perimeter.length - 2]
-            const prev1 = perimeter[perimeter.length - 1]
-            const prevWallAngle = _M.angleFromCoords(prev1[0] - prev2[0], prev1[1] - prev2[1])
-
-            const poias = createAnglePoias01(root, -prevWallAngle, -angle, H_TOP_POIAS, .5)
-            _M.translateVertices(poias.v, prev[0], H - H_TOP_POIAS, prev[1])
-            for (let j = 0; j < poias.v.length; ++j) {
-                 v.push(poias.v[j])
-            }
-            for (let j = 0; j < poias.uv.length; ++j) {
-                 uv.push(poias.uv[j])
-            }
-            for (let j = 0; j < poias.c.length; ++j) {
-                 c.push(poias.c[j])
-            }
+        const poias = createAnglePoias01(root, -prevWall.angle, -angle, H_TOP_POIAS, D + .2)
+        _M.translateVertices(poias.v, wallsData[i].X, H - H_TOP_POIAS, wallsData[i].Z)
+        for (let j = 0; j < poias.v.length; ++j) {
+            v.push(poias.v[j])
         }
-
-        const wallData1: IdataForFillWall = addTypeFullIdataForFillWall(wallDataSheme_tmp)
-        wallsData.push(wallData1)
+        for (let j = 0; j < poias.uv.length; ++j) {
+            uv.push(poias.uv[j])
+        }
+        for (let j = 0; j < poias.c.length; ++j) {
+            c.push(poias.c[j])
+        }
 
         // CAP INNER CORNERS
-        if (wallsData.length > 1) {
-            const prevWall = wallsData[wallsData.length - 2] 
-            const currWall = wallsData[wallsData.length - 1]
-            
-            const p1: A3 = [
-                prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3],
-                0,
-                prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3 + 2],
-            ]
-            const p0: A3 = [
-                currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3],
-                0,
-                currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3 + 2],
-            ]
-            const p2: A3 = [...p1]
-            p2[1] = H
+        const p1: A3 = [
+            prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3],
+            0,
+            prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3 + 2],
+        ]
+        const p0: A3 = [
+            buffer[indicies[`field_wall_innerStart`] * 3],
+            0,
+            buffer[indicies[`field_wall_innerStart`] * 3 + 2],
+        ]
+        const p2: A3 = [...p1]
+        p2[1] = H
 
-            const p3: A3 = [...p0]
-            p3[1] = H
+        const p3: A3 = [...p0]
+        p3[1] = H
 
-            v.push(..._M.createPolygon(p0, p1, p2, p3))
-            uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
-            c.push(..._M.fillColorFace(COLOR_DARK))
-
-            if (i === perimeter.length - 1) {
-                const prevWall = wallsData[wallsData.length - 1] 
-                const currWall = wallsData[0]
-                
-                const p1: A3 = [
-                    prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3],
-                    0,
-                    prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3 + 2],
-                ]
-                const p0: A3 = [
-                    currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3],
-                    0,
-                    currWall.buffer[currWall.indicies[`field_wall_innerStart`] * 3 + 2],
-                ]
-                const p2: A3 = [...p1]
-                p2[1] = H
-
-                const p3: A3 = [...p0]
-                p3[1] = H
-
-                v.push(..._M.createPolygon(p0, p1, p2, p3))
-                uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
-                c.push(..._M.fillColorFace(COLOR_DARK))
-            }
-        }
-
-        prevWallAngle = angle
+        v.push(..._M.createPolygon(p0, p1, p2, p3))
+        uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
+        c.push(..._M.fillColorFace(COLOR_DARK))
     }
 
     // roof

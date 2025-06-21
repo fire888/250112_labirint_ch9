@@ -35,7 +35,7 @@ export const createHoleBack01 = (root: Root, holeData: IHoleOrderData): IArrayFo
     const uv: number[] = []
 
     // UNDER HOLE ///////////////////////////
-    //if (x0 < x1 && y0 < y1) {
+    if (x0 < x1 && y0 < y1) {
         v.push(
             ..._M.createPolygon(
                 [x1, y0, 0],
@@ -45,8 +45,8 @@ export const createHoleBack01 = (root: Root, holeData: IHoleOrderData): IArrayFo
             )
         )
         c.push(..._M.fillColorFace(color))
-    //}
-    //if (x1 < x2 && y0 < y1) {
+    }
+    if (x1 < x2 && y0 < y1) {
         v.push(
             ..._M.createPolygon(
                 [x2, y0, 0],
@@ -56,8 +56,8 @@ export const createHoleBack01 = (root: Root, holeData: IHoleOrderData): IArrayFo
             )
         )
         c.push(..._M.fillColorFace(color))
-    //}
-    //if (x2 < x3 && y0 < y1) {
+    }
+    if (x2 < x3 && y0 < y1) {
         v.push(
             ..._M.createPolygon(
                 [x3, y0, 0],
@@ -67,7 +67,7 @@ export const createHoleBack01 = (root: Root, holeData: IHoleOrderData): IArrayFo
             )
         )
         c.push(..._M.fillColorFace(color))
-    //}
+    }
 
     // LINE HOLE /////////////////
     if (x0 < x1 && y1 < y2) {

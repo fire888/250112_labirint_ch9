@@ -93,7 +93,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
                 _M.translateVertices(r, 
                     SIDE_PILASTER_W + SINGLE_SECTION_W * (i + 1) + INNER_PILASTER_W * (i + .5), 
                     0, 
-                    -.3 - .2,
+                    -d,
                 )
                 v.push(...r)
                 uv.push(...tileMapWall.empty)
@@ -165,7 +165,8 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             const door = createDoor00(root, {
                 w: W_DOOR,
                 h: H_DOOR,  
-                d: d + .2,
+                //d: d + .2,
+                d: d,
             })
             _M.translateVertices(
                 door.v, 
@@ -220,7 +221,8 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
                 N_SECTION_DOOR * INNER_PILASTER_W + 
                 SINGLE_SECTION_W * .5, 
                 0, 
-                -.3 - .2,
+                //-.3 - .2,
+                -d,
             )
             for (let i = 0; i < holeWindowBack.v.length; i += 9) {
                 const tmp0 = holeWindowBack.v[i + 3]
@@ -325,7 +327,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
                 holeWindowBack.v,
                 SIDE_PILASTER_W + i * SINGLE_SECTION_W + i * INNER_PILASTER_W + SINGLE_SECTION_W * .5,
                 0, 
-                -.3 - .2,
+                -d,
             )
 
             for (let i = 0; i < holeWindowBack.uv.length; i += 1) {
@@ -512,10 +514,10 @@ export const calculateLogicWall04 = (
         // BACK TOP POIAS
         {
             const b = _M.createPolygon(
-                [w, h - H_TOP_POIAS, -.5],
-                [0, h - H_TOP_POIAS, -.5],
-                [0, h, -.5],
-                [w, h, -.5],
+                [w, h - H_TOP_POIAS, -d],
+                [0, h - H_TOP_POIAS, -d],
+                [0, h, -d],
+                [w, h, -d],
             )
             v.push(...b)
             uv.push(

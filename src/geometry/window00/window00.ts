@@ -12,7 +12,7 @@ const DEFAULT_WINDOW_DATA: IHoleData = {
 
 export const createWindow00 = (root: Root, windowData: IHoleData) => {
     const { w, h, d } = { ...DEFAULT_WINDOW_DATA, ...windowData }
-    const DD = -.5
+    const DD = -d
 
     const hW = -w * .5
 

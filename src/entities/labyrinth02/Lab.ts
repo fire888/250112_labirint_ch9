@@ -172,9 +172,9 @@ export class Lab {
             const c: number[] = []
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].typeSegment !== SegmentType.AREA_00) {
-                    continue;
-                }
+                //if (areasData[i].typeSegment !== SegmentType.AREA_00) {
+                //    continue;
+                //}
                 const r = createArea00(areasData[i].perimeter, COLOR_FLOOR, tileMapWall.stoneTree)
                 v.push(...r.v)
             }

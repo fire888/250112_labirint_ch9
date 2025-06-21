@@ -84,6 +84,8 @@ export type IArrayForBuffers = {
 export type IPerimeter = [number, number][]
 
 export type IdataForFillWall = {
+    X: number,
+    Z: number,
     buffer: number[],
     w: number,
     h: number,
@@ -93,6 +95,8 @@ export type IdataForFillWall = {
     H_TOP_POIAS: number,
     TYPE_SIDE_PILASTER: ElemType,
     SIDE_PILASTER_W: number,
+    INNER_WALL_START_OFFSET: number,
+    INNER_WALL_END_OFFSET: number
     indicies: {
         [key: string]: number
     }
