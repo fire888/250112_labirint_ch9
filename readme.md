@@ -20,7 +20,8 @@ V -skip small and short doors
 V -add texture sky 
 V -window inner dark
 -bug fill poligons roads
-
+-inner offsets walls angle scrop
+-make wallsData logic before fill poligins 
 
 
 

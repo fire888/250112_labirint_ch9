@@ -28,7 +28,8 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
     const H_TOP_POIAS = 0.4 + Math.random()
 
     let prevWallAngle = null
-    let prevWidthSidePilaster = null
+
+    const INNER_WALLS_OFFSET = 1 
 
     const wallsData: IdataForFillWall[] = []
 
@@ -72,9 +73,9 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         wallDataSheme_tmp.indicies[`field_wall_start`] = 0
         wallDataSheme_tmp.buffer.push(d, 0, 0)
         wallDataSheme_tmp.indicies[`field_wall_end`] = 1
-        wallDataSheme_tmp.buffer.push(1, 0, -.5)
+        wallDataSheme_tmp.buffer.push(INNER_WALLS_OFFSET + .8, 0, -.5)
         wallDataSheme_tmp.indicies[`field_wall_innerStart`] = 2
-        wallDataSheme_tmp.buffer.push(d - 1, 0, -.5)
+        wallDataSheme_tmp.buffer.push(d - INNER_WALLS_OFFSET - .8, 0, -.5)
         wallDataSheme_tmp.indicies[`field_wall_innerEnd`] = 3
 
         const TYPE_TOP_POIAS = ElemType.POIAS_01
@@ -91,6 +92,8 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
             TYPE_TOP_POIAS,
             TYPE_SIDE_PILASTER: sidePilasterType,
             SIDE_PILASTER_W,
+            INNER_WALL_START_OFFSET: INNER_WALLS_OFFSET,
+            INNER_WALL_END_OFFSET: INNER_WALLS_OFFSET,
         }
 
         const r = calculateLogicWall04(root, DATA_FOR_WALL)

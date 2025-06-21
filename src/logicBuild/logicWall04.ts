@@ -11,6 +11,7 @@ import { createPoias02 } from 'geometry/poias02/poias02';
 import { createDoor00 } from 'geometry/door00/door00';
 import { createWindow00 } from 'geometry/window00/window00';
 import { createHole00 } from 'geometry/hole00/hole00';
+import { createHoleBack01 } from 'geometry/holeBack01/holeBack01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
 import { _M, A2, A3 } from 'geometry/_m';
 import { COLOR_BLUE_D, COLOR_BLUE_L, COLOR_DARK } from 'constants/CONSTANTS';
@@ -30,12 +31,16 @@ type ISingleFloorData = {
     SINGLE_SECTION_W: number,
     N_SECTION_DOOR: number,
     W_DOOR: number,
+    INNER_WALL_START_OFFSET: number,
+    INNER_WALL_END_OFFSET: number,
 }
 
 const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
+
+    const BACK_WALL_START_OFFSET = 3 
 
     const { 
         w, 
@@ -50,7 +55,9 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
         FULL_SECTIONS_W, 
         SINGLE_SECTION_W, 
         N_SECTION_DOOR, 
-        W_DOOR 
+        W_DOOR,
+        INNER_WALL_START_OFFSET,
+        INNER_WALL_END_OFFSET,
     } = floorData
     
     { // INNER PILASTERS
@@ -75,7 +82,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             uv.push(...innerP.uv)
             c.push(...innerP.c)
 
-            // back wall Fill
+            // back pilaster fill wall Fill
             {
                 const r = _M.createPolygon(
                     [INNER_PILASTER_W * .5, 0, 0],
@@ -295,35 +302,32 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             c.push(...holeWindow.c)
 
             // BACK HOLE WINDOW
-            const holeWindowBack = createHole00(root, {
-                w: wWindow,
-                h: hWindow,
-                d,
-                offsetY: bottomOffsetY + H_POIAS_BOTTOM,
-                offsetX: 0,
-                width: SINGLE_SECTION_W,
-                height: h,
+            let x0 = -SINGLE_SECTION_W * .5
+            if (i === 0) {
+                x0 = -SINGLE_SECTION_W * .5 + INNER_WALL_START_OFFSET
+            } 
+            const x1 = -wWindow * .5
+            const x2 = wWindow * .5
+            let x3 = SINGLE_SECTION_W * .5
+            if (i === N - 1) {
+                x3 = SINGLE_SECTION_W * .5 - INNER_WALL_END_OFFSET 
+            } 
+            const y0 = 0
+            const y1 = bottomOffsetY + H_POIAS_BOTTOM
+            const y2 = bottomOffsetY + H_POIAS_BOTTOM + hWindow
+            const y3 = h
+
+            const holeWindowBack = createHoleBack01(root, {
+                x0, x1, x2, x3,
+                y0, y1, y2, y3
             })
             _M.translateVertices(
                 holeWindowBack.v,
-                SIDE_PILASTER_W +   
-                i * SINGLE_SECTION_W + 
-                i * INNER_PILASTER_W + 
-                SINGLE_SECTION_W * .5,
+                SIDE_PILASTER_W + i * SINGLE_SECTION_W + i * INNER_PILASTER_W + SINGLE_SECTION_W * .5,
                 0, 
                 -.3 - .2,
             )
-            for (let i = 0; i < holeWindowBack.v.length; i += 9) {
-                const tmp0 = holeWindowBack.v[i + 3]
-                const tmp1 = holeWindowBack.v[i + 4]
-                const tmp2 = holeWindowBack.v[i + 5]
-                holeWindowBack.v[i + 3] = holeWindowBack.v[i]
-                holeWindowBack.v[i + 4] = holeWindowBack.v[i + 1]
-                holeWindowBack.v[i + 5] = holeWindowBack.v[i + 2]
-                holeWindowBack.v[i] = tmp0
-                holeWindowBack.v[i + 1] = tmp1
-                holeWindowBack.v[i + 2] = tmp2
-            }
+
             for (let i = 0; i < holeWindowBack.uv.length; i += 1) {
                 holeWindowBack.uv[i] = 0
             }
@@ -355,7 +359,9 @@ export const calculateLogicWall04 = (
         TYPE_SIDE_PILASTER, 
         H_TOP_POIAS, 
         TYPE_TOP_POIAS,
-        SIDE_PILASTER_W, 
+        SIDE_PILASTER_W,
+        INNER_WALL_START_OFFSET,
+        INNER_WALL_END_OFFSET,
     } = dataForBuldWall
 
     const W = Math.random() * 2 + 2
@@ -387,6 +393,8 @@ export const calculateLogicWall04 = (
         SINGLE_SECTION_W,
         N_SECTION_DOOR,
         W_DOOR,
+        INNER_WALL_START_OFFSET,
+        INNER_WALL_END_OFFSET,
     }
 
     // FILL VERY SHORT SECTION 

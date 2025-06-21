@@ -24,7 +24,18 @@ export interface IHoleData {
     w: number,
     h: number,
     d: number,
-} 
+}
+
+export interface IHoleOrderData {
+    x0: number,
+    x1: number,
+    x2: number,
+    x3: number,
+    y0: number,
+    y1: number,
+    y2: number,
+    y3: number,
+}
 
 export interface IHoleEgesData extends IHoleData {
     width: number,
@@ -57,6 +68,8 @@ export type IDataForWall = {
     TYPE_TOP_POIAS: ElemType,
     TYPE_SIDE_PILASTER: ElemType,
     SIDE_PILASTER_W: number,
+    INNER_WALL_START_OFFSET: number,
+    INNER_WALL_END_OFFSET: number
 }
 
 export type IArrayForBuffers = {
