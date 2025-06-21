@@ -24,7 +24,7 @@ export const checkTypeSegment = (perimeter: [number, number][]) => {
     for (let i = 0; i < angles.length; ++i) {
         const prev = angles[i - 1] ? angles[i - 1] : angles[angles.length - 1]
         const cur = angles[i]
-        if (Math.abs(cur - prev) < Math.PI * .1) {
+        if (Math.abs(cur - prev) < Math.PI * .03) {
             isSmallAngle = true 
             break
         }
@@ -32,8 +32,12 @@ export const checkTypeSegment = (perimeter: [number, number][]) => {
 
     
     let type = SegmentType.HOUSE_00
-    //if (isSmallAngle || isWallShort) { 
-    //    type = SegmentType.AREA_00
+    if (isSmallAngle || isWallShort) { 
+        type = SegmentType.AREA_00
+    }
+
+    //if (isWallShort) { 
+    //   type = SegmentType.AREA_00
     //}
 
     return type

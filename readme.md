@@ -13,7 +13,7 @@ V -refactoring depth of whalls
 V -if ond of angles less 30 drop house
 V -cap inner angles
 -design light
--texture roofs
+V -texture roofs
 V -roads connect left\right sides
 V -skip small and short doors
 V -add texture sky 
@@ -22,7 +22,7 @@ V -window inner dark
 V -inner offsets walls angle scrop
 V -make wallsData logic before fill poligins 
 -colonnades without walls
-
+-disable short walls
 
 NODE v20.11.0
 

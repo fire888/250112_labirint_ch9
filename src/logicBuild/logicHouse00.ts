@@ -16,7 +16,7 @@ import {
 let n = 0
 
 //const D = .1
-const D = .5
+const D = .2
 
 export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
     ++n
@@ -185,7 +185,7 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
 
     // roof
     const centerYOffset = 2
-    const area = createArea00(perimeter, COLOR_BLUE_D, tileMapWall.linesTree, centerYOffset)           
+    const area = createArea00(perimeter, COLOR_BLUE_D, tileMapWall.roofTree, centerYOffset)           
     _M.translateVertices(area.v, 0, H, 0)
     v.push(...area.v)
     c.push(...area.c)

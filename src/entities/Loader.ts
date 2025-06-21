@@ -9,7 +9,7 @@ import audioDoor from '../assets/door.mp3'
 import audioFly from '../assets/fly.mp3'
 import roadImg from '../assets/road_stone.jpg'
 import lightMap from '../assets/tiles.jpg'
-import wallTile from '../assets/tiles_wall.jpg'
+import wallTile from '../assets/tiles_wall.png'
 import noise00 from '../assets/noise00.jpg'
 
 import nx from '../assets/sky/nx.jpg'

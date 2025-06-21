@@ -94,4 +94,17 @@ export const tileMapWall = {
         0, 0, 
         0, 0,
     ],
+    'roof': [
+        D * 1, D * 3,
+        D * 2, D * 3,
+        D * 2, D * 4,
+        D * 1, D * 3,
+        D * 2, D * 4,
+        D * 1, D * 4,
+    ],
+    'roofTree': [
+        D * 1, D * 3,
+        D * 2, D * 3,
+        D * 1.5, D * 4,
+    ],
 } 
