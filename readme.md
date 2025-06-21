@@ -19,7 +19,8 @@ V -roads connect left\right sides
 V -skip small and short doors
 V -add texture sky 
 V -window inner dark
-- 
+-bug fill poligons roads
+
 
 
 
