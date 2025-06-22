@@ -24,6 +24,7 @@ V -make wallsData logic before fill poligins
 V -colonnades without walls
 -disable short walls
 -fill stones under colonnades
+-make desert more
 
 
 NODE v20.11.0
