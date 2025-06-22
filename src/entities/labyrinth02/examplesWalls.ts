@@ -24,7 +24,7 @@ import { createPoias01 } from "geometry/poias01/poias01";
 import { createPoias02 } from "geometry/poias02/poias02";
 import { createColumn00 } from "geometry/column00/column00";
 
-import { calculateLogicHouse00 } from "logicBuild/logicHouse00";
+import { calculateLogicHouse00 } from "logicBuild/logicHouse00/logicHouse00";
 
 import { COLOR_BLUE } from "constants/CONSTANTS";
 

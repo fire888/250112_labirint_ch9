@@ -1,5 +1,6 @@
 export enum SegmentType {
     HOUSE_00 = 'HOUSE_00',
+    HOUSE_01 = 'HOUSE_01',
     AREA_00 = 'AREA_00',
     STRUCTURE_00 = 'STRUCTURE_00',
 }

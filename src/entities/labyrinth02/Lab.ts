@@ -1,11 +1,12 @@
 import { Root } from "../../index";
 import * as THREE from "three";
 import { _M, A3 } from "../../geometry/_m";
-import { createScheme} from "./scheme"
+import { createScheme } from "./scheme"
 import { 
     createWall_02, 
 } from 'geometry/wall02_down'
-import { calculateLogicHouse00 } from "logicBuild/logicHouse00";
+import { calculateLogicHouse00 } from "logicBuild/logicHouse00/logicHouse00";
+import { calculateLogicHouse01 } from "logicBuild/logicHouse01/logicHouse01";
 import { createCurb00 } from "geometry/bevel00/curb00";
 import { createArea00 } from "geometry/area00/area00";
 import { offset, } from "./offset";
@@ -96,6 +97,10 @@ export class Lab {
                     const m = calculateLogicHouse00(this._root, areasData[i].perimeterInner)
                     m.position.y = .1
                 }
+                if (areasData[i].typeSegment === SegmentType.HOUSE_01) {
+                    const m = calculateLogicHouse01(this._root, areasData[i].perimeterInner)
+                    m.position.y = .1
+                }
             }
         }
         console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
@@ -109,7 +114,14 @@ export class Lab {
             const c: number[] = [] 
 
             for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].typeSegment !== SegmentType.HOUSE_00) {
+                let isHouse = false
+                if (areasData[i].typeSegment === SegmentType.HOUSE_00) {
+                    isHouse = true
+                }
+                if (areasData[i].typeSegment === SegmentType.HOUSE_01) {
+                    isHouse = true
+                }
+                if (!isHouse) {
                     continue;
                 }
 

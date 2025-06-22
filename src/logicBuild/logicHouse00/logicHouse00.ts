@@ -1,9 +1,9 @@
-import { Root } from "../index"
+import { Root } from "../../index"
 import { IPerimeter, IDataForWall, ElemType } from "types/GeomTypes"
-import { calculateLogicWall04 } from './logicWall04'
+import { calculateLogicWall00 } from './logicWall00'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { createArea00 } from "geometry/area00/area00"
-import { _M, A3 } from '../geometry/_m'
+import { _M, A3 } from '../../geometry/_m'
 import { COLOR_BLUE_D, COLOR_DARK } from "constants/CONSTANTS"
 import { tileMapWall, } from "geometry/tileMapWall"
 import * as THREE from "three" 
@@ -29,8 +29,6 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
     const c: number[] = []
 
     const H_TOP_POIAS = 0.4 + Math.random()
-
-    const INNER_WALLS_OFFSET = .4 
 
     const wallsData_TMP: IdataForFillWall_TMP[] = []
 
@@ -76,10 +74,6 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         wallDataSheme_tmp.indicies[`field_wall_start`] = 0
         wallDataSheme_tmp.buffer.push(d, 0, 0)
         wallDataSheme_tmp.indicies[`field_wall_end`] = 1
-        // wallDataSheme_tmp.buffer.push(INNER_WALLS_OFFSET + .8, 0, -.5)
-        // wallDataSheme_tmp.indicies[`field_wall_innerStart`] = 2
-        // wallDataSheme_tmp.buffer.push(d - INNER_WALLS_OFFSET - .8, 0, -.5)
-        // wallDataSheme_tmp.indicies[`field_wall_innerEnd`] = 3
 
         wallDataSheme_tmp.TYPE_TOP_POIAS = ElemType.POIAS_01
         wallDataSheme_tmp.H_TOP_POIAS = H_TOP_POIAS
@@ -129,7 +123,7 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
     console.log('WWW', wallsData)
 
     for (let i = 0; i < wallsData.length; ++i) {
-        const r = calculateLogicWall04(root, wallsData[i])
+        const r = calculateLogicWall00(root, wallsData[i])
 
         const { angle, X, Z, buffer, indicies } = wallsData[i]
 

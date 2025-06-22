@@ -21,8 +21,10 @@ V -window inner dark
 -bug fill poligons roads
 V -inner offsets walls angle scrop
 V -make wallsData logic before fill poligins 
--colonnades without walls
+V -colonnades without walls
 -disable short walls
+-fill stones under colonnades
+
 
 NODE v20.11.0
 

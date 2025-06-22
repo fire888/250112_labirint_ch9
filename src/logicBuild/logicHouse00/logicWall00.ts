@@ -1,4 +1,4 @@
-import { Root } from '../index';
+import { Root } from '../../index';
 import { IFloorData, IWallData, IHoleData, IArrayForBuffers, ElemType, IDataForWall } from 'types/GeomTypes';
 import { createPilaster00 } from 'geometry/pilaster00/pilastre00';
 import { createPilaster01 } from 'geometry/pilaster01/pilaster01';
@@ -15,7 +15,7 @@ import { createHoleBack01 } from 'geometry/holeBack01/holeBack01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
 import { _M, A2, A3 } from 'geometry/_m';
 import { COLOR_BLUE_D, COLOR_BLUE_L, COLOR_DARK } from 'constants/CONSTANTS';
-import { tileMapWall } from "../geometry/tileMapWall"
+import { tileMapWall } from "../../geometry/tileMapWall"
 
 type ISingleFloorData = {
     w: number,
@@ -346,7 +346,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
 }
 
 
-export const calculateLogicWall04 = (
+export const calculateLogicWall00 = (
     root: Root, 
     dataForBuldWall: IDataForWall
 ): IArrayForBuffers => {
