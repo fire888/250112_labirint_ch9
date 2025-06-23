@@ -19,11 +19,11 @@ export class Floor {
         const S = 100
 
         /** заливаем квадраты поля кроме цнтрального */ 
-        for (let j = -1; j < 2; ++j) {
-            for (let i = -1; i < 2; ++i) {
-                if (i === 0 && j === 0) {
-                    continue;
-                }
+        for (let j = -3; j < 4; ++j) {
+            for (let i = -3; i < 4; ++i) {
+                //if (i === 0 && j === 0) {
+                //    continue;
+                //}
                 v.push(..._M.createPolygon(
                     [i * S, 0, j * S],
                     [i * S, 0, (j + 1) * S],
