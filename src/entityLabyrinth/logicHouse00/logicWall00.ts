@@ -158,10 +158,9 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
     }
 
     // DRAW DOOR
-    if (N_FLOOR === 0) {
+    if (N_FLOOR === 0 && N_SECTION_DOOR < N) { // чтобы пропустить дверь секцию двери можно поставить N_SECTION_DOOR = 500 
         const H_DOOR = Math.min(h - 1.5, 1.8 + Math.random() * 2)
         {
-
             const door = createDoor00(root, {
                 w: W_DOOR,
                 h: H_DOOR,  
@@ -205,7 +204,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             c.push(...holeDoor.c)
 
             // BACK HOLE DOOR
-            const holeWindowBack = createHole00(root, {
+            const holeDoorBack = createHole00(root, {
                 w: W_DOOR,
                 h: H_DOOR,
                 d,
@@ -215,7 +214,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
                 height: h,
             })
             _M.translateVertices(
-                holeWindowBack.v,
+                holeDoorBack.v,
                 SIDE_PILASTER_W + 
                 N_SECTION_DOOR * SINGLE_SECTION_W + 
                 N_SECTION_DOOR * INNER_PILASTER_W + 
@@ -224,29 +223,28 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
                 //-.3 - .2,
                 -d,
             )
-            for (let i = 0; i < holeWindowBack.v.length; i += 9) {
-                const tmp0 = holeWindowBack.v[i + 3]
-                const tmp1 = holeWindowBack.v[i + 4]
-                const tmp2 = holeWindowBack.v[i + 5]
-                holeWindowBack.v[i + 3] = holeWindowBack.v[i]
-                holeWindowBack.v[i + 4] = holeWindowBack.v[i + 1]
-                holeWindowBack.v[i + 5] = holeWindowBack.v[i + 2]
-                holeWindowBack.v[i] = tmp0
-                holeWindowBack.v[i + 1] = tmp1
-                holeWindowBack.v[i + 2] = tmp2
+            for (let i = 0; i < holeDoorBack.v.length; i += 9) {
+                const tmp0 = holeDoorBack.v[i + 3]
+                const tmp1 = holeDoorBack.v[i + 4]
+                const tmp2 = holeDoorBack.v[i + 5]
+                holeDoorBack.v[i + 3] = holeDoorBack.v[i]
+                holeDoorBack.v[i + 4] = holeDoorBack.v[i + 1]
+                holeDoorBack.v[i + 5] = holeDoorBack.v[i + 2]
+                holeDoorBack.v[i] = tmp0
+                holeDoorBack.v[i + 1] = tmp1
+                holeDoorBack.v[i + 2] = tmp2
             }
-            for (let i = 0; i < holeWindowBack.uv.length; i += 1) {
-                holeWindowBack.uv[i] = 0
+            for (let i = 0; i < holeDoorBack.uv.length; i += 1) {
+                holeDoorBack.uv[i] = 0
             }
-            for (let i = 0; i < holeWindowBack.c.length; i += 1) {
-                holeWindowBack.c[i] = 0
+            for (let i = 0; i < holeDoorBack.c.length; i += 1) {
+                holeDoorBack.c[i] = 0
             }
-            v.push(...holeWindowBack.v)
-            uv.push(...holeWindowBack.uv)     
-            c.push(...holeWindowBack.c)
+            v.push(...holeDoorBack.v)
+            uv.push(...holeDoorBack.uv)     
+            c.push(...holeDoorBack.c)
         }
     }
-
 
     // DRAW WINDOWS 
     {
