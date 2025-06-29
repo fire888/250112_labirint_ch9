@@ -34,9 +34,9 @@ export const checkTypeSegment = (perimeter: [number, number][]) => {
     if (Math.random() < .2) {
         type = SegmentType.HOUSE_01
     }
-    if (isSmallAngle || isWallShort) { 
-        type = SegmentType.AREA_00
-    }
+    // if (isSmallAngle || isWallShort) { 
+    //     type = SegmentType.AREA_00
+    // }
 
     return type
 }

@@ -7,9 +7,9 @@ var Offset = require('polygon-offset');
 export const createScheme = (root: Root) => {
     const voronoi = new Voronoi();
     //const S = 100
-    const SX = 100
-    const SY = 100
-    const N = 50
+    const SX = 150
+    const SY = 150
+    const N = 70
 
     const RN = 10 
 
