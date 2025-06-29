@@ -7,16 +7,12 @@ import {
     BufferGeometry,
     BufferAttribute,
     Mesh,
-    // LineBasicMaterial,
-    // Line,
-} from "three";
+} from "three"
 
 export type A3 = [number, number, number]
 export type A2 = [number, number]
 
 let geomLabel: THREE.PlaneGeometry | null = null
-
-
 
 export const _M = {
     createPolygon: function(v0: A3, v1: A3, v2: A3, v3: A3) { return  [...v0, ...v1, ...v2, ...v0, ...v2, ...v3] },
@@ -361,24 +357,6 @@ export const _M = {
         return line1            
     },
 
-    
-    // makeCreaterSquare: (data: { w: number }) => {
-    //     const { w } = data 
-    //     const lineMaterial = new LineBasicMaterial({ color: 0x0000ff })
-    //     const linePoints = [
-    //         new Vector3(-w / 2, 0, -w / 2),
-    //         new Vector3(-w / 2, 0, w / 2),
-    //         new Vector3(w / 2, 0, w / 2),
-    //         new Vector3(w / 2, 0, -w / 2),
-    //         new Vector3(-w / 2, 0, -w / 2),
-    //     ]
-    //     const geometry = new BufferGeometry().setFromPoints(linePoints)
-    
-    //     return () => {
-    //         return new Line(geometry, lineMaterial)
-    //     }
-    // }
-
     dist (v1: [number, number], v2: [number, number]) {
         return Math.sqrt((v1[0] - v2[0]) * (v1[0] - v2[0]) + (v1[1] - v2[1]) * (v1[1] - v2[1]))
     },
@@ -427,56 +405,31 @@ export const _M = {
     },
 
     center: (points: [number, number][]): [number, number] => {
-        // let minX = Infinity
-        // let maxX = -Infinity
-        // let minY = Infinity
-        // let maxY = -Infinity
+        let area = 0
+        let Cx = 0
+        let Cy = 0
+        const n = points.length
         
-        // for (let i = 0; i < points.length; ++i) {
-        //     if (minX > points[i][0]) {
-        //         minX = points[i][0]
-        //     }
-        //     if (maxX < points[i][0]) {
-        //         maxX = points[i][0]
-        //     }
-        //     if (minY > points[i][1]) {
-        //         minY = points[i][1]
-        //     }
-        //     if (maxY < points[i][1]) {
-        //         maxY = points[i][1]
-        //     }
-        // }
-
-        // return [
-        //     minX + (maxX - minX) * .5,
-        //     minY + (maxY - minY) * .5,
-        // ]
-
-            let area = 0;
-            let Cx = 0;
-            let Cy = 0;
-            const n = points.length;
-          
-            for (let i = 0; i < n; i++) {
-              const [x0, y0] = points[i];
-              const [x1, y1] = points[(i + 1) % n];
-          
-              const cross = (x0 * y1) - (x1 * y0);
-              area += cross;
-              Cx += (x0 + x1) * cross;
-              Cy += (y0 + y1) * cross;
-            }
-          
-            area /= 2;
-            
-            if (area === 0) {
-              throw new Error('Area of polygon is zero (possibly degenerate polygon)');
-            }
-          
-            Cx /= (6 * area);
-            Cy /= (6 * area);
-          
-            return [Cx, Cy];
+        for (let i = 0; i < n; i++) {
+            const [x0, y0] = points[i]
+            const [x1, y1] = points[(i + 1) % n]
+        
+            const cross = (x0 * y1) - (x1 * y0)
+            area += cross
+            Cx += (x0 + x1) * cross
+            Cy += (y0 + y1) * cross
+        }
+        
+        area /= 2
+        
+        if (area === 0) {
+            throw new Error('Area of polygon is zero (possibly degenerate polygon)')
+        }
+        
+        Cx /= (6 * area)
+        Cy /= (6 * area)
+        
+        return [Cx, Cy]
     },
 
     getLastAndFirstCoordsPath: (p1: number[], p2: number[]): number[] => {
@@ -498,7 +451,6 @@ export const _M = {
         return path0
     },
 
-    
     isEqualsV3: (v1_1: any, v1_2: any, v1_3: any, v2_1: any, v2_2: any , v2_3: any): boolean => {
         return (v1_1 === v2_1 && v1_2 === v2_2 && v1_3 === v2_3)
     }, 
@@ -733,4 +685,3 @@ export const _M = {
         return uv1
     }
 }
-

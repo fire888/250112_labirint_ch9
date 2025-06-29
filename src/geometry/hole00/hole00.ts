@@ -1,10 +1,7 @@
 import { Root } from "index";
-import { IHoleEgesData, IArrayForBuffers} from "../../types/GeomTypes";
+import { IHoleEgesData, IArrayForBuffers} from "../../types/GeomTypes"
 import { _M } from "../_m"
-import { tileMapWall } from '../tileMapWall'
 import { COLOR_BLUE } from "../../constants/CONSTANTS"
-
-
 
 export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuffers => {
     /*
@@ -100,6 +97,7 @@ export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuff
         )
         c.push(..._M.fillColorFace(color))
     }
+    
     // OWER WOLE /////////////////////     
     if (x0 < x1 && y2 < y3) {
         v.push(

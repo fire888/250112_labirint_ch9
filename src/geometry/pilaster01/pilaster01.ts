@@ -1,10 +1,8 @@
-import { _M, A3 } from "../_m";
+import { _M } from "../_m"
 import { tileMapWall } from '../tileMapWall'
-import { IArrayForBuffers } from "types/GeomTypes";
+import { IArrayForBuffers } from "types/GeomTypes"
 import { Root } from "index";
-
-import { COLOR_BLUE_D } from "constants/CONSTANTS";
-
+import { COLOR_BLUE_D } from "constants/CONSTANTS"
 
 export const createPilaster01 = (root: Root, w: number, h: number, d: number = .3): IArrayForBuffers => {
     const v: number[] = []
@@ -143,7 +141,6 @@ export const createPilaster01 = (root: Root, w: number, h: number, d: number = .
             uv.push(...tileMapWall.noiseTree)  
         }
     }
-    
     
     return { v, c, uv }
 }

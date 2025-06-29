@@ -1,10 +1,7 @@
-import { Root } from "index";
-import { IArrayForBuffers, IHoleOrderData } from "../../types/GeomTypes";
+import { Root } from "index"
+import { IArrayForBuffers, IHoleOrderData } from "../../types/GeomTypes"
 import { _M } from "../_m"
-// import { tileMapWall } from '../tileMapWall'
 import { COLOR_BLUE } from "../../constants/CONSTANTS"
-
-
 
 export const createHoleBack01 = (root: Root, holeData: IHoleOrderData): IArrayForBuffers => {
     /*
@@ -127,12 +124,11 @@ export const createHoleBack01 = (root: Root, holeData: IHoleOrderData): IArrayFo
         c.push(..._M.fillColorFace(color))
     }
 
-    //_M.translateVertices(v, -holeData.width * .5, 0, 0)
-
     for (let i = 0; i < v.length; i += 3) {
         uv.push(
-            .4 + v[i] / x3 * .2, 
-            .0 + .25 + v[i + 1] / y3 * .2
+            0, 0
+            //.4 + v[i] / x3 * .2, 
+            //.0 + .25 + v[i + 1] / y3 * .2
         )
     }
 

@@ -40,7 +40,6 @@ export const createTopElem_00 = (color: A3 = COLOR_BLUE_D, w: number = .5, h: nu
         }
     }
 
-
     const r = _M.lathePath(profile, 4, color, tileMapWall.noise)
     v.push(...r.v)
     c.push(...r.c)

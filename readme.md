@@ -18,13 +18,15 @@ V -roads connect left\right sides
 V -skip small and short doors
 V -add texture sky 
 V -window inner dark
--bug fill poligons roads
+V -bug fill poligons roads
 V -inner offsets walls angle scrop
 V -make wallsData logic before fill poligins 
 V -colonnades without walls
 -disable short walls
--fill stones under colonnades
--make desert more
+V-fill stones under colonnades
+V-make desert more
+-add collisions
+-connect verticies by indicies ?
 
 
 NODE v20.11.0

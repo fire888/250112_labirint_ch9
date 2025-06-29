@@ -1,9 +1,9 @@
-import { _M, A3 } from "../_m";
-import { IArrayForBuffers } from "types/GeomTypes";
+import { _M } from "../_m"
+import { IArrayForBuffers } from "types/GeomTypes"
 import { Root } from "index";
-import { createPilaster01 } from "geometry/pilaster01/pilaster01";
-import { createPilaster02 } from "geometry/pilaster02/pilaster02";
-import { createColumn00 } from "geometry/column00/column00";
+import { createPilaster01 } from "geometry/pilaster01/pilaster01"
+import { createPilaster02 } from "geometry/pilaster02/pilaster02"
+import { createColumn00 } from "geometry/column00/column00"
 
 export const createPilaster00 = (root: Root, w: number, h: number, d: number): IArrayForBuffers => {
     const v: number[] = []

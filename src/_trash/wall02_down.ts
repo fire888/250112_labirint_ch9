@@ -1,9 +1,8 @@
-import { _M, A3 } from "./_m";
-import { tileMapWall } from './tileMapWall'
+import { _M, A3 } from "../geometry/_m";
+import { tileMapWall } from '../geometry/tileMapWall'
 import { COLOR_BLUE, COLOR_BLUE_D } from "constants/CONSTANTS";
  
 const C1 = COLOR_BLUE_D
-const C2 = COLOR_BLUE
 const PR_BOTTOM: [number, number][] = [
     // [-.2, -1.5],
     // [-.2, -1.3],

@@ -70,14 +70,10 @@ export class Studio {
         this.scene = new Scene()
         this.scene.add(this.spotLight)
         this.scene.add(this.camera)
-;
-        //root.loader.assets.mapEnv.mapping = EquirectangularReflectionMapping;
-        //root.loader.assets.mapEnv.colorSpace = SRGBColorSpace;
-
+        
         //root.loader.assets.cubeSky.mapping = EquirectangularReflectionMapping;
         root.loader.assets.cubeSky.colorSpace = SRGBColorSpace;
 
-        //this.scene.background = root.loader.assets.mapEnv
         this.scene.background = root.loader.assets.cubeSky
         //this.envMap = root.loader.assets.noise00
         this.envMap = root.loader.assets.cubeSky

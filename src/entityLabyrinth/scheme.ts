@@ -1,7 +1,7 @@
 import { Voronoi } from "./rhill-voronoi-core";
-import { Root } from "../../index";
+import { Root } from "../index";
 import * as THREE from "three";
-import { _M } from "../../geometry/_m"; 
+import { _M } from "geometry/_m"; 
 var Offset = require('polygon-offset');
 
 export const createScheme = (root: Root) => {

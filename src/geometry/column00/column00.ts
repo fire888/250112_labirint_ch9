@@ -1,8 +1,8 @@
-import { _M } from "../_m";
+import { _M } from "../_m"
 import { tileMapWall } from '../tileMapWall'
-import { IArrayForBuffers } from "types/GeomTypes";
-import { Root } from "index";
-import { COLOR_BLUE } from "constants/CONSTANTS";
+import { IArrayForBuffers } from "types/GeomTypes"
+import { Root } from "index"
+import { COLOR_BLUE } from "constants/CONSTANTS"
 
 export const createColumn00 = (root: Root, w: number, h: number, n: number = 8): IArrayForBuffers => {
     const v: number[] = []

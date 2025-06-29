@@ -1,12 +1,12 @@
-import { _M, A3 } from "./_m";
-import { tileMapWall } from './tileMapWall'
-import { createDoor00 } from "./door00/door00"
-import { createWindow00 } from "./window00/window00";
-import { createHole00 } from "./hole00/hole00";
-import { createPilaster00 } from "./pilaster00/pilastre00";
-import { createPilaster01 } from "./pilaster01/pilaster01";
-import { createPoias00 } from "./poias00/poias00";
-import { createPoias01 } from "./poias01/poias01";
+import { _M, A3 } from "../geometry/_m";
+import { tileMapWall } from '../geometry/tileMapWall'
+import { createDoor00 } from "../geometry/door00/door00"
+import { createWindow00 } from "../geometry/window00/window00";
+import { createHole00 } from "../geometry/hole00/hole00";
+import { createPilaster00 } from "../geometry/pilaster00/pilastre00";
+import { createPilaster01 } from "../geometry/pilaster01/pilaster01";
+import { createPoias00 } from "../geometry/poias00/poias00";
+import { createPoias01 } from "../geometry/poias01/poias01";
 import { Root } from "index";
 import { 
     IHoleData,
@@ -208,7 +208,6 @@ const createFloor = (root: Root, floorData: IFloorData): IArrayForBuffers => {
                 c.push(...door.c)
             }
         }
-
     }
 
     {

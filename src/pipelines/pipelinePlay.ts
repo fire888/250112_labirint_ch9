@@ -1,18 +1,9 @@
 import { Root } from '../index'
 import { pause } from '../helpers/htmlHelpers'
 
-let indexLevel = 0
-
 export const pipelinePlay = async (root: Root) => {
-    const {
-        CONSTANTS,
-        studio,
-        controls,
-        ui,
-        phisics,
-        lab,
-        audio,
-    } = root
+
+    await pause(10000000000000000)
 
 
     // energy get *******************************************/

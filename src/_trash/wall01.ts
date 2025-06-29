@@ -1,5 +1,5 @@
-import { _M, A3 } from "./_m";
-import { tileMapWall } from './tileMapWall'
+import { _M, A3 } from "../geometry/_m";
+import { tileMapWall } from '../geometry/tileMapWall'
 
 const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('3c3865') 
 const COLOR_BLUE_D: A3 = _M.hexToNormalizedRGB('1c1937') 

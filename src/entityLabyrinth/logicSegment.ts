@@ -1,5 +1,5 @@
 import { SegmentType } from "../types/GeomTypes";
-import { _M } from "geometry/_m";
+import { _M } from "../geometry/_m";
 
 export const checkTypeSegment = (perimeter: [number, number][]) => {
     let isWallShort = false

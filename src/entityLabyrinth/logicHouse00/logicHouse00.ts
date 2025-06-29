@@ -1,5 +1,5 @@
 import { Root } from "../../index"
-import { IPerimeter, IDataForWall, ElemType } from "types/GeomTypes"
+import { IPerimeter, ElemType } from "types/GeomTypes"
 import { calculateLogicWall00 } from './logicWall00'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { createArea00 } from "geometry/area00/area00"
@@ -13,16 +13,11 @@ import {
     addTypeFullIdataForFillWall 
 } from "types/GeomTypes"
 
-let n = 0
-
-//const D = .1
 const D = .2
 
 export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
-    ++n
 
     const H = Math.random() * 12 + 3 
-    //const H = Math.random() * 60 + 3 
 
     const v: number[] = [] 
     const uv: number[] = [] 
@@ -120,8 +115,6 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         wallsData.push(wallData)
     }
 
-    console.log('WWW', wallsData)
-
     for (let i = 0; i < wallsData.length; ++i) {
         const r = calculateLogicWall00(root, wallsData[i])
 
@@ -139,7 +132,6 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
             c.push(r.c[j])
         }
 
-        const prevWallAngle = wallsData[i - 1] ? wallsData[i - 1].angle : wallsData[wallsData.length - 1].angle
         const prevWall = wallsData[i - 1] ? wallsData[i - 1] : wallsData[wallsData.length - 1]
 
         // ANGLE CONNECT TOP POIAS WITH PREVIOUS WALL 

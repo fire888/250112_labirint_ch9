@@ -1,6 +1,10 @@
-import { Texture, TextureLoader, AudioLoader, CubeTextureLoader, CubeTexture } from 'three'
-import mapEnv from "../assets/env.webp"
-import sky from '../assets/sky.webp'
+import { 
+    Texture, 
+    TextureLoader, 
+    AudioLoader, 
+    CubeTextureLoader, 
+    CubeTexture 
+} from 'three'
 import sprite from '../assets/sprite.webp'
 import audioAmbient from '../assets/ambient.mp3'
 import steps from '../assets/steps_metal.mp3'
@@ -8,7 +12,6 @@ import audioBzink from '../assets/bzink.mp3'
 import audioDoor from '../assets/door.mp3'
 import audioFly from '../assets/fly.mp3'
 import roadImg from '../assets/road_stone.jpg'
-import lightMap from '../assets/tiles.jpg'
 import wallTile from '../assets/tiles_wall.png'
 import noise00 from '../assets/noise00.jpg'
 
@@ -20,8 +23,6 @@ import py from '../assets/sky/py.jpg'
 import pz from '../assets/sky/pz.jpg'
 
 type Assets = {
-    mapEnv: Texture,
-    sky: Texture,
     sprite: Texture,
     soundAmbient: any,
     soundStepsMetal: any,
@@ -43,8 +44,6 @@ export class LoaderAssets {
     _textureLoader: TextureLoader = new TextureLoader()
     _cubeTextureLoader: CubeTextureLoader = new CubeTextureLoader()
     assets: Assets = {
-        mapEnv: null,
-        sky: null,
         sprite: null,
         soundAmbient: null,
         soundStepsMetal: null,
@@ -89,8 +88,6 @@ export class LoaderAssets {
             }
 
             const promises = [
-                loadTexture('mapEnv', mapEnv),
-                loadTexture('sky', sky),
                 loadTexture('sprite', sprite),
 
                 loadAudio('soundAmbient', audioAmbient),
@@ -100,7 +97,7 @@ export class LoaderAssets {
                 loadAudio('soundFly', audioFly),
                 
                 loadTexture('roadImg', roadImg),
-                loadTexture('lightMap', lightMap),
+                //loadTexture('lightMap', lightMap),
                 loadTexture('mapWall_01', wallTile),
                 loadTexture('noise00', noise00),
 

@@ -2,10 +2,8 @@ import { _M, A3 } from "../_m"
 import { tileMapWall } from '../tileMapWall'
 import { createCurb00 } from "../bevel00/curb00"
 import { COLOR_BLUE, COLOR_BLUE_L } from "../../constants/CONSTANTS"
-
 import { Root } from "index"
 import { IHoleData } from "../../types/GeomTypes"
-
 
 const TOP_PROFILE: [number, number][] = [
     [0, 0],
@@ -24,13 +22,11 @@ export const createDoor00 = (
     const uv: number[] = [] 
     const c: number[] = []
 
-
     const {
         w = 2, 
         d = .8, 
         h = 4,
     } = doorData
-
 
     const R = w * .5 - .2
     const DS = .1
@@ -39,12 +35,10 @@ export const createDoor00 = (
 
     { // проем внутренний
         // порог нижний
-        {
-            const r = createCurb00([0, 0], [R, 0], [R, -d], [0, -d], tileMapWall.noise, .1, 100, COLOR_BLUE)
-            v.push(...r.v)
-            uv.push(...r.uv)
-            c.push(...r.c)
-        }
+        const r = createCurb00([0, 0], [R, 0], [R, -d], [0, -d], tileMapWall.noise, .1, 100, COLOR_BLUE)
+        v.push(...r.v)
+        uv.push(...r.uv)
+        c.push(...r.c)
 
         v.push(
             ..._M.createPolygon(
@@ -295,10 +289,8 @@ export const createDoor00 = (
         c.push(..._M.fillColorFace(COLOR_BLUE))
     }
 
-    { // mirror
-        _M.appendMirrorX(v, c, uv)
-    }
-
+    // mirror
+    _M.appendMirrorX(v, c, uv)
 
     return { v, uv, c }
 }

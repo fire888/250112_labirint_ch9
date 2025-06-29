@@ -1,12 +1,10 @@
-import { _M, A3 } from "../_m";
+import { _M } from "../_m"
 import { tileMapWall } from '../tileMapWall'
-import { IArrayForBuffers } from "types/GeomTypes";
-import { Root } from "index";
-import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
-import { createPilaster01 } from "geometry/pilaster01/pilaster01";
-import { createPilaster02 } from "geometry/pilaster02/pilaster02";
-import { createPilaster03 } from "geometry/pilaster03/pilaster03";
-import { createColumn00 } from "geometry/column00/column00";
+import { IArrayForBuffers } from "types/GeomTypes"
+import { Root } from "index"
+import { COLOR_BLUE_D } from "constants/CONSTANTS"
+import { createPilaster02 } from "geometry/pilaster02/pilaster02"
+import { createPilaster03 } from "geometry/pilaster03/pilaster03"
 
 export const createPilaster04 = (root: Root, w: number, h: number, d: number): IArrayForBuffers => {
     const v: number[] = []

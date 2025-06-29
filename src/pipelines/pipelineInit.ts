@@ -63,7 +63,4 @@ export const pipelineInit = async (root: Root) => {
     //await ui.hideStartScreen()
 
     //audio.playAmbient()
-    
-    
-
 }

@@ -1,26 +1,18 @@
-import { Root } from "../../index";
-import * as THREE from "three";
-import { _M, A3 } from "../../geometry/_m";
+import { Root } from "../index"
+import { _M, A3 } from "../geometry/_m"
 import { createScheme } from "./scheme"
-import { 
-    createWall_02, 
-} from 'geometry/wall02_down'
-import { calculateLogicHouse00 } from "logicBuild/logicHouse00/logicHouse00";
-import { calculateLogicHouse01 } from "logicBuild/logicHouse01/logicHouse01";
-import { createCurb00 } from "geometry/bevel00/curb00";
-import { createArea00 } from "geometry/area00/area00";
-import { offset, } from "./offset";
-import { createExamplesAllWalls } from "./examplesWalls";
+import { calculateLogicHouse00 } from "./logicHouse00/logicHouse00"
+import { calculateLogicHouse01 } from "./logicHouse01/logicHouse01"
+import { checkTypeSegment } from "./logicSegment"
+import { createArea00 } from "geometry/area00/area00"
+import { createExamplesAllWalls } from "./examplesWalls"
 import { tileMapWall } from "geometry/tileMapWall";
-import { log, STYLE_KEYS } from "helpers/logger";
-import { checkTypeSegment } from "logicBuild/logicSegment";
-import { SegmentType } from "types/GeomTypes";
-import { COLOR_BLUE_D } from "constants/CONSTANTS";
 
-//const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('0b0421') 
+import { SegmentType } from "types/GeomTypes";
+
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('000000') 
 
-export class Lab {
+export class Labyrinth {
     _root: Root
     constructor() {}
     async init (root: Root, params = {}) {
@@ -29,7 +21,7 @@ export class Lab {
         let d = Date.now()
 
         console.log('[MESSAGE:] START EXAMPLES')
-        //createExamplesAllWalls(root)
+        createExamplesAllWalls(root)
         console.log('[TIME:] COMPLETE EXAMPLES:', ((Date.now() - d) / 1000).toFixed(2))
         
         console.log('[MESSAGE:] START SCHEME')
@@ -115,10 +107,10 @@ export class Lab {
 
             for (let i = 0; i < areasData.length; ++i) {
                 let isHouse = false
-                if (areasData[i].typeSegment === SegmentType.HOUSE_00) {
-                    isHouse = true
-                }
-                if (areasData[i].typeSegment === SegmentType.HOUSE_01) {
+                if (
+                    areasData[i].typeSegment === SegmentType.HOUSE_00 ||
+                    areasData[i].typeSegment === SegmentType.HOUSE_01
+                ) {
                     isHouse = true
                 }
                 if (!isHouse) {

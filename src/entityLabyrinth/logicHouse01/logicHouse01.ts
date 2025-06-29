@@ -1,11 +1,8 @@
-import { Root } from "../../index"
-import { IPerimeter, IDataForWall, ElemType } from "types/GeomTypes"
+import { Root } from "index"
+import { IPerimeter, ElemType } from "types/GeomTypes"
 import { calculateLogicWall01 } from './logicWall01'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
-import { createArea00 } from "geometry/area00/area00"
-import { _M, A3 } from '../../geometry/_m'
-import { COLOR_BLUE_D, COLOR_DARK } from "constants/CONSTANTS"
-import { tileMapWall, } from "geometry/tileMapWall"
+import { _M } from 'geometry/_m'
 import * as THREE from "three" 
 import { 
     IdataForFillWall, 

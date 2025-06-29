@@ -1,7 +1,7 @@
-import { _M, A3 } from "./_m";
-import { tileMapWall } from './tileMapWall'
-import { createTopElem_00 } from './topElem00/topElem_00'
-import { createPilaster00 } from "./pilaster00/pilastre00";
+import { _M, A3 } from "../geometry/_m";
+import { tileMapWall } from '../geometry/tileMapWall'
+import { createTopElem_00 } from '../geometry/topElem00/topElem_00'
+import { createPilaster00 } from "../geometry/pilaster00/pilastre00";
 
 import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
 import { Root } from "index";

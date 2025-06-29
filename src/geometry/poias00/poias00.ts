@@ -2,10 +2,9 @@ import { IArrayForBuffers } from "types/GeomTypes"
 import { Root } from "index"
 import { _M } from "../_m"
 import { tileMapWall } from "../tileMapWall"
-import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
+import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS"
 
 const C1 = COLOR_BLUE_D
-const C2 = COLOR_BLUE
 
 const PR_BOTTOM: [number, number][] = [
     [0.25, 0],

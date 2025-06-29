@@ -1,8 +1,8 @@
-import { _M, A3 } from "../_m";
+import { _M } from "../_m"
 import { tileMapWall } from '../tileMapWall'
-import { IArrayForBuffers } from "types/GeomTypes";
-import { Root } from "index";
-import { COLOR_BLUE_D } from "constants/CONSTANTS";
+import { IArrayForBuffers } from "types/GeomTypes"
+import { Root } from "index"
+import { COLOR_BLUE_D } from "constants/CONSTANTS"
 
 const C1 = COLOR_BLUE_D
 
@@ -26,7 +26,6 @@ export const createPilaster02 = (root: Root, w: number, h: number, d: number): I
     const v: number[] = []
     const c: number[] = []
     const uv: number[] = []
-
 
     let pr = PR_COLUMN
     if (h !== 1.4) {
@@ -89,6 +88,7 @@ export const createPilaster02 = (root: Root, w: number, h: number, d: number): I
         )   
         uv.push(...tileMapWall.noiseTree)  
     }
+
     /** left */
     {
         const r = _M.fillPoligonsV3(path0, pathR, d, tileMapWall.noise, C1)
@@ -125,6 +125,7 @@ export const createPilaster02 = (root: Root, w: number, h: number, d: number): I
             uv.push(...tileMapWall.noiseTree)  
         }
     }
+    
     /** right */
     {
         const r = _M.fillPoligonsV3(pathL, path0, d, tileMapWall.noise, C1)

@@ -1,8 +1,8 @@
 import { Root } from "index"
-import { createWall_01, createAngleWall_01 } from "geometry/wall01"
-import { createWall_01_door_window, IWallData_01_door_window  } from "geometry/wall01_door_window";
-import { createWall_02, createAngleWall_02 } from 'geometry/wall02_down'
-import { createWall_03, createAngleWall_03 } from "geometry/wall03";
+import { createWall_01, createAngleWall_01 } from "_trash/wall01"
+import { createWall_01_door_window, IWallData_01_door_window  } from "_trash/wall01_door_window";
+import { createWall_02 } from '_trash/wall02_down'
+import { createWall_03, createAngleWall_03 } from "_trash/wall03";
 
 import { tileMapWall } from "geometry/tileMapWall";
 import { _M } from "geometry/_m";
@@ -11,6 +11,7 @@ import { ElemType, IHoleData } from 'types/GeomTypes'
 import { createDoor00 } from "geometry/door00/door00";
 import { createWindow00 } from "geometry/window00/window00";
 import { createHole00 } from "geometry/hole00/hole00";
+import { createHoleBack01 } from "geometry/holeBack01/holeBack01";
 import { createTopElem_00 } from "geometry/topElem00/topElem_00";
 import { createArea00 } from "geometry/area00/area00";
 import { createCurb00 } from "geometry/bevel00/curb00";
@@ -23,11 +24,8 @@ import { createPoias00 } from "geometry/poias00/poias00";
 import { createPoias01 } from "geometry/poias01/poias01";
 import { createPoias02 } from "geometry/poias02/poias02";
 import { createColumn00 } from "geometry/column00/column00";
-
-import { calculateLogicHouse00 } from "logicBuild/logicHouse00/logicHouse00";
-
+import { calculateLogicHouse00 } from "./logicHouse00/logicHouse00";
 import { COLOR_BLUE } from "constants/CONSTANTS";
-
 
 export const createExamplesAllWalls = (root: Root) => {
     const v = []
@@ -140,6 +138,15 @@ export const createExamplesAllWalls = (root: Root) => {
     {
         const hole = createHole00(root, { w: 1, h: 2, d: .3, offsetX: 0, offsetY: 1, width: 2, height: 4 })        
         _M.translateVertices(hole.v, 80, 0, -10)
+        v.push(...hole.v)
+        c.push(...hole.c)
+        uv.push(...hole.uv)
+    }
+
+    // holeBack
+    {
+        const hole = createHoleBack01(root, { x0: 0, x1: 1, x2: 2, x3: 3,  y0: 0, y1: 1, y2: 2, y3: 3 })        
+        _M.translateVertices(hole.v, 80, 0, -20)
         v.push(...hole.v)
         c.push(...hole.c)
         uv.push(...hole.uv)

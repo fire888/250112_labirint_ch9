@@ -1,7 +1,6 @@
-import { tileMapWall } from 'geometry/tileMapWall'
-import { _M, A3 } from 'geometry/_m'
+import { tileMapWall } from '../tileMapWall'
+import { _M, A3 } from '../_m'
 import { COLOR_BLUE } from 'constants/CONSTANTS'
-//const COLOR_BLUE: A3 = _M.hexToNormalizedRGB('1a182d') 
 
 export const createCurb00 = (
     frontStart: [number, number],
@@ -27,12 +26,13 @@ export const createCurb00 = (
     }
 
     const dFront = _M.dist(frontStart, frontEnd)
-    const n = Math.floor(dFront / repeatWidth) + 1
-    const frontXStep = (frontEnd[0] - frontStart[0]) / n
-    const frontZStep = (frontEnd[1] - frontStart[1]) / n
-    const backXStep = (backEnd[0] - backStart[0]) / n
-    const backZStep = (backEnd[1] - backStart[1]) / n
-    /** top */
+    const nRepeat = Math.floor(dFront / repeatWidth) + 1
+    const frontXStep = (frontEnd[0] - frontStart[0]) / nRepeat
+    const frontZStep = (frontEnd[1] - frontStart[1]) / nRepeat
+    const backXStep = (backEnd[0] - backStart[0]) / nRepeat
+    const backZStep = (backEnd[1] - backStart[1]) / nRepeat
+    
+    /** top if collapsed front */
     if (isCollapseFront) {
         v.push(
             backStart[0], h, backStart[1],
@@ -49,7 +49,10 @@ export const createCurb00 = (
             ...color,
             ...color,
         )
-    } if (isCollapseBack) {
+    }
+    
+    /** top if collapsed back */
+    if (isCollapseBack) {
         v.push(
             frontEnd[0], h, frontEnd[1],
             backStart[0], h, backStart[1],
@@ -65,8 +68,11 @@ export const createCurb00 = (
             ...color,
             ...color,
         )
-    } else {
-        for (let i = 0; i < n; ++i) {
+    }
+
+    /** top if not collapsed */
+    if (!isCollapseBack && !isCollapseFront) {
+        for (let i = 0; i < nRepeat; ++i) {
             v.push(..._M.createPolygon(
                 [backStart[0] + i * backXStep, h, backStart[1] + i * backZStep],
                 [frontStart[0] + i * frontXStep, h, frontStart[1] + i * frontZStep],
@@ -78,11 +84,10 @@ export const createCurb00 = (
         }
     }
 
-
     if (h !== 0) {
-        // front
+        // front side
         if (!isCollapseFront) {
-            for (let i = 0; i < n; ++i) {
+            for (let i = 0; i < nRepeat; ++i) {
                 v.push(..._M.createPolygon(
                     [frontStart[0] + i * frontXStep, h, frontStart[1] + i * frontZStep],
                     [frontStart[0] + i * frontXStep, 0, frontStart[1] + i * frontZStep],
@@ -93,10 +98,9 @@ export const createCurb00 = (
                 c.push(..._M.fillColorFace(color))
             }
         }
-
-        // back
+        // back side
         if (!isCollapseBack) {
-            for (let i = 0; i < n; ++i) {
+            for (let i = 0; i < nRepeat; ++i) {
                 v.push(..._M.createPolygon(
                     [backStart[0] + (i + 1) * backXStep, h, backStart[1] + (i + 1) * backZStep],
                     [backStart[0] + (i + 1) * backXStep, 0, backStart[1] + (i + 1) * backZStep],

@@ -1,6 +1,6 @@
-import { _M, A3 } from "../_m"
+import { _M } from "../_m"
 import { tileMapWall } from '../tileMapWall'
-import { COLOR_BLUE_L, COLOR_WINDOW_INNER_D, /*COLOR_BLUE_D*/ } from "../../constants/CONSTANTS"
+import { COLOR_BLUE_L, COLOR_WINDOW_INNER_D } from "../../constants/CONSTANTS"
 import { Root } from "index"
 import { IHoleData } from "../../types/GeomTypes"
 

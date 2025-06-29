@@ -9,10 +9,9 @@ import { LoaderAssets } from "./entities/Loader";
 import { DeviceData } from "./entities/DeviceData"
 import { Ui } from "./entities/Ui"
 import { Phisics } from "./entities/Phisics"
-import { Lab } from './entities/labyrinth02/Lab'
+import { Labyrinth } from './entityLabyrinth/Labyrinth'
 import { AudioManager } from "./entities/AudioManager"
 import { Materials } from "./entities/Materials"
-
 import { pipelineInit } from "./pipelines/pipelineInit"
 import { pipelinePlay } from "./pipelines/pipelinePlay"
 import { pipelineEnd } from "./pipelines/pipelineEnd"
@@ -29,7 +28,7 @@ export type Root = {
     deviceData: DeviceData,
     ui: Ui,
     phisics: Phisics,
-    lab: Lab,
+    lab: Labyrinth,
     audio: AudioManager,
     materials: Materials,
 }
@@ -50,12 +49,12 @@ window.addEventListener("DOMContentLoaded", async () => {
         loader: new LoaderAssets(),
         deviceData: new DeviceData(),
         phisics: new Phisics(),
-        lab: new Lab(),
+        lab: new Labyrinth(),
         audio: new AudioManager(),
         materials: new Materials(),
     }
 
     await pipelineInit(root)
     await pipelinePlay(root)
-    //await pipelineEnd(root)
+    await pipelineEnd(root)
 })

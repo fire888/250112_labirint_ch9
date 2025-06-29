@@ -1,20 +1,14 @@
 import { Root } from '../../index';
-import { IFloorData, IWallData, IHoleData, IArrayForBuffers, ElemType, IDataForWall } from 'types/GeomTypes';
+import { IArrayForBuffers, ElemType, IDataForWall } from 'types/GeomTypes';
 import { createPilaster00 } from 'geometry/pilaster00/pilastre00';
 import { createPilaster01 } from 'geometry/pilaster01/pilaster01';
 import { createPilaster02 } from 'geometry/pilaster02/pilaster02';
 import { createPilaster03 } from 'geometry/pilaster03/pilaster03';
 import { createPilaster04 } from 'geometry/pilaster04/pilaster04';
-import { createPoias00 } from 'geometry/poias00/poias00';
 import { createPoias01 } from 'geometry/poias01/poias01';
-import { createPoias02 } from 'geometry/poias02/poias02';
-import { createDoor00 } from 'geometry/door00/door00';
-import { createWindow00 } from 'geometry/window00/window00';
-import { createHole00 } from 'geometry/hole00/hole00';
-import { createHoleBack01 } from 'geometry/holeBack01/holeBack01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
-import { _M, A2, A3 } from 'geometry/_m';
-import { COLOR_BLUE_D, COLOR_BLUE_L, COLOR_DARK } from 'constants/CONSTANTS';
+import { _M, A2, A3 } from '../../geometry/_m';
+import { COLOR_BLUE_D } from 'constants/CONSTANTS';
 import { tileMapWall } from "../../geometry/tileMapWall"
 
 type ISingleFloorData = {

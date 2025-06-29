@@ -1,12 +1,11 @@
-import { _M, A3 } from "../_m";
-import { tileMapWall } from '../tileMapWall';
-import { IArrayForBuffers } from "types/GeomTypes";
-import { Root } from "index";
+import { _M } from "../_m"
+import { tileMapWall } from '../tileMapWall'
+import { IArrayForBuffers } from "types/GeomTypes"
+import { Root } from "index"
 
-import { COLOR_BLUE_D, COLOR_BLUE } from "constants/CONSTANTS";
+import { COLOR_BLUE_D } from "constants/CONSTANTS"
 
-const TOP_PROFILE = 
-[
+const TOP_PROFILE = [
     [0,0],
     [0,0],
     [0,0.1],
@@ -23,7 +22,7 @@ const TOP_PROFILE =
 ]
 
 const modifyProfile = (h: number = 1.3, d: number = 0): number[] => {
-        let profile = TOP_PROFILE
+    let profile = TOP_PROFILE
     if (h !== 1.3) {
         profile = []
         for (let i = 0; i < TOP_PROFILE.length; ++i) {

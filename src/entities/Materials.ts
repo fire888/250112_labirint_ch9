@@ -44,10 +44,12 @@ export class Materials {
             vertexColors: true,
         })
 
-        const map = root.loader.assets.noise00
-        map.wrapS = THREE.RepeatWrapping
-        map.wrapT = THREE.RepeatWrapping
-        map.repeat.set(12, 25)
+        {
+            const map = root.loader.assets.noise00
+            map.wrapS = THREE.RepeatWrapping
+            map.wrapT = THREE.RepeatWrapping
+            map.repeat.set(12, 25)
+        }
         this.desert = new THREE.MeshPhongMaterial({
             color: 0x323341,
             specular: 0x733d8a,
