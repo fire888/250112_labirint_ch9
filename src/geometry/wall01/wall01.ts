@@ -7,9 +7,9 @@ import { createPilaster03 } from 'geometry/pilaster03/pilaster03';
 import { createPilaster04 } from 'geometry/pilaster04/pilaster04';
 import { createPoias01 } from 'geometry/poias01/poias01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
-import { _M, A2, A3 } from '../../geometry/_m';
+import { _M, A2, A3 } from '../_m';
 import { COLOR_BLUE_D } from 'constants/CONSTANTS';
-import { tileMapWall } from "../../geometry/tileMapWall"
+import { tileMapWall } from "../tileMapWall"
 
 type ISingleFloorData = {
     w: number,
@@ -142,7 +142,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
 }
 
 
-export const calculateLogicWall01 = (
+export const wall01 = (
     root: Root, 
     dataForBuldWall: IDataForWall
 ): IArrayForBuffers => {

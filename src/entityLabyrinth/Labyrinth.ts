@@ -1,11 +1,11 @@
 import { Root } from "../index"
 import { _M, A3 } from "../geometry/_m"
 import { createScheme } from "./scheme"
-import { calculateLogicHouse00 } from "./logicHouse00/logicHouse00"
-import { calculateLogicHouse01 } from "./logicHouse01/logicHouse01"
+import { buildHouse00 } from "./buildHouse00/buildHouse00"
+import { buildHouse01 } from "./buildHouse01/buildHouse01"
 import { checkTypeSegment } from "./logicSegment"
 import { createArea00 } from "geometry/area00/area00"
-import { createExamplesAllWalls } from "./examplesWalls"
+import { buildExamples } from "./buildExamples"
 import { tileMapWall } from "geometry/tileMapWall";
 
 import { SegmentType } from "types/GeomTypes";
@@ -21,7 +21,7 @@ export class Labyrinth {
         let d = Date.now()
 
         console.log('[MESSAGE:] START EXAMPLES')
-        createExamplesAllWalls(root)
+        buildExamples(root)
         console.log('[TIME:] COMPLETE EXAMPLES:', ((Date.now() - d) / 1000).toFixed(2))
         
         console.log('[MESSAGE:] START SCHEME')
@@ -86,11 +86,11 @@ export class Labyrinth {
         {
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].typeSegment === SegmentType.HOUSE_00) {
-                    const m = calculateLogicHouse00(this._root, areasData[i].perimeterInner)
+                    const m = buildHouse00(this._root, areasData[i].perimeterInner)
                     m.position.y = .1
                 }
                 if (areasData[i].typeSegment === SegmentType.HOUSE_01) {
-                    const m = calculateLogicHouse01(this._root, areasData[i].perimeterInner)
+                    const m = buildHouse01(this._root, areasData[i].perimeterInner)
                     m.position.y = .1
                 }
             }

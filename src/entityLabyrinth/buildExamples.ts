@@ -24,10 +24,13 @@ import { createPoias00 } from "geometry/poias00/poias00";
 import { createPoias01 } from "geometry/poias01/poias01";
 import { createPoias02 } from "geometry/poias02/poias02";
 import { createColumn00 } from "geometry/column00/column00";
-import { calculateLogicHouse00 } from "./logicHouse00/logicHouse00";
+import { wall00 } from "geometry/wall00/wall00";
+import { wall01 } from "geometry/wall01/wall01";
+import { buildHouse00 } from "./buildHouse00/buildHouse00";
+import { buildHouse01 } from "./buildHouse01/buildHouse01";
 import { COLOR_BLUE } from "constants/CONSTANTS";
 
-export const createExamplesAllWalls = (root: Root) => {
+export const buildExamples = (root: Root) => {
     const v = []
     const uv = []
     const c = []
@@ -268,6 +271,44 @@ export const createExamplesAllWalls = (root: Root) => {
         uv.push(...col.uv)
     }
 
+    // wall00
+    {
+        const r = wall00(root, {
+            w: 20,
+            h: 10,
+            d:.2,
+            H_TOP_POIAS: .3,
+            TYPE_TOP_POIAS: ElemType.POIAS_01,
+            TYPE_SIDE_PILASTER: ElemType.PILASTER_01,
+            SIDE_PILASTER_W: .3,
+            INNER_WALL_START_OFFSET: 0,
+            INNER_WALL_END_OFFSET: 0,
+        })
+        _M.translateVertices(r.v, 0, 0, -20)
+        v.push(...r.v)
+        uv.push(...r.uv)
+        c.push(...r.c)
+    }
+
+    // wall01
+    {
+            const r = wall01(root, {
+            w: 20,
+            h: 10,
+            d:.2,
+            H_TOP_POIAS: .6,
+            TYPE_TOP_POIAS: ElemType.POIAS_01,
+            TYPE_SIDE_PILASTER: ElemType.PILASTER_01,
+            SIDE_PILASTER_W: .3,
+            INNER_WALL_START_OFFSET: 0,
+            INNER_WALL_END_OFFSET: 0,
+        })
+        _M.translateVertices(r.v, -100, 0, -40)
+        v.push(...r.v)
+        uv.push(...r.uv)
+        c.push(...r.c)
+    }
+
     const m = _M.createMesh({ 
         v,
         uv,
@@ -286,7 +327,20 @@ export const createExamplesAllWalls = (root: Root) => {
             [15, 1],
             [1, 1],
         ]
-        const m = calculateLogicHouse00(root, perimeter)
+        const m = buildHouse00(root, perimeter)
         m.position.x = -30
+    }
+
+    { // HOUSE 01
+       const perimeter: [number, number][] = [
+            [1, 1],
+            [1, 10],
+            [2, 11],
+            [17, 11],
+            [15, 1],
+            [1, 1],
+        ]
+        const m = buildHouse01(root, perimeter)
+        m.position.x = -60
     }
 }

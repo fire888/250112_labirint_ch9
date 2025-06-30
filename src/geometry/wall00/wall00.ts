@@ -15,7 +15,7 @@ import { createHoleBack01 } from 'geometry/holeBack01/holeBack01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
 import { _M, A2, A3 } from 'geometry/_m';
 import { COLOR_BLUE_D, COLOR_BLUE_L, COLOR_DARK } from 'constants/CONSTANTS';
-import { tileMapWall } from "../../geometry/tileMapWall"
+import { tileMapWall } from "../tileMapWall"
 
 type ISingleFloorData = {
     w: number,
@@ -344,7 +344,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
 }
 
 
-export const calculateLogicWall00 = (
+export const wall00 = (
     root: Root, 
     dataForBuldWall: IDataForWall
 ): IArrayForBuffers => {

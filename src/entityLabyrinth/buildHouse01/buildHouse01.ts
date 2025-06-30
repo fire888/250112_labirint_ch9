@@ -1,11 +1,8 @@
-import { Root } from "../../index"
+import { Root } from "index"
 import { IPerimeter, ElemType } from "types/GeomTypes"
-import { calculateLogicWall00 } from './logicWall00'
+import { wall01 } from '../../geometry/wall01/wall01'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
-import { createArea00 } from "geometry/area00/area00"
-import { _M, A3 } from '../../geometry/_m'
-import { COLOR_BLUE_D, COLOR_DARK } from "constants/CONSTANTS"
-import { tileMapWall, } from "geometry/tileMapWall"
+import { _M } from 'geometry/_m'
 import * as THREE from "three" 
 import { 
     IdataForFillWall, 
@@ -13,11 +10,16 @@ import {
     addTypeFullIdataForFillWall 
 } from "types/GeomTypes"
 
+let n = 0
+
+//const D = .1
 const D = .2
 
-export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
+export const buildHouse01 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
+    ++n
 
-    const H = Math.random() * 12 + 3 
+    //const H = Math.random() * 12 + 3 
+    const H = Math.random() * 60 + 3 
 
     const v: number[] = [] 
     const uv: number[] = [] 
@@ -116,7 +118,7 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
     }
 
     for (let i = 0; i < wallsData.length; ++i) {
-        const r = calculateLogicWall00(root, wallsData[i])
+        const r = wall01(root, wallsData[i])
 
         const { angle, X, Z, buffer, indicies } = wallsData[i]
 
@@ -146,54 +148,6 @@ export const calculateLogicHouse00 = (root: Root, perimeter: IPerimeter): THREE.
         for (let j = 0; j < poias.c.length; ++j) {
             c.push(poias.c[j])
         }
-
-        // CAP INNER CORNERS
-        const p1: A3 = [
-            prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3],
-            0,
-            prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3 + 2],
-        ]
-        const p0: A3 = [
-            buffer[indicies[`field_wall_innerStart`] * 3],
-            0,
-            buffer[indicies[`field_wall_innerStart`] * 3 + 2],
-        ]
-        const p2: A3 = [...p1]
-        p2[1] = H
-
-        const p3: A3 = [...p0]
-        p3[1] = H
-
-        v.push(..._M.createPolygon(p0, p1, p2, p3))
-        uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
-        c.push(..._M.fillColorFace(COLOR_DARK))
-    }
-
-    // roof
-    const centerYOffset = 2
-    const area = createArea00(perimeter, COLOR_BLUE_D, tileMapWall.roofTree, centerYOffset)           
-    _M.translateVertices(area.v, 0, H, 0)
-    v.push(...area.v)
-    c.push(...area.c)
-    uv.push(...area.uv)
-
-    // roof bottom side
-    {
-        const perimeterReverse = perimeter.slice().reverse()
-        const area = createArea00(perimeterReverse, COLOR_DARK, tileMapWall.emptyTree, 0)           
-        _M.translateVertices(area.v, 0, H, 0)
-        v.push(...area.v)
-        c.push(...area.c)
-        uv.push(...area.uv)
-    }
-
-    // first floor
-    {
-        const area = createArea00(perimeter, COLOR_DARK, tileMapWall.emptyTree, 0)           
-        _M.translateVertices(area.v, 0, .01, 0)
-        v.push(...area.v)
-        c.push(...area.c)
-        uv.push(...area.uv)
     }
 
     const m = _M.createMesh({ 
