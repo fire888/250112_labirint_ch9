@@ -292,7 +292,7 @@ export const buildExamples = (root: Root) => {
 
     // wall01
     {
-            const r = wall01(root, {
+        const r = wall01(root, {
             w: 20,
             h: 10,
             d:.2,
@@ -303,7 +303,7 @@ export const buildExamples = (root: Root) => {
             INNER_WALL_START_OFFSET: 0,
             INNER_WALL_END_OFFSET: 0,
         })
-        _M.translateVertices(r.v, -100, 0, -40)
+        _M.translateVertices(r.v, 0, 0, -40)
         v.push(...r.v)
         uv.push(...r.uv)
         c.push(...r.c)
