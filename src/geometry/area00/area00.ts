@@ -1,4 +1,5 @@
 import { _M, A3 } from "../_m"
+
 export const createArea00 = (coords: [number, number][] = [], color: A3, uvTile: number[], centerYOffset: number = 0) => {
 
     const filtered = []
