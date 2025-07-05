@@ -18,7 +18,7 @@ import { Root } from "../index";
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { Saturate3 } from '../shaders/satutate'
-
+import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js'
 
 const params = {
     threshold: 0.65,
@@ -55,14 +55,14 @@ export class Studio {
         this.camera.lookAt(150, 1, 150)
 
         this.spotLight = new SpotLight(0xffffff, 10)
-        this.spotLight.intensity = 10
+        this.spotLight.intensity = 20
         this.spotLight.position.set(0, 3, 5);
         this.spotLight.angle = Math.PI * .2;
         this.spotLight.penumbra = 1
         this.spotLight.decay = 1
         this.spotLight.distance = 30
-        const target = new Object3D();
-        this.spotLight.target = target;
+        const target = new Object3D()
+        this.spotLight.target = target
 
         target.position.z = -50
         this.camera.add(this.spotLight.target)
@@ -83,7 +83,7 @@ export class Studio {
         this.amb = new THREE.AmbientLight(0xFFFFFF, 3)
         this.scene.add(this.amb)
 
-        this.dirLight = new DirectionalLight( 0xffffff, 10 )
+        this.dirLight = new DirectionalLight(0x2b2241, 10)
         this.dirLight.position.set(-3, 10, 2)
         
         this.scene.add(this.dirLight)
@@ -96,10 +96,17 @@ export class Studio {
         this.composer = new EffectComposer(this.renderer)
         this.renderPass = new RenderPass(this.scene, this.camera)
         this.composer.addPass(this.renderPass)
+        
+        const ssaoPass = new SSAOPass(this.scene, this.camera, window.innerWidth, window.innerHeight)
+        ssaoPass.kernelRadius = 5
+		ssaoPass.minDistance = 0.001
+		ssaoPass.maxDistance = .3
+		ssaoPass.enabled = true
+        this.composer.addPass(ssaoPass)
+
         this.shader = new ShaderPass(Saturate3)
         this.composer.addPass(this.shader)
-        
-
+    
         window.addEventListener( 'resize', this.onWindowResize.bind(this))
         this.onWindowResize()
     }

@@ -31,17 +31,20 @@ export class Materials {
         }
 
         this.road = new THREE.MeshPhongMaterial({ 
-            color: 0x000000,
+            color: 0xffffff,
+            //emissive: 0x221a33,
             map: root.loader.assets.roadImg,
+            //envMap: root.loader.assets.cubeSky,
             //map: this._root.loader.assets.lightMap,
             bumpMap: root.loader.assets.roadImg,
             bumpScale: 7,
-            shininess: 6,
-            //shininess: 10,
+            //shininess: 3,
+            shininess: 50.,
             specular: 0x555566,
             //aoMap: this._root.loader.assets.roadImg,
             //aoMapIntensity: 100,
             vertexColors: true,
+            reflectivity: .6, 
         })
 
         {

@@ -10,7 +10,7 @@ import { tileMapWall } from "geometry/tileMapWall";
 
 import { SegmentType } from "types/GeomTypes";
 
-const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('000000') 
+const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810') 
 
 export class Labyrinth {
     _root: Root
