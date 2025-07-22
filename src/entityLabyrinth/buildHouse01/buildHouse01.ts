@@ -1,5 +1,5 @@
 import { Root } from "index"
-import { IPerimeter, ElemType } from "types/GeomTypes"
+import { IPerimeter, ElemType, IArrayForBuffers } from "types/GeomTypes"
 import { wall01 } from '../../geometry/wall01/wall01'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { _M } from 'geometry/_m'
@@ -10,19 +10,14 @@ import {
     addTypeFullIdataForFillWall 
 } from "types/GeomTypes"
 
-let n = 0
 
-//const D = .1
 const D = .2
 
-export const buildHouse01 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
-    ++n
-
-    //const H = Math.random() * 12 + 3 
+export const buildHouse01 = (root: Root, perimeter: IPerimeter): IArrayForBuffers => {
     const H = Math.random() * 60 + 3 
 
     const v: number[] = [] 
-    const uv: number[] = [] 
+    const uv: number[] = []
     const c: number[] = []
 
     const H_TOP_POIAS = 0.4 + Math.random()
@@ -150,13 +145,5 @@ export const buildHouse01 = (root: Root, perimeter: IPerimeter): THREE.Mesh => {
         }
     }
 
-    const m = _M.createMesh({ 
-        v, 
-        uv,
-        c,
-        material: root.materials.walls00,
-    })
-    root.studio.add(m)
-
-    return m
+    return { v, uv, c }
 }

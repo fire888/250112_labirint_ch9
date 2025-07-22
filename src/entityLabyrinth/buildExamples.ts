@@ -6,7 +6,7 @@ import { createWall_03, createAngleWall_03 } from "_trash/wall03";
 
 import { tileMapWall } from "geometry/tileMapWall";
 import { _M } from "geometry/_m";
-import { ElemType, IHoleData } from 'types/GeomTypes'
+import { ElemType, IHoleData, IArrayForBuffers } from 'types/GeomTypes'
 
 import { createDoor00 } from "geometry/door00/door00";
 import { createWindow00 } from "geometry/window00/window00";
@@ -327,7 +327,15 @@ export const buildExamples = (root: Root) => {
             [15, 1],
             [1, 1],
         ]
-        const m = buildHouse00(root, perimeter)
+        const houseData = buildHouse00(root, perimeter)
+        const m = _M.createMesh({ 
+            v: houseData.v,
+            uv: houseData.uv,
+            c: houseData.c,
+            material: root.materials.walls00,
+        })
+        root.studio.add(m)
+        m.position.y = .1
         m.position.x = -30
     }
 
@@ -340,7 +348,15 @@ export const buildExamples = (root: Root) => {
             [15, 1],
             [1, 1],
         ]
-        const m = buildHouse01(root, perimeter)
+        const houseData = buildHouse01(root, perimeter)
+        const m = _M.createMesh({ 
+            v: houseData.v,
+            uv: houseData.uv,
+            c: houseData.c,
+            material: root.materials.walls00,
+        })
+        root.studio.add(m)
+        m.position.y = .1
         m.position.x = -60
     }
 }

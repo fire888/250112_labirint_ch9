@@ -8,7 +8,7 @@ import { createArea00 } from "geometry/area00/area00"
 import { buildExamples } from "./buildExamples"
 import { tileMapWall } from "geometry/tileMapWall";
 
-import { SegmentType } from "types/GeomTypes";
+import { IArrayForBuffers, SegmentType } from "types/GeomTypes";
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810') 
 
@@ -86,14 +86,40 @@ export class Labyrinth {
         {
             for (let i = 0; i < areasData.length; ++i) {
                 if (areasData[i].typeSegment === SegmentType.HOUSE_00) {
-                    const m = buildHouse00(this._root, areasData[i].perimeterInner)
+                    const houseData: IArrayForBuffers = buildHouse00(this._root, areasData[i].perimeterInner)
+                    const { v, uv, c } = houseData
+                    const m = _M.createMesh({ 
+                         v, 
+                         uv,
+                         c,
+                         material: root.materials.walls00,
+                    })
+                    root.studio.add(m)
                     m.position.y = .1
                 }
                 if (areasData[i].typeSegment === SegmentType.HOUSE_01) {
-                    const m = buildHouse01(this._root, areasData[i].perimeterInner)
+                    const houseData: IArrayForBuffers = buildHouse01(this._root, areasData[i].perimeterInner)
+                    const { v, uv, c } = houseData
+                    const m = _M.createMesh({ 
+                         v, 
+                         uv,
+                         c,
+                         material: root.materials.walls00,
+                    })
+                    root.studio.add(m)
                     m.position.y = .1
                 }
             }
+        }
+        console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
+
+        /** roads */
+        console.log('[MESSAGE:] START ROADS ')
+        d = Date.now()
+        {
+             //       m.position.y = .1
+             //   }
+            //}
         }
         console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
 

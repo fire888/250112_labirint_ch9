@@ -55,7 +55,7 @@ export class Studio {
         this.camera.lookAt(150, 1, 150)
 
         this.spotLight = new SpotLight(0xffffff, 10)
-        this.spotLight.intensity = 20
+        this.spotLight.intensity = 10
         this.spotLight.position.set(0, 3, 5);
         this.spotLight.angle = Math.PI * .2;
         this.spotLight.penumbra = 1
@@ -77,10 +77,10 @@ export class Studio {
         this.scene.background = root.loader.assets.cubeSky
         //this.envMap = root.loader.assets.noise00
         this.envMap = root.loader.assets.cubeSky
-        this.fog = new THREE.Fog(0x2b2241, 1, 50)
+        this.fog = new THREE.Fog(0x2b2241, 1, 100)
 
         //this.amb = new THREE.AmbientLight(0xFFFFFF, 2)
-        this.amb = new THREE.AmbientLight(0xFFFFFF, 4)
+        this.amb = new THREE.AmbientLight(0xFFFFFF, 8)
         this.scene.add(this.amb)
 
         this.dirLight = new DirectionalLight(0x2b2241, 15)
