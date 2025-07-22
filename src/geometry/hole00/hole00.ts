@@ -3,7 +3,7 @@ import { IHoleEgesData, IArrayForBuffers} from "../../types/GeomTypes"
 import { _M } from "../_m"
 import { COLOR_BLUE } from "../../constants/CONSTANTS"
 
-export const createHole00 = (root: Root, holeData: IHoleEgesData): IArrayForBuffers => {
+export const createHole00 = (holeData: IHoleEgesData): IArrayForBuffers => {
     /*
 
     |-------|--------|-------|

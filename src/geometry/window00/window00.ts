@@ -10,7 +10,7 @@ const DEFAULT_WINDOW_DATA: IHoleData = {
     d: .3,
 }
 
-export const createWindow00 = (root: Root, windowData: IHoleData) => {
+export const createWindow00 = (windowData: IHoleData) => {
     const { w, h, d } = { ...DEFAULT_WINDOW_DATA, ...windowData }
     const DD = -d
 

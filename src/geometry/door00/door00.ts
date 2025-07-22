@@ -15,7 +15,6 @@ const TOP_PROFILE: [number, number][] = [
 ]
 
 export const createDoor00 = (
-    root: Root, 
     doorData: IHoleData,
 ) => {
     const v: number[] = [] 

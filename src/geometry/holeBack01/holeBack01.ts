@@ -3,7 +3,7 @@ import { IArrayForBuffers, IHoleOrderData } from "../../types/GeomTypes"
 import { _M } from "../_m"
 import { COLOR_BLUE } from "../../constants/CONSTANTS"
 
-export const createHoleBack01 = (root: Root, holeData: IHoleOrderData): IArrayForBuffers => {
+export const createHoleBack01 = (holeData: IHoleOrderData): IArrayForBuffers => {
     /*
 
     |-------|--------|-------|

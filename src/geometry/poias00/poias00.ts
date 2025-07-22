@@ -28,7 +28,7 @@ const PR_CENTER: [number, number][] = [
     [0, 1.75],
 ]
 
-export const createPoias00 = (root: Root, w: number, h: number = 1.75, d: number = .25): IArrayForBuffers => {
+export const createPoias00 = (w: number, h: number = 1.75, d: number = .25): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []

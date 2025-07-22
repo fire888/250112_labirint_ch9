@@ -52,7 +52,7 @@ const modifyProfile = (h: number = 1.3, d: number = 0): number[] => {
 }
 
 
-export const createPoias01 = (root: Root, w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
+export const createPoias01 = (w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
@@ -68,7 +68,6 @@ export const createPoias01 = (root: Root, w: number, h: number = 1.3, d: number 
 }
 
 export const createAnglePoias01 = (
-    root: Root, 
     angle1: number, 
     angle2: number, 
     h: number = 1.3, 

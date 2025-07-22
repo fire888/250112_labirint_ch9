@@ -1,14 +1,15 @@
 import { Root } from "../index"
 import { _M, A3 } from "../geometry/_m"
 import { createScheme } from "./scheme"
-import { buildHouse00 } from "./buildHouse00/buildHouse00"
-import { buildHouse01 } from "./buildHouse01/buildHouse01"
+//import { buildHouse00 } from "./buildHouse00/buildHouse00"
+//import { buildHouse01 } from "./buildHouse01/buildHouse01"
 import { checkTypeSegment } from "./logicSegment"
 import { createArea00 } from "geometry/area00/area00"
-import { buildExamples } from "./buildExamples"
-import { tileMapWall } from "geometry/tileMapWall";
+//import { buildExamples } from "./buildExamples"
+import { tileMapWall } from "geometry/tileMapWall"
+import { calculateHouses } from "./calculateHouses"
 
-import { IArrayForBuffers, SegmentType } from "types/GeomTypes";
+import { IArrayForBuffers, SegmentType, IArea } from "types/GeomTypes";
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810') 
 
@@ -20,15 +21,15 @@ export class Labyrinth {
 
         let d = Date.now()
 
-        console.log('[MESSAGE:] START EXAMPLES')
-        buildExamples(root)
-        console.log('[TIME:] COMPLETE EXAMPLES:', ((Date.now() - d) / 1000).toFixed(2))
+        //console.log('[MESSAGE:] START EXAMPLES')
+        //buildExamples(root)
+        //console.log('[TIME:] COMPLETE EXAMPLES:', ((Date.now() - d) / 1000).toFixed(2))
         
         console.log('[MESSAGE:] START SCHEME')
         d = Date.now()
         const scheme = createScheme(root)
 
-        const areasData = []
+        const areasData: IArea[] = []
 
         for (let i = 0; i < scheme.length; ++i) {
             const area = _M.area(scheme[i].area)
@@ -80,36 +81,59 @@ export class Labyrinth {
         //     }
         // ] 
 
+        //const houses = []
+
         // /** walls */
-        console.log('[MESSAGE:] START WALLS')
+        console.log('[MESSAGE:] START CALCULATE WALLS')
+        d = Date.now()
+        const houses = calculateHouses(areasData)
+        // {
+        //     for (let i = 0; i < areasData.length; ++i) {
+        //         if (areasData[i].typeSegment === SegmentType.HOUSE_00) {
+        //             const houseData: IArrayForBuffers = buildHouse00(this._root, areasData[i].perimeterInner)
+        //             houses.push(houseData) 
+        //             //const { v, uv, c } = houseData
+        //             //const m = _M.createMesh({ 
+        //             //     v, 
+        //             //     uv,
+        //             //     c,
+        //             //     material: root.materials.walls00,
+        //             //})
+        //             //root.studio.add(m)
+        //             //m.position.y = .1
+        //         }
+        //         if (areasData[i].typeSegment === SegmentType.HOUSE_01) {
+        //             const houseData: IArrayForBuffers = buildHouse01(this._root, areasData[i].perimeterInner)
+        //             houses.push(houseData)
+                    
+        //             // const { v, uv, c } = houseData
+        //             // const m = _M.createMesh({ 
+        //             //      v, 
+        //             //      uv,
+        //             //      c,
+        //             //      material: root.materials.walls00,
+        //             // })
+        //             // root.studio.add(m)
+        //             // m.position.y = .1
+        //         }
+        //     }
+        // }
+        console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
+
+        console.log('[MESSAGE:] START ADD WALLS')
         d = Date.now()
         {
-            for (let i = 0; i < areasData.length; ++i) {
-                if (areasData[i].typeSegment === SegmentType.HOUSE_00) {
-                    const houseData: IArrayForBuffers = buildHouse00(this._root, areasData[i].perimeterInner)
-                    const { v, uv, c } = houseData
-                    const m = _M.createMesh({ 
-                         v, 
-                         uv,
-                         c,
-                         material: root.materials.walls00,
-                    })
-                    root.studio.add(m)
-                    m.position.y = .1
-                }
-                if (areasData[i].typeSegment === SegmentType.HOUSE_01) {
-                    const houseData: IArrayForBuffers = buildHouse01(this._root, areasData[i].perimeterInner)
-                    const { v, uv, c } = houseData
-                    const m = _M.createMesh({ 
-                         v, 
-                         uv,
-                         c,
-                         material: root.materials.walls00,
-                    })
-                    root.studio.add(m)
-                    m.position.y = .1
-                }
-            }
+            houses.forEach(h => {
+                const { v, uv, c } = h
+                const m = _M.createMesh({ 
+                     v, 
+                     uv,
+                     c,
+                     material: root.materials.walls00,
+                 })
+                root.studio.add(m)
+                m.position.y = .1
+            })
         }
         console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
 

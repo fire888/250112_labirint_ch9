@@ -29,7 +29,7 @@ type ISingleFloorData = {
     INNER_WALL_END_OFFSET: number,
 }
 
-const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuffers => {
+const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
@@ -66,7 +66,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
         }
     
         for (let i = 0; i < COUNT_INNER_PILASTERS; i++) { 
-            const innerP = constr(root, INNER_PILASTER_W, h, d + .25)
+            const innerP = constr(INNER_PILASTER_W, h, d + .25)
             const copryV = [...innerP.v]
             _M.rotateVerticesY(copryV, Math.PI)
             innerP.v.push(...copryV)
@@ -83,67 +83,11 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
         }
     }
 
-    // let H_POIAS_BOTTOM = 0.5 + Math.random()
-    // if (N_FLOOR > 0) {
-    //     H_POIAS_BOTTOM = 0.15 + Math.random() * 1
-    // }
-    // { // POIAS BOTTOM
-    //    // calculate Breaks By DOORS 
-    //     const breakPoiasParts = [] 
-    //     let START_POIAS_X = SIDE_PILASTER_W
-    //     for (let i = 0; i < N; ++i) {
-    //         if (i === N_SECTION_DOOR && N_FLOOR === 0) { 
-    //             const endX = 
-    //                 SIDE_PILASTER_W + 
-    //                 SINGLE_SECTION_W * (i) + 
-    //                 INNER_PILASTER_W * (i) + 
-    //                 SINGLE_SECTION_W * .5 - 
-    //                 W_DOOR * .5
-
-    //             breakPoiasParts.push({
-    //                 startX: START_POIAS_X, 
-    //                 endX,
-    //             })
-    //             START_POIAS_X = endX + W_DOOR
-    //         }
-    //     }   
-    //     breakPoiasParts.push({
-    //         startX: START_POIAS_X, 
-    //         endX: w - SIDE_PILASTER_W,
-    //     })
-
-    //     // insert POIAS
-    //     let constructorPoiasBottom = createPoias00
-    //     let poiasD = d + .2
-    //     if (N_FLOOR > 0) {
-    //         constructorPoiasBottom = createPoias02
-    //         poiasD = 0
-    //     }
-
-    //     for (let i = 0; i < breakPoiasParts.length; ++i) { 
-    //         const poiasPart = constructorPoiasBottom(
-    //             root, 
-    //             breakPoiasParts[i].endX - breakPoiasParts[i].startX, 
-    //             H_POIAS_BOTTOM, 
-    //             poiasD,
-    //         )
-    //         _M.translateVertices(poiasPart.v, 
-    //             breakPoiasParts[i].startX, 
-    //             0, 
-    //             0
-    //         )
-    //         v.push(...poiasPart.v)
-    //         uv.push(...poiasPart.uv)
-    //         c.push(...poiasPart.c)
-    //     }
-    // }
-
     return { v, uv, c }
 }
 
 
 export const wall01 = (
-    root: Root, 
     dataForBuldWall: IDataForWall
 ): IArrayForBuffers => {
     const v: number[] = []
@@ -202,7 +146,7 @@ export const wall01 = (
             topPoiasConstructor = createPoias01
         }
         if (topPoiasConstructor) {
-            const topPoias = topPoiasConstructor(root, w, H_TOP_POIAS, d + .2)
+            const topPoias = topPoiasConstructor(w, H_TOP_POIAS, d + .2)
 
             const copyV = [...topPoias.v]
             _M.rotateVerticesY(copyV, Math.PI)
@@ -242,7 +186,7 @@ export const wall01 = (
 
             floorData.h = floorH
         
-            const r = createFloor(root, floorData, i)
+            const r = createFloor(floorData, i)
             _M.translateVertices(r.v, 0, currentH_Level, 0)
 
             for (let j = 0; j < r.v.length; ++j) {
@@ -274,7 +218,7 @@ export const wall01 = (
         }
 
         if (constrPilaster) {
-            const leftP = constrPilaster(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
+            const leftP = constrPilaster(SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
             const copyV = [...leftP.v]
             _M.rotateVerticesY(copyV, Math.PI)
             //v.push(...copyV)

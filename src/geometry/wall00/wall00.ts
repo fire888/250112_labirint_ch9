@@ -35,7 +35,7 @@ type ISingleFloorData = {
     INNER_WALL_END_OFFSET: number,
 }
 
-const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuffers => {
+const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
@@ -72,7 +72,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
         }
     
         for (let i = 0; i < COUNT_INNER_PILASTERS; i++) { 
-            const innerP = constr(root, INNER_PILASTER_W, h, d + .25)
+            const innerP = constr(INNER_PILASTER_W, h, d + .25)
             _M.translateVertices(innerP.v, 
                 SIDE_PILASTER_W + SINGLE_SECTION_W * (i + 1) + INNER_PILASTER_W * (i + .5), 
                 0, 
@@ -141,7 +141,6 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
 
         for (let i = 0; i < breakPoiasParts.length; ++i) { 
             const poiasPart = constructorPoiasBottom(
-                root, 
                 breakPoiasParts[i].endX - breakPoiasParts[i].startX, 
                 H_POIAS_BOTTOM, 
                 poiasD,
@@ -161,7 +160,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
     if (N_FLOOR === 0 && N_SECTION_DOOR < N) { // чтобы пропустить дверь секцию двери можно поставить N_SECTION_DOOR = 500 
         const H_DOOR = Math.min(h - 1.5, 1.8 + Math.random() * 2)
         {
-            const door = createDoor00(root, {
+            const door = createDoor00({
                 w: W_DOOR,
                 h: H_DOOR,  
                 //d: d + .2,
@@ -181,7 +180,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             c.push(...door.c)
 
             // HOLE DOOR
-            const holeDoor = createHole00(root, {
+            const holeDoor = createHole00({
                 w: W_DOOR,
                 h: H_DOOR,  
                 d: d + .2,
@@ -204,7 +203,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             c.push(...holeDoor.c)
 
             // BACK HOLE DOOR
-            const holeDoorBack = createHole00(root, {
+            const holeDoorBack = createHole00({
                 w: W_DOOR,
                 h: H_DOOR,
                 d,
@@ -255,7 +254,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             if (i === N_SECTION_DOOR && N_FLOOR === 0) {
                 continue // пропускаем место двери
             }
-            const window = createWindow00(root, {
+            const window = createWindow00({
                 w: wWindow,
                 h: hWindow,
                 d,
@@ -279,7 +278,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             if (i === N_SECTION_DOOR && N_FLOOR === 0) {
                 continue // пропускаем место двери
             }
-            const holeWindow = createHole00(root, {
+            const holeWindow = createHole00({
                 w: wWindow,
                 h: hWindow,
                 d,
@@ -317,7 +316,7 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
             const y2 = bottomOffsetY + H_POIAS_BOTTOM + hWindow
             const y3 = h
 
-            const holeWindowBack = createHoleBack01(root, {
+            const holeWindowBack = createHoleBack01({
                 x0, x1, x2, x3,
                 y0, y1, y2, y3
             })
@@ -345,7 +344,6 @@ const createFloor = (root: Root, floorData: ISingleFloorData, N_FLOOR: number): 
 
 
 export const wall00 = (
-    root: Root, 
     dataForBuldWall: IDataForWall
 ): IArrayForBuffers => {
     const v: number[] = []
@@ -447,7 +445,7 @@ export const wall00 = (
 
             floorData.h = floorH
         
-            const r = createFloor(root, floorData, i)
+            const r = createFloor(floorData, i)
             _M.translateVertices(r.v, 0, currentH_Level, 0)
 
             for (let j = 0; j < r.v.length; ++j) {
@@ -479,13 +477,13 @@ export const wall00 = (
         }
 
         if (constrPilaster) {
-            const leftP = constrPilaster(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
+            const leftP = constrPilaster(SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
             _M.translateVertices(leftP.v, SIDE_PILASTER_W * .5, 0, 0)
             v.push(...leftP.v)
             uv.push(...leftP.uv)
             c.push(...leftP.c)
 
-            const rightP = constrPilaster(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
+            const rightP = constrPilaster(SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
             _M.translateVertices(rightP.v, w - SIDE_PILASTER_W * .5, 0, 0)
             v.push(...rightP.v)
             uv.push(...rightP.uv)
@@ -500,7 +498,7 @@ export const wall00 = (
             topPoiasConstructor = createPoias01
         }
         if (topPoiasConstructor) {
-            const topPoias = topPoiasConstructor(root, w, H_TOP_POIAS, d + .2)
+            const topPoias = topPoiasConstructor(w, H_TOP_POIAS, d + .2)
             _M.translateVertices(topPoias.v, 0, h - H_TOP_POIAS, 0)
             v.push(...topPoias.v)
             uv.push(...topPoias.uv)
@@ -542,21 +540,6 @@ export const wall00 = (
             c.push(...topElem.c)
         }
     }
-
-    // // BACK PART
-    // {
-    //     const b = _M.createPolygon(
-    //         [w, 0, -d],
-    //         [0, 0, -d],
-    //         [0, h, -d],
-    //         [w, h, -d],
-    //     )
-    //     v.push(...b)
-    //     uv.push(
-    //         ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
-    //     )
-    //     c.push(..._M.fillColorFace(COLOR_DARK))
-    // }
 
     return { v, uv, c }
 }

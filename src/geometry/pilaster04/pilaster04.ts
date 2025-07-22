@@ -6,7 +6,7 @@ import { COLOR_BLUE_D } from "constants/CONSTANTS"
 import { createPilaster02 } from "geometry/pilaster02/pilaster02"
 import { createPilaster03 } from "geometry/pilaster03/pilaster03"
 
-export const createPilaster04 = (root: Root, w: number, h: number, d: number): IArrayForBuffers => {
+export const createPilaster04 = (w: number, h: number, d: number): IArrayForBuffers => {
     const v: number[] = []
     const c: number[] = []
     const uv: number[] = []
@@ -15,14 +15,14 @@ export const createPilaster04 = (root: Root, w: number, h: number, d: number): I
     const H_CAPITEL = .4
 
     {
-        const p = createPilaster02(root, w, H_BASE, d)
+        const p = createPilaster02(w, H_BASE, d)
         v.push(...p.v)
         c.push(...p.c)
         uv.push(...p.uv)
     }
 
     {
-        const r = createPilaster03(root, w * 1.05, H_CAPITEL, d)
+        const r = createPilaster03(w * 1.05, H_CAPITEL, d)
         _M.translateVertices(r.v, 0, h - H_CAPITEL, 0)
         v.push(...r.v)
         uv.push(...r.uv)

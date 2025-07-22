@@ -15,7 +15,7 @@ const PR_COLUMN = [
     [.1, 1],
 ]
 
-export const createPilaster03 = (root: Root, w: number, h: number, d: number): IArrayForBuffers => {
+export const createPilaster03 = (w: number, h: number, d: number): IArrayForBuffers => {
     const v: number[] = []
     const c: number[] = []
     const uv: number[] = []

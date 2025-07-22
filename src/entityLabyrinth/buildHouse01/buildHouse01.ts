@@ -13,7 +13,7 @@ import {
 
 const D = .2
 
-export const buildHouse01 = (root: Root, perimeter: IPerimeter): IArrayForBuffers => {
+export const buildHouse01 = (perimeter: IPerimeter): IArrayForBuffers => {
     const H = Math.random() * 60 + 3 
 
     const v: number[] = [] 
@@ -113,7 +113,7 @@ export const buildHouse01 = (root: Root, perimeter: IPerimeter): IArrayForBuffer
     }
 
     for (let i = 0; i < wallsData.length; ++i) {
-        const r = wall01(root, wallsData[i])
+        const r = wall01(wallsData[i])
 
         const { angle, X, Z, buffer, indicies } = wallsData[i]
 
@@ -132,7 +132,7 @@ export const buildHouse01 = (root: Root, perimeter: IPerimeter): IArrayForBuffer
         const prevWall = wallsData[i - 1] ? wallsData[i - 1] : wallsData[wallsData.length - 1]
 
         // ANGLE CONNECT TOP POIAS WITH PREVIOUS WALL 
-        const poias = createAnglePoias01(root, -prevWall.angle, -angle, H_TOP_POIAS, D + .2)
+        const poias = createAnglePoias01(-prevWall.angle, -angle, H_TOP_POIAS, D + .2)
         _M.translateVertices(poias.v, wallsData[i].X, H - H_TOP_POIAS, wallsData[i].Z)
         for (let j = 0; j < poias.v.length; ++j) {
             v.push(poias.v[j])

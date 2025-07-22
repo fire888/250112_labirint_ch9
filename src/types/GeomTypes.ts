@@ -119,5 +119,13 @@ export const addTypeFullIdataForFillWall = (draft: Partial<IdataForFillWall>): I
     } else {
         throw new Error('wall draft is incomplete');
     }
+}
+
+export type IArea = {
+    center: [number, number],
+    area: number,
+    perimeter: IPerimeter,
+    perimeterInner: IPerimeter,
+    typeSegment: SegmentType,
 } 
 

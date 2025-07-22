@@ -4,7 +4,7 @@ import { IArrayForBuffers } from "types/GeomTypes"
 import { Root } from "index"
 import { COLOR_BLUE } from "constants/CONSTANTS"
 
-export const createColumn00 = (root: Root, w: number, h: number, n: number = 8): IArrayForBuffers => {
+export const createColumn00 = (w: number, h: number, n: number = 8): IArrayForBuffers => {
     const v: number[] = []
     const c: number[] = []
     const uv: number[] = []

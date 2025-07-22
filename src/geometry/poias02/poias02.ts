@@ -23,7 +23,7 @@ for (let i = 0; i < PROFILE.length; ++i) {
     n.push([PROFILE[i][0] - .1, PROFILE[i][1]])
 }
 
-export const createPoias02 = (root: Root, w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
+export const createPoias02 = (w: number, h: number = 1.3, d: number = 0): IArrayForBuffers => {
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []

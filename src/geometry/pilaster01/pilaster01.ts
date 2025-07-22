@@ -4,7 +4,7 @@ import { IArrayForBuffers } from "types/GeomTypes"
 import { Root } from "index";
 import { COLOR_BLUE_D } from "constants/CONSTANTS"
 
-export const createPilaster01 = (root: Root, w: number, h: number, d: number = .3): IArrayForBuffers => {
+export const createPilaster01 = (w: number, h: number, d: number = .3): IArrayForBuffers => {
     const v: number[] = []
     const c: number[] = []
     const uv: number[] = []

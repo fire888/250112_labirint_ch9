@@ -5,7 +5,7 @@ import { createPilaster01 } from "geometry/pilaster01/pilaster01"
 import { createPilaster02 } from "geometry/pilaster02/pilaster02"
 import { createColumn00 } from "geometry/column00/column00"
 
-export const createPilaster00 = (root: Root, w: number, h: number, d: number): IArrayForBuffers => {
+export const createPilaster00 = (w: number, h: number, d: number): IArrayForBuffers => {
     const v: number[] = []
     const c: number[] = []
     const uv: number[] = []
@@ -16,14 +16,14 @@ export const createPilaster00 = (root: Root, w: number, h: number, d: number): I
     const OFFSET_COLUMN_BASE = .14
 
     {
-        const p = createPilaster01(root, w, h, d - D_COLUMN_BASE)
+        const p = createPilaster01(w, h, d - D_COLUMN_BASE)
         v.push(...p.v)
         c.push(...p.c)
         uv.push(...p.uv)
     }
 
     {
-        const r = createPilaster02(root, w - OFFSET_COLUMN, H_BASE, D_COLUMN_BASE)
+        const r = createPilaster02(w - OFFSET_COLUMN, H_BASE, D_COLUMN_BASE)
         _M.translateVertices(r.v, 0, 0, d - D_COLUMN_BASE)
         v.push(...r.v)
         uv.push(...r.uv)
@@ -33,7 +33,7 @@ export const createPilaster00 = (root: Root, w: number, h: number, d: number): I
     // bodycolumn    
     {
         // если база широкая расставляем несколько колонн
-        const r = createColumn00(root, .38, h - H_BASE) // 1.4 - высота базы
+        const r = createColumn00(.38, h - H_BASE) // 1.4 - высота базы
 
         const _W = w - (OFFSET_COLUMN_BASE - .1) - (OFFSET_COLUMN_BASE - .1)
         const DIAM = (.15 + .1) * 2
