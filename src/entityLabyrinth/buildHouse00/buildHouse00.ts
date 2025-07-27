@@ -4,7 +4,7 @@ import { wall00 } from '../../geometry/wall00/wall00'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { createArea00 } from "geometry/area00/area00"
 import { _M, A3 } from '../../geometry/_m'
-import { COLOR_BLUE_D, COLOR_DARK } from "constants/CONSTANTS"
+import { COLOR_BLUE_D, COLOR_DARK_INTERIOR } from "constants/CONSTANTS"
 import { tileMapWall, } from "geometry/tileMapWall"
 import { 
     IdataForFillWall, 
@@ -21,6 +21,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
     const v: number[] = [] 
     const uv: number[] = [] 
     const c: number[] = []
+    const vCollide: number[] = []
 
     const H_TOP_POIAS = 0.4 + Math.random()
 
@@ -116,7 +117,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
 
     for (let i = 0; i < wallsData.length; ++i) {
         const r = wall00(wallsData[i])
-
+        
         const { angle, X, Z, buffer, indicies } = wallsData[i]
 
         _M.rotateVerticesY(r.v, -angle)
@@ -129,6 +130,12 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
         }
         for (let j = 0; j < r.c.length; ++j) {
             c.push(r.c[j])
+        }
+
+        { /// collision
+            _M.rotateVerticesY(r.vCollide, -angle)
+            _M.translateVertices(r.vCollide, X, 0, Z)
+            vCollide.push(...r.vCollide)
         }
 
         const prevWall = wallsData[i - 1] ? wallsData[i - 1] : wallsData[wallsData.length - 1]
@@ -165,7 +172,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
 
         v.push(..._M.createPolygon(p0, p1, p2, p3))
         uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
-        c.push(..._M.fillColorFace(COLOR_DARK))
+        c.push(..._M.fillColorFace(COLOR_DARK_INTERIOR))
     }
 
     // roof
@@ -179,7 +186,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
     // roof bottom side
     {
         const perimeterReverse = perimeter.slice().reverse()
-        const area = createArea00(perimeterReverse, COLOR_DARK, tileMapWall.emptyTree, 0)           
+        const area = createArea00(perimeterReverse, COLOR_DARK_INTERIOR, tileMapWall.emptyTree, 0)           
         _M.translateVertices(area.v, 0, H, 0)
         v.push(...area.v)
         c.push(...area.c)
@@ -188,12 +195,12 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
 
     // first floor
     {
-        const area = createArea00(perimeter, COLOR_DARK, tileMapWall.emptyTree, 0)           
+        const area = createArea00(perimeter, COLOR_DARK_INTERIOR, tileMapWall.emptyTree, 0)           
         _M.translateVertices(area.v, 0, .01, 0)
         v.push(...area.v)
         c.push(...area.c)
         uv.push(...area.uv)
     }
 
-    return { v, uv, c }
+    return { v, uv, c, vCollide }
 }

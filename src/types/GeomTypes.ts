@@ -77,6 +77,7 @@ export type IArrayForBuffers = {
     v: number[]
     uv: number[]
     c: number[]
+    vCollide?: number[]
     w?: number 
     h?: number
     d?: number 

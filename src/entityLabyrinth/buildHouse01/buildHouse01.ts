@@ -19,6 +19,7 @@ export const buildHouse01 = (perimeter: IPerimeter): IArrayForBuffers => {
     const v: number[] = [] 
     const uv: number[] = []
     const c: number[] = []
+    const vCollide: number[] = []
 
     const H_TOP_POIAS = 0.4 + Math.random()
 
@@ -145,5 +146,5 @@ export const buildHouse01 = (perimeter: IPerimeter): IArrayForBuffers => {
         }
     }
 
-    return { v, uv, c }
+    return { v, uv, c, vCollide }
 }

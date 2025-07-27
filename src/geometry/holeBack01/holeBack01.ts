@@ -1,7 +1,7 @@
 import { Root } from "index"
 import { IArrayForBuffers, IHoleOrderData } from "../../types/GeomTypes"
 import { _M } from "../_m"
-import { COLOR_BLUE } from "../../constants/CONSTANTS"
+import { COLOR_DARK_INTERIOR } from "../../constants/CONSTANTS"
 
 export const createHoleBack01 = (holeData: IHoleOrderData): IArrayForBuffers => {
     /*
@@ -25,7 +25,7 @@ export const createHoleBack01 = (holeData: IHoleOrderData): IArrayForBuffers => 
 
     const { x0, x1, x2, x3, y0, y1, y2, y3 } = holeData
 
-    const color = COLOR_BLUE
+    const color = COLOR_DARK_INTERIOR
 
     const v: number[] = []
     const c: number[] = []

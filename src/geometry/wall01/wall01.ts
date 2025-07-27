@@ -7,7 +7,7 @@ import { createPilaster03 } from 'geometry/pilaster03/pilaster03';
 import { createPilaster04 } from 'geometry/pilaster04/pilaster04';
 import { createPoias01 } from 'geometry/poias01/poias01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
-import { _M, A2, A3 } from '../_m';
+import { _M } from '../_m';
 import { COLOR_BLUE_D } from 'constants/CONSTANTS';
 import { tileMapWall } from "../tileMapWall"
 
@@ -118,7 +118,7 @@ export const wall01 = (
     const FULL_SECTIONS_W = WORK_WALL_W - FULL_W_INNER_PILASTERS
     const SINGLE_SECTION_W = FULL_SECTIONS_W / N
 
-    const N_SECTION_DOOR = SINGLE_SECTION_W < 2 ? 500 :Math.floor(Math.random() * N)
+    const N_SECTION_DOOR = SINGLE_SECTION_W < 2 ? -1 : Math.floor(Math.random() * N)
     const W_DOOR = Math.min(SINGLE_SECTION_W - .6,  2 + Math.random() * 2)
 
     const floorData: ISingleFloorData = {
@@ -181,7 +181,7 @@ export const wall01 = (
                 floorH = h - H_TOP_POIAS - currentH_Level
             }
             if (i === 0 && floorH < 3) { // remove door
-                floorData.N_SECTION_DOOR = 500
+                floorData.N_SECTION_DOOR = -1
             }
 
             floorData.h = floorH

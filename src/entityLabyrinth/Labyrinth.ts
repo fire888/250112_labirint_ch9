@@ -7,23 +7,16 @@ import { tileMapWall } from "geometry/tileMapWall"
 import * as THREE from "three"
 
 import { IArrayForBuffers, SegmentType, IArea } from "types/GeomTypes";
+import { pause } from "helpers/htmlHelpers"
+import { calculateHouses } from "./calculateHouses"
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810') 
-
-
-const workerHouses = new Worker(
-    // @ts-ignore
-    new URL('./calculateHouses.ts', import.meta.url), 
-    { type: 'module' }
-)
-
-
-
 
 export class Labyrinth {
     _root: Root
     _houses: THREE.Mesh[] = []
     _roads: THREE.Mesh[] = []
+    _stricts: THREE.Group[] = []
 
     constructor() {}
     async init (root: Root, params = {}) {
@@ -32,7 +25,7 @@ export class Labyrinth {
 
         const iterate = async () => {
             await this.build()
-            setTimeout(iterate, 3000)
+            //setTimeout(iterate, 10000)
         }
 
         iterate()
@@ -67,19 +60,11 @@ export class Labyrinth {
         console.log('[MESSAGE:] START CALCULATE WALLS')
         d = Date.now()
 
-        const createPromiseWorker = (areasData: IArea[]) => new Promise((resolve) => {
-            workerHouses.onmessage = (e) => {
-                resolve(e.data.houses)
-            }
-            workerHouses.postMessage({ areasData: areasData })
-        })
 
         console.log('[MESSAGE:] START WORKER HOUSES')
         d = Date.now()
-        // @ts-ignore
-        const houses: IArrayForBuffers[] = await createPromiseWorker(areasData)
+        const houses: IArrayForBuffers[] = calculateHouses(areasData)
         console.log('[TIME:] COMPLETE WORKER HOUSES', ((Date.now() - d) / 1000).toFixed(2))
-
 
         console.log('[MESSAGE:] START REMOVE PREV')
         d = Date.now()
@@ -88,60 +73,75 @@ export class Labyrinth {
 
         console.log('[MESSAGE:] START ADD WALLS')
         d = Date.now()
-        {
-            houses.forEach(h => {
-                const { v, uv, c } = h
-                const m = _M.createMesh({ 
-                     v, 
-                     uv,
-                     c,
-                     material: this._root.materials.walls00,
-                 })
-                this._root.studio.add(m)
-                m.position.y = .1
-                this._houses.push(m)
-            })
-        }
-        console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
+        for (let i = 0; i < 2; ++i) {
+            for (let j = 0; j < 2; ++j) {
+                const strict = new THREE.Group()
+                strict.position.x = i * 152 - 152
+                strict.position.z = j * 152 - 152
+                this._root.studio.add(strict)
+                {
+                    houses.forEach(h => {
+                        const { v, uv, c, vCollide = [] } = h
+                        const m = _M.createMesh({ 
+                            v, 
+                            uv,
+                            c,
+                            material: this._root.materials.walls00,
+                        })
+                        strict.add(m)
+                        m.position.y = .1
+                        this._houses.push(m)
 
-        /** roads */
-        console.log('[MESSAGE:] START ROADS ')
-        d = Date.now()
-        {
-            const v: number[] = []
-            const uv: number[] = [] 
-            const c: number[] = [] 
-
-            for (let i = 0; i < areasData.length; ++i) {
-                let isHouse = false
-                if (
-                    areasData[i].typeSegment === SegmentType.HOUSE_00 ||
-                    areasData[i].typeSegment === SegmentType.HOUSE_01
-                ) {
-                    isHouse = true
+                        const collisionMesh = _M.createMesh({
+                            v: vCollide,
+                            material: this._root.materials.collision
+                        })
+                        collisionMesh.position.add(strict.position) 
+                        this._root.phisics.addMeshToCollision(collisionMesh)
+                    })
                 }
-                if (!isHouse) {
-                    continue;
+                console.log('[TIME:] COMPLETE WALLS:', ((Date.now() - d) / 1000).toFixed(2))
+
+                /** roads */
+                console.log('[MESSAGE:] START ROADS ')
+                d = Date.now()
+                {
+                    const v: number[] = []
+                    const uv: number[] = [] 
+                    const c: number[] = [] 
+
+                    for (let i = 0; i < areasData.length; ++i) {
+                        let isHouse = false
+                        if (
+                            areasData[i].typeSegment === SegmentType.HOUSE_00 ||
+                            areasData[i].typeSegment === SegmentType.HOUSE_01
+                        ) {
+                            isHouse = true
+                        }
+                        if (!isHouse) {
+                            continue;
+                        }
+
+                        const areaData = areasData[i]
+
+                        const r = createArea00(areaData.perimeter, COLOR_FLOOR, tileMapWall.stoneTree)
+
+                        v.push(...r.v)
+                        c.push(...r.c)
+                    }
+
+                    const uv1 = _M.fillUvByPositionsXZ(v)
+                    const m = _M.createMesh({ 
+                        v,
+                        uv: uv1,
+                        c,
+                        material: this._root.materials.road
+                    })
+                    m.position.y = .1
+                    strict.add(m)
+                    this._roads.push(m)
                 }
-
-                const areaData = areasData[i]
-
-                const r = createArea00(areaData.perimeter, COLOR_FLOOR, tileMapWall.stoneTree)
-
-                v.push(...r.v)
-                c.push(...r.c)
-            }
-
-            const uv1 = _M.fillUvByPositionsXZ(v)
-            const m = _M.createMesh({ 
-                v,
-                uv: uv1,
-                c,
-                material: this._root.materials.road
-            })
-            m.position.y = .1
-            this._root.studio.add(m)
-            this._roads.push(m)
+            }    
         }
         console.log('[TIME:] COMPLETE ROADS', ((Date.now() - d) / 1000).toFixed(2))
     }
@@ -149,16 +149,18 @@ export class Labyrinth {
 
     async clear () {
         this._houses.forEach(h => {
-            this._root.studio.remove(h)
-            h.geometry.dispose
+            h.parent.remove(h)
+            h.geometry.dispose()
         })
         this._houses = []
 
         this._roads.forEach(h => {
-            this._root.studio.remove(h)
-            h.geometry.dispose
+            h.parent.remove(h)
+            h.geometry.dispose()
         })
         this._roads = []
+
+        await pause(100)
     } 
 }
 

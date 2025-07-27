@@ -14,7 +14,7 @@ import { createHole00 } from 'geometry/hole00/hole00';
 import { createHoleBack01 } from 'geometry/holeBack01/holeBack01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
 import { _M, A2, A3 } from 'geometry/_m';
-import { COLOR_BLUE_D, COLOR_BLUE_L, COLOR_DARK } from 'constants/CONSTANTS';
+import { COLOR_BLUE_D, COLOR_DARK_INTERIOR } from 'constants/CONSTANTS';
 import { tileMapWall } from "../tileMapWall"
 
 type ISingleFloorData = {
@@ -97,7 +97,7 @@ const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuf
                 )
                 v.push(...r)
                 uv.push(...tileMapWall.empty)
-                c.push(..._M.fillColorFace([0, 0, 0]))
+                c.push(..._M.fillColorFace(COLOR_DARK_INTERIOR))
             }
         }
     }
@@ -157,13 +157,12 @@ const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuf
     }
 
     // DRAW DOOR
-    if (N_FLOOR === 0 && N_SECTION_DOOR < N) { // чтобы пропустить дверь секцию двери можно поставить N_SECTION_DOOR = 500 
+    if (N_FLOOR === 0 && N_SECTION_DOOR !== -1) { // чтобы пропустить дверь секцию двери можно поставить N_SECTION_DOOR = -1
         const H_DOOR = Math.min(h - 1.5, 1.8 + Math.random() * 2)
         {
             const door = createDoor00({
                 w: W_DOOR,
                 h: H_DOOR,  
-                //d: d + .2,
                 d: d,
             })
             _M.translateVertices(
@@ -218,8 +217,7 @@ const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuf
                 N_SECTION_DOOR * SINGLE_SECTION_W + 
                 N_SECTION_DOOR * INNER_PILASTER_W + 
                 SINGLE_SECTION_W * .5, 
-                0, 
-                //-.3 - .2,
+                0,
                 -d,
             )
             for (let i = 0; i < holeDoorBack.v.length; i += 9) {
@@ -236,8 +234,10 @@ const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuf
             for (let i = 0; i < holeDoorBack.uv.length; i += 1) {
                 holeDoorBack.uv[i] = 0
             }
-            for (let i = 0; i < holeDoorBack.c.length; i += 1) {
-                holeDoorBack.c[i] = 0
+            for (let i = 0; i < holeDoorBack.c.length; i += 3) {
+                holeDoorBack.c[i] = COLOR_DARK_INTERIOR[0]
+                holeDoorBack.c[i + 1] = COLOR_DARK_INTERIOR[1]
+                holeDoorBack.c[i + 2] = COLOR_DARK_INTERIOR[2]
             }
             v.push(...holeDoorBack.v)
             uv.push(...holeDoorBack.uv)     
@@ -330,8 +330,10 @@ const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuf
             for (let i = 0; i < holeWindowBack.uv.length; i += 1) {
                 holeWindowBack.uv[i] = 0
             }
-            for (let i = 0; i < holeWindowBack.c.length; i += 1) {
-                holeWindowBack.c[i] = 0
+            for (let i = 0; i < holeWindowBack.c.length; i += 3) {
+                holeWindowBack.c[i] = COLOR_DARK_INTERIOR[0]
+                holeWindowBack.c[i + 1] = COLOR_DARK_INTERIOR[1]
+                holeWindowBack.c[i + 2] = COLOR_DARK_INTERIOR[2]
             }
             v.push(...holeWindowBack.v)
             uv.push(...holeWindowBack.uv)     
@@ -349,6 +351,7 @@ export const wall00 = (
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
+    const vCollide: number[] = []  
 
     const { 
         w, 
@@ -374,7 +377,7 @@ export const wall00 = (
     const FULL_SECTIONS_W = WORK_WALL_W - FULL_W_INNER_PILASTERS
     const SINGLE_SECTION_W = FULL_SECTIONS_W / N
 
-    const N_SECTION_DOOR = SINGLE_SECTION_W < 2 ? 500 :Math.floor(Math.random() * N)
+    let N_SECTION_DOOR = SINGLE_SECTION_W < 2 ? -1 : Math.floor(Math.random() * N)
     const W_DOOR = Math.min(SINGLE_SECTION_W - .6,  2 + Math.random() * 2)
 
     const floorData: ISingleFloorData = {
@@ -397,6 +400,8 @@ export const wall00 = (
 
     // FILL VERY SHORT SECTION 
     if (N === 0) {
+        N_SECTION_DOOR = -1
+
         const p1: number[] = [0, 0, 0, 0, h - H_TOP_POIAS, 0]
         const p2: number[] = [0, 0, 0, 0, h - H_TOP_POIAS, 0]
         const r = _M.fillPoligonsV3(
@@ -424,7 +429,7 @@ export const wall00 = (
             uv.push(
                 ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
             )
-            c.push(..._M.fillColorFace([0, 0, 0]))
+            c.push(..._M.fillColorFace(COLOR_DARK_INTERIOR))
         }
     }
 
@@ -440,7 +445,8 @@ export const wall00 = (
                 floorH = h - H_TOP_POIAS - currentH_Level
             }
             if (i === 0 && floorH < 3) { // remove door
-                floorData.N_SECTION_DOOR = 500
+                floorData.N_SECTION_DOOR = -1
+                N_SECTION_DOOR = -1
             }
 
             floorData.h = floorH
@@ -519,7 +525,7 @@ export const wall00 = (
             uv.push(
                 ..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]),
             )
-            c.push(..._M.fillColorFace([0, 0, 0]))
+            c.push(..._M.fillColorFace(COLOR_DARK_INTERIOR))
         }
     }
 
@@ -541,5 +547,71 @@ export const wall00 = (
         }
     }
 
-    return { v, uv, c }
+    { // collision
+        if (N_SECTION_DOOR === -1) { 
+            const vC = _M.createPolygon(
+                [0, 0, d + .2],
+                [w, 0, d + .2],
+                [w, h, d + .2],
+                [0, h, d + .2],
+            )
+            vCollide.push(...vC)
+            const vC_b = _M.createPolygon(
+                [0, 0, - .2],
+                [w, 0, - .2],
+                [w, h, - .2],
+                [0, h, - .2],
+            )
+            vCollide.push(...vC, ...vC_b)
+        } else {
+            const startDoorX = SIDE_PILASTER_W + SINGLE_SECTION_W * (N_SECTION_DOOR + .5) + INNER_PILASTER_W * N_SECTION_DOOR - W_DOOR * .5
+            const endDoorX = SIDE_PILASTER_W + SINGLE_SECTION_W * (N_SECTION_DOOR + .5)  + INNER_PILASTER_W * N_SECTION_DOOR + W_DOOR * .5
+            const v1 = _M.createPolygon(
+                [0, 0, d + .2],
+                [startDoorX, 0, d + .2],
+                [startDoorX, h, d + .2],
+                [0, h, d + .2],
+            )
+            const v2 = _M.createPolygon(
+                [startDoorX, 2, d + .2],
+                [endDoorX, 2, d + .2],
+                [endDoorX, h, d + .2],
+                [startDoorX, h, d + .2],
+            )
+            const v3 = _M.createPolygon(
+                [endDoorX, 0, d + .2],
+                [w, 0, d + .2],
+                [w, h, d + .2],
+                [endDoorX, h, d + .2],
+            )
+            const v1_b = _M.createPolygon(
+                [0, 0, -.2],
+                [startDoorX, 0, -.2],
+                [startDoorX, h, -.2],
+                [0, h, -.2],
+            )
+            const v2_b = _M.createPolygon(
+                [startDoorX, 2, -.2],
+                [endDoorX, 2, -.2],
+                [endDoorX, h, -.2],
+                [startDoorX, h, -.2],
+            )
+            const v3_b = _M.createPolygon(
+                [endDoorX, 0, -.2],
+                [w, 0, -.2],
+                [w, h, -.2],
+                [endDoorX, h, -.2],
+            )
+            vCollide.push(
+                ...v1,
+                ...v2,
+                ...v3,
+                ...v1_b,
+                ...v2_b,
+                ...v3_b,
+            )
+        }
+    }
+
+    return { v, uv, c, vCollide }
 }
