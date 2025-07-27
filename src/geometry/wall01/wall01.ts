@@ -221,7 +221,6 @@ export const wall01 = (
             const leftP = constrPilaster(SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
             const copyV = [...leftP.v]
             _M.rotateVerticesY(copyV, Math.PI)
-            //v.push(...copyV)
             leftP.v.push(...copyV)
 
             _M.translateVertices(leftP.v, SIDE_PILASTER_W * .5, 0, 0)
@@ -230,19 +229,10 @@ export const wall01 = (
             uv.push(...leftP.uv)
             c.push(...leftP.c)
 
-
             uv.push(...leftP.uv)
             c.push(...leftP.c)
-
-            // const rightP = constrPilaster(root, SIDE_PILASTER_W, h - H_TOP_POIAS, .3)
-            // _M.translateVertices(rightP.v, w - SIDE_PILASTER_W * .5, 0, 0)
-            // v.push(...rightP.v)
-            // uv.push(...rightP.uv)
-            // c.push(...rightP.c)
         }
     }
-
-
 
     // TOP ELEMS 
     {
