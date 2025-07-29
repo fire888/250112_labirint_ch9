@@ -23,7 +23,7 @@ type ISingleFloorData = {
     FULL_W_INNER_PILASTERS: number,
     FULL_SECTIONS_W: number,
     SINGLE_SECTION_W: number,
-    N_SECTION_DOOR: number,
+    //N_SECTION_DOOR: number,
     W_DOOR: number,
     INNER_WALL_START_OFFSET: number,
     INNER_WALL_END_OFFSET: number,
@@ -48,7 +48,7 @@ const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuf
         FULL_W_INNER_PILASTERS, 
         FULL_SECTIONS_W, 
         SINGLE_SECTION_W, 
-        N_SECTION_DOOR, 
+        //N_SECTION_DOOR, 
         W_DOOR,
         INNER_WALL_START_OFFSET,
         INNER_WALL_END_OFFSET,
@@ -93,6 +93,7 @@ export const wall01 = (
     const v: number[] = []
     const uv: number[] = []
     const c: number[] = []
+    const vCollide: number[] = []
 
     const { 
         w, 
@@ -118,7 +119,7 @@ export const wall01 = (
     const FULL_SECTIONS_W = WORK_WALL_W - FULL_W_INNER_PILASTERS
     const SINGLE_SECTION_W = FULL_SECTIONS_W / N
 
-    const N_SECTION_DOOR = SINGLE_SECTION_W < 2 ? -1 : Math.floor(Math.random() * N)
+    //const N_SECTION_DOOR = SINGLE_SECTION_W < 2 ? -1 : Math.floor(Math.random() * N)
     const W_DOOR = Math.min(SINGLE_SECTION_W - .6,  2 + Math.random() * 2)
 
     const floorData: ISingleFloorData = {
@@ -133,7 +134,7 @@ export const wall01 = (
         FULL_W_INNER_PILASTERS,
         FULL_SECTIONS_W,
         SINGLE_SECTION_W,
-        N_SECTION_DOOR,
+        //N_SECTION_DOOR,
         W_DOOR,
         INNER_WALL_START_OFFSET,
         INNER_WALL_END_OFFSET,
@@ -166,7 +167,7 @@ export const wall01 = (
 
     // FILL VERY SHORT SECTION 
     if (N === 0) {
-        return { v, uv, c }
+        return { v, uv, c, vCollide }
     }
 
     if (N > 0) {
@@ -179,9 +180,6 @@ export const wall01 = (
 
             if (h - H_TOP_POIAS - currentH_Level - floorH < 3) {
                 floorH = h - H_TOP_POIAS - currentH_Level
-            }
-            if (i === 0 && floorH < 3) { // remove door
-                floorData.N_SECTION_DOOR = -1
             }
 
             floorData.h = floorH
@@ -201,6 +199,49 @@ export const wall01 = (
             currentH_Level += floorH
             ++i
         }
+
+        {
+            const x1 = 0
+            const x2 = SIDE_PILASTER_W
+            const offZ = .2
+            vCollide.push(
+                ..._M.createPolygon(
+                    [x1, 0, d + offZ],
+                    [x2, 0, d + offZ],
+                    [x2, h, d + offZ],
+                    [x1, h, d + offZ],
+                ),
+                ..._M.createPolygon(
+                    [x1, 0, -d - offZ],
+                    [x2, 0, -d - offZ],
+                    [x2, h, -d - offZ],
+                    [x1, h, -d - offZ],
+                ),
+            )
+            for (let i = 0; i < COUNT_INNER_PILASTERS; ++i) {
+                const stepX = (w - SIDE_PILASTER_W) / (COUNT_INNER_PILASTERS + 1)
+
+                const x0 = SIDE_PILASTER_W * .5 + (i + 1) * stepX
+                const x1 = x0 - INNER_PILASTER_W * .5
+                const x2 = x0 + INNER_PILASTER_W * .5
+                const offZ = .2
+                vCollide.push(
+                    ..._M.createPolygon(
+                        [x1, 0, d + offZ],
+                        [x2, 0, d + offZ],
+                        [x2, h, d + offZ],
+                        [x1, h, d + offZ],
+                    ),
+                    ..._M.createPolygon(
+                        [x1, 0, -d - offZ],
+                        [x2, 0, -d - offZ],
+                        [x2, h, -d - offZ],
+                        [x1, h, -d - offZ],
+                    ),
+                )
+            }
+        }
+
     }
 
     { // OUTER PILASTERS
@@ -252,5 +293,5 @@ export const wall01 = (
         }
     }
 
-    return { v, uv, c }
+    return { v, uv, c, vCollide }
 }

@@ -130,6 +130,10 @@ export const buildHouse01 = (perimeter: IPerimeter): IArrayForBuffers => {
             c.push(r.c[j])
         }
 
+        _M.rotateVerticesY(r.vCollide, -angle)
+        _M.translateVertices(r.vCollide, X, 0, Z)
+        vCollide.push(...r.vCollide)
+
         const prevWall = wallsData[i - 1] ? wallsData[i - 1] : wallsData[wallsData.length - 1]
 
         // ANGLE CONNECT TOP POIAS WITH PREVIOUS WALL 
