@@ -50,11 +50,11 @@ module.exports = (env, { mode }) => {
                 // 'cannon': 'cannon',
                 // 'babylonjs-loaders': 'babylonjs-loaders',
             }),
-            // new CopyPlugin({
-            //     patterns: [
-            //         {from: './templates/start-img.webp', to: 'start-img.webp'},
-            //     ],
-            // }),
+            new CopyPlugin({
+                patterns: [
+                    {from: './templates/start-img.webp', to: 'start-img.webp'},
+                ],
+            }),
         ],
         module: {
             rules: [
