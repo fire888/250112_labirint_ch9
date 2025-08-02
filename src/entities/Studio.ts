@@ -14,7 +14,8 @@ import {
 } from 'three'
 import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { Root } from "../index";
+import { Root } from "../index"
+import { Tween, Interpolation, Easing } from '@tweenjs/tween.js'
 
 const params = {
     threshold: 0.65,
@@ -69,14 +70,15 @@ export class Studio {
 
         this.scene.background = root.loader.assets.cubeSky
         this.envMap = root.loader.assets.cubeSky
-        this.fog = new THREE.Fog(0x2b2241, 1, 50)
+        this.fog = new THREE.Fog(0x0e2535, .2, 1)
+        this.addFog()
 
         this.amb = new THREE.AmbientLight(0x5e4a8d, 4)
         this.scene.add(this.amb)
 
         this.dirLight = new DirectionalLight(0x2b2241, 15)
         this.dirLight = new DirectionalLight( 0x97e6eb, 30)
-        this.dirLight.position.set(-3, 3, 2)
+        this.dirLight.position.set(-3, 3, -2)
         this.scene.add(this.dirLight)
 
         this.renderer = new WebGLRenderer({ antialias: true })
@@ -114,5 +116,72 @@ export class Studio {
         const axesHelper = new AxesHelper(size)
         axesHelper.position.set(x, y, z)
         this.scene.add(axesHelper)
+    }
+
+    cameraFlyToLevel () {
+        const { PLAYER_START_POS } = this._root.CONSTANTS
+
+        const time = 5000
+
+        const savedPos = new THREE.Vector3().fromArray([PLAYER_START_POS[0], PLAYER_START_POS[1], PLAYER_START_POS[2] - 10])
+        const targetPos = new THREE.Vector3().fromArray(PLAYER_START_POS)
+
+        const startFogFar = .5
+        const endFogFar = 3
+
+        this.camera.position.copy(savedPos)
+        this.camera.lookAt(targetPos)
+        const savedQ = new THREE.Quaternion().copy(this.camera.quaternion)
+        this.camera.lookAt(new THREE.Vector3().copy(targetPos).setY(targetPos.y - 100000))
+        const startQ = new THREE.Quaternion().copy(this.camera.quaternion) 
+        const targetQ = new THREE.Quaternion().copy(savedQ)
+
+        return new Promise(res => {
+            this.camera.position.copy(savedPos)
+            this.camera.lookAt(targetPos)
+
+            const obj = { v: 0 }
+            new Tween(obj)
+                .easing(Easing.Linear.In)
+                .to({ v: 1 }, time)
+                .onUpdate(() => {
+                    this.camera.position.lerpVectors(savedPos, targetPos, obj.v)
+                    this.camera.quaternion.slerpQuaternions(startQ, targetQ, Math.min(1., obj.v * 1.3))
+                    this.fog.far = startFogFar + (endFogFar - startFogFar) * obj.v
+                })
+                .onComplete(() => {
+                    res(true)
+                })
+                .start()
+        })
+    }
+
+    animateFogTo(far: number, color: THREE.Color, time: number) {
+        const startFogFar = this.fog.far
+        const endFogFar = far
+        const startColor = new THREE.Color().copy(this.fog.color)
+        
+        return new Promise(res => {        
+            const obj = { v: 0 }
+            new Tween(obj)
+                .easing(Easing.Exponential.InOut)
+                .to({ v: 1 }, time)
+                .onUpdate(() => {
+                    this.fog.far = startFogFar + (endFogFar - startFogFar) * obj.v
+                    this.fog.color.lerpColors(startColor, color, obj.v)
+                })
+                .onComplete(() => {
+                    res(true)
+                })
+                .start()
+        })
+    } 
+
+    addFog() {
+        this.scene.fog = this.fog
+    }
+
+    removeFog() {
+        this.scene.fog = null
     }
 }

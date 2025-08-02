@@ -1,5 +1,7 @@
+import { pause } from 'helpers/htmlHelpers'
 import { Root } from '../index'
 import { Tween, Interpolation, Easing, update } from '@tweenjs/tween.js'
+import { COLOR_FOG_PLAY } from '../constants/CONSTANTS'
 
 export const pipelineInit = async (root: Root) => {
     const {
@@ -31,17 +33,12 @@ export const pipelineInit = async (root: Root) => {
     //studio.addAxisHelper()
     ticker.on(studio.render.bind(studio))
 
-    ui.init(root)
-
     phisics.init(root)
     ticker.on(phisics.update.bind(phisics))
     phisics.createPlayerPhisicsBody(CONSTANTS.PLAYER_START_POS)
 
     floor.init(root)
     studio.add(floor.mesh)
-
-    controls.init(root)
-    ticker.on(controls.update.bind(controls))
 
     await lab.init(root)
 
@@ -64,7 +61,28 @@ export const pipelineInit = async (root: Root) => {
     //audio.init(root)
     //ticker.on(audio.update.bind(audio))
 
+    //phisics.stopPlayerBody()
+    ui.init(root)
+
     await ui.hideStartScreen()
+    controls.init(root)
+    ticker.on(controls.update.bind(controls))
+
+    await pause(100)
+
+    controls.disconnect()
+    await studio.cameraFlyToLevel()
+    phisics.setPlayerPosition(...CONSTANTS.PLAYER_START_POS)
+    studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
+    controls.connect()
+    
+    //await studio.cameraFlyToLevel()
+    //controls.init(root)
+    //controls.enablePointer()
+    //controls.disconnect()
+    //ticker.on(controls.update.bind(controls))
+
+    //controls.connect()
 
     //audio.playAmbient()
 }

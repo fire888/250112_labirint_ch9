@@ -30,14 +30,11 @@ export class ControlsSystem {
         this._phone = new ControlsPhone()
         this._phone.init(root)
 
-        // this._currentWalkingControls = deviceData.device === 'desktop' 
-        //     ? this._pointer
-        //     : this._phone
-        // this._currentWalkingControls.enable()
-        ui.toggleVisibleLock(true) 
-        this._currentWalkingControls = this._phone
-        this._orbit.enable()
-
+        this._currentWalkingControls = deviceData.device === 'desktop' 
+            ? this._pointer
+            : this._phone
+        this._currentWalkingControls.enable()
+        
         // click on buttonPointerLock: enable pointerLock and hide phoneControls  
         ui.lockButton.onclick = () => {
             this._pointer.enable().then(isOn => {
@@ -52,9 +49,7 @@ export class ControlsSystem {
                 this._orbit.disable()
                 ui.toggleVisibleLock(false) 
 
-                if (root.studio.fog) {
-                    root.studio.scene.fog = root.studio.fog
-                }
+                root.studio.addFog()            
             })
         }
         // callback on pointerUnlock: enable phoneControls and show buttonPointerLock
@@ -80,7 +75,7 @@ export class ControlsSystem {
                     this._currentWalkingControls.disable()
                     this._orbit.enable()
 
-                    root.studio.scene.fog = null
+                    root.studio.removeFog()
                 }
             }
         }

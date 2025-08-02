@@ -1,15 +1,20 @@
 import { _M, A3 } from "../geometry/_m"
+import * as THREE from 'three'
 
 const PHISICS_CONF = {
     IS_DEBUG: false
 }
 
-const PLAYER_START_POS: number[] = [30, 3, -50]
+//const PLAYER_START_POS: number[] = [30, 3, -50]
+const PLAYER_START_POS: number[] = [30, .7, -200]
 
 export const CONSTANTS = {
     PHISICS_CONF, 
     PLAYER_START_POS,
 }
+
+export const COLOR_FOG_START = new THREE.Color().setHex(0x0e2535) 
+export const COLOR_FOG_PLAY = new THREE.Color().setHex(0x2b2241) 
 
 export const COLOR_WINDOW_INNER_D: A3 = [.25, .25, .5]
 export const COLOR_WHITE: A3 = _M.hexToNormalizedRGB('222222') 
