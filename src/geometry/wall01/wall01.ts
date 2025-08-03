@@ -1,4 +1,3 @@
-import { Root } from '../../index';
 import { IArrayForBuffers, ElemType, IDataForWall } from 'types/GeomTypes';
 import { createPilaster00 } from 'geometry/pilaster00/pilastre00';
 import { createPilaster01 } from 'geometry/pilaster01/pilaster01';
@@ -9,7 +8,6 @@ import { createPoias01 } from 'geometry/poias01/poias01';
 import { createTopElem_00 } from 'geometry/topElem00/topElem_00';
 import { _M } from '../_m';
 import { COLOR_BLUE_D } from 'constants/CONSTANTS';
-import { tileMapWall } from "../tileMapWall"
 
 type ISingleFloorData = {
     w: number,
@@ -200,23 +198,18 @@ export const wall01 = (
             ++i
         }
 
-        {
+        { // collide
             const x1 = 0
             const x2 = SIDE_PILASTER_W
             const offZ = .2
             vCollide.push(
-                ..._M.createPolygon(
+                ..._M.createBevel4P(
                     [x1, 0, d + offZ],
                     [x2, 0, d + offZ],
-                    [x2, h, d + offZ],
-                    [x1, h, d + offZ],
-                ),
-                ..._M.createPolygon(
-                    [x1, 0, -d - offZ],
                     [x2, 0, -d - offZ],
-                    [x2, h, -d - offZ],
-                    [x1, h, -d - offZ],
-                ),
+                    [x1, 0, -d - offZ],
+                    h
+                )
             )
             for (let i = 0; i < COUNT_INNER_PILASTERS; ++i) {
                 const stepX = (w - SIDE_PILASTER_W) / (COUNT_INNER_PILASTERS + 1)
@@ -226,18 +219,13 @@ export const wall01 = (
                 const x2 = x0 + INNER_PILASTER_W * .5
                 const offZ = .2
                 vCollide.push(
-                    ..._M.createPolygon(
+                    ..._M.createBevel4P(
                         [x1, 0, d + offZ],
                         [x2, 0, d + offZ],
-                        [x2, h, d + offZ],
-                        [x1, h, d + offZ],
-                    ),
-                    ..._M.createPolygon(
-                        [x1, 0, -d - offZ],
                         [x2, 0, -d - offZ],
-                        [x2, h, -d - offZ],
-                        [x1, h, -d - offZ],
-                    ),
+                        [x1, 0, -d - offZ],
+                        h
+                    )
                 )
             }
         }

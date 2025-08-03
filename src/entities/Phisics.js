@@ -71,7 +71,7 @@ export class Phisics {
         this._levelsPhisicsMeshes = []
 
         if (root.CONSTANTS.PHISICS_CONF.IS_DEBUG) {
-            this.cannonDebugger = new CannonDebugger(root.studio.scene, this.world, {})
+          this.cannonDebugger = new CannonDebugger(root.studio.scene, this.world, {})
         }
     }
 

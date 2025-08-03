@@ -305,7 +305,7 @@ V -make first floor
 V -refactoring depth of whalls
 V -if ond of angles less 30 drop house
 V -cap inner angles
--design light
+V -design light
 V -texture roofs
 V -roads connect left\right sides
 V -skip small and short doors
@@ -315,10 +315,13 @@ V -bug fill poligons roads
 V -inner offsets walls angle scrop
 V -make wallsData logic before fill poligins 
 V -colonnades without walls
--disable short walls
-V-fill stones under colonnades
-V-make desert more
--add collisions
+V -disable short walls
+V -fill stones under colonnades
+V -make desert more
+V -add collisions
+-collisions colomns sides
+-small level for phones
+-black inner houses
 -connect verticies by indicies ?
 
 

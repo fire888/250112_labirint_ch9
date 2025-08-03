@@ -1,9 +1,7 @@
-import { Root } from "index"
 import { IPerimeter, ElemType, IArrayForBuffers } from "types/GeomTypes"
 import { wall01 } from '../../geometry/wall01/wall01'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { _M } from 'geometry/_m'
-import * as THREE from "three" 
 import { 
     IdataForFillWall, 
     IdataForFillWall_TMP, 

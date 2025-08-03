@@ -124,7 +124,7 @@ export class Labyrinth {
 
                         const areaData = areasData[i]
 
-                        const r = createArea00(areaData.perimeter, COLOR_FLOOR, tileMapWall.stoneTree)
+                        const r = createArea00(areaData.perimeter, COLOR_FLOOR, tileMapWall.stoneTree, 0, -2, tileMapWall.break)
 
                         v.push(...r.v)
                         c.push(...r.c)
