@@ -16,7 +16,13 @@ export const pipelineInit = async (root: Root) => {
         lab,
         audio,
         materials,
+        deviceData,
     } = root
+
+    if (deviceData.isMobileDevice) {
+        root.appData.isBigLevel = false
+        root.appData.playerStartPosition = [...CONSTANTS.PLAYER_START_POS_SMALL_LEVEL]
+    }
 
     loader.init()
     await loader.loadAssets()
@@ -35,7 +41,7 @@ export const pipelineInit = async (root: Root) => {
 
     phisics.init(root)
     ticker.on(phisics.update.bind(phisics))
-    phisics.createPlayerPhisicsBody(CONSTANTS.PLAYER_START_POS)
+    phisics.createPlayerPhisicsBody(root.appData.playerStartPosition)
 
     floor.init(root)
     studio.add(floor.mesh)
@@ -72,7 +78,7 @@ export const pipelineInit = async (root: Root) => {
 
     controls.disconnect()
     await studio.cameraFlyToLevel()
-    phisics.setPlayerPosition(...CONSTANTS.PLAYER_START_POS)
+    phisics.setPlayerPosition(...root.appData.playerStartPosition)
     studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
     controls.connect()
     

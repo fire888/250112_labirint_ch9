@@ -5,12 +5,13 @@ const PHISICS_CONF = {
     IS_DEBUG: false
 }
 
-//const PLAYER_START_POS: number[] = [30, 3, -50]
-const PLAYER_START_POS: number[] = [30, .7, -200]
+const PLAYER_START_POS_BIG_LEVEL: number[] = [30, .7, -200]
+const PLAYER_START_POS_SMALL_LEVEL: number[] = [30, .7, -50]
 
 export const CONSTANTS = {
     PHISICS_CONF, 
-    PLAYER_START_POS,
+    PLAYER_START_POS_BIG_LEVEL,
+    PLAYER_START_POS_SMALL_LEVEL,
 }
 
 export const COLOR_FOG_START = new THREE.Color().setHex(0x0e2535) 

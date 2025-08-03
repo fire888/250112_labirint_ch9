@@ -119,12 +119,12 @@ export class Studio {
     }
 
     cameraFlyToLevel () {
-        const { PLAYER_START_POS } = this._root.CONSTANTS
+        const { playerStartPosition } = this._root.appData
 
         const time = 5000
 
-        const savedPos = new THREE.Vector3().fromArray([PLAYER_START_POS[0], PLAYER_START_POS[1], PLAYER_START_POS[2] - 10])
-        const targetPos = new THREE.Vector3().fromArray(PLAYER_START_POS)
+        const savedPos = new THREE.Vector3().fromArray([playerStartPosition[0], playerStartPosition[1], playerStartPosition[2] - 10])
+        const targetPos = new THREE.Vector3().fromArray(playerStartPosition)
 
         const startFogFar = .5
         const endFogFar = 3

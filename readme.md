@@ -319,8 +319,8 @@ V -disable short walls
 V -fill stones under colonnades
 V -make desert more
 V -add collisions
--collisions colomns sides
--small level for phones
+V -collisions colomns sides
+V -small level for phones
 -black inner houses
 -connect verticies by indicies ?
 

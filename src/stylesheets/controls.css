@@ -31,6 +31,9 @@
     background-size: contain;
     box-sizing: content-box;
 }
+.control:focus {
+    outline:none;
+}
 .control-small  {
     position: absolute;
     flex: 0 0 60px;
