@@ -181,17 +181,17 @@ export class Ui {
 
         wrapper.appendChild(createOffset(20))
 
-        // const prev = document.createElement('div')
-        // prev.classList.add('dark')
-        // prev.innerHTML = 'Previous chapters:'
-        // wrapper.appendChild(prev)
+        const prev = document.createElement('div')
+        prev.classList.add('dark')
+        prev.innerHTML = 'Previous chapters:'
+        wrapper.appendChild(prev)
 
-        // wrapper.appendChild(createOffset(20))
+        wrapper.appendChild(createOffset(20))
 
-        // const list = createChaptersList()
-        // wrapper.appendChild(list)
+        const list = createChaptersList()
+        wrapper.appendChild(list)
 
-        // wrapper.appendChild(createOffset(20))
+        wrapper.appendChild(createOffset(20))
 
         {
             const prev = document.createElement('div')
@@ -200,7 +200,7 @@ export class Ui {
             wrapper.appendChild(prev)
         }
 
-        //wrapper.appendChild(createOffset(20))
+        wrapper.appendChild(createOffset(20))
 
         // {
         //     const prev = document.createElement('div')
@@ -253,8 +253,9 @@ const createOffset = (n) => {
 
 const createChaptersList = () => {
     const LIST = []
-    for (let i = 1; i < 9; ++i) {
-        LIST.push([i, './../chapter0' + i + '/', 'Chapter ' + i])
+    for (let i = 1; i < 10; ++i) {
+        const strI = i < 10 ? '0' + i : i
+        LIST.push([i, './../adventure/' + strI, 'Chapter ' + i])
     }
     LIST[LIST.length - 1].push('current chapter')
 
