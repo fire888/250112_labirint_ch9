@@ -321,8 +321,9 @@ V -make desert more
 V -add collisions
 V -collisions colomns sides
 V -small level for phones
--add game info 
+V -add game info 
 -black inner houses
+-SSAO for desctop ?
 -connect verticies by indicies ?
 
 
