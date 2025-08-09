@@ -34,6 +34,7 @@ V -black inner houses
 V -SSAO for desctop ?
 V - add sprites
 - add fly point
+- add cristalls in houses
 -connect verticies by indicies ?
 
 

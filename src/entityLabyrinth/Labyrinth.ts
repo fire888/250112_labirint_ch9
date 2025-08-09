@@ -17,6 +17,8 @@ export class Labyrinth {
     _houses: THREE.Mesh[] = []
     _roads: THREE.Mesh[] = []
     _stricts: THREE.Group[] = []
+    centersHousesDarks: THREE.Vector3[] = []
+    centersHousesColumns: THREE.Vector3[] = []
 
     constructor() {}
     async init (root: Root, params = {}) {
@@ -32,10 +34,10 @@ export class Labyrinth {
     }
 
     async build () {
-        let d = Date.now()
+        const { isBigLevel } = this._root.appData
         
         console.log('[MESSAGE:] START SCHEME')
-        d = Date.now()
+        let d = Date.now()
         const scheme = createScheme(this._root)
 
         const areasData: IArea[] = []
@@ -44,6 +46,20 @@ export class Labyrinth {
             const area = _M.area(scheme[i].area)
             const center = _M.center(scheme[i].area) 
             const typeSegment = checkTypeSegment(scheme[i].offset)
+
+            if (isBigLevel) {
+                for (let i = 0; i < 2; ++i) {
+                    for (let j = 0; j < 2; ++j) {
+                        if (typeSegment === SegmentType.HOUSE_00) {
+                            this.centersHousesDarks.push(new THREE.Vector3(center[0] + i * 152 - 152, .5, center[1] + j * 152 - 152))
+                        }  else if (typeSegment === SegmentType.HOUSE_01) {
+                            this.centersHousesColumns.push(new THREE.Vector3(center[0] + i * 152 - 152, .5, center[1] + j * 152 - 152))
+                        }
+                    }
+                }
+            } else {
+                this.centersHousesDarks.push(new THREE.Vector3(center[0], .5, center[1]))
+            }
 
             areasData.push({
                 center,
@@ -65,8 +81,6 @@ export class Labyrinth {
         d = Date.now()
         await this.clear()
         console.log('[TIME:] COMPLETE REMOVE PREV', ((Date.now() - d) / 1000).toFixed(2))
-
-        const { isBigLevel } = this._root.appData
 
         console.log('[MESSAGE:] START ADD WALLS')
         d = Date.now()

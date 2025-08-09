@@ -3,6 +3,7 @@ import { Root } from '../index'
 import { Tween, Interpolation, Easing, update } from '@tweenjs/tween.js'
 import { COLOR_FOG_PLAY } from '../constants/CONSTANTS'
 import { IS_DEV_START_ORBIT } from '../constants/CONSTANTS'
+import * as THREE from 'three'
 
 export const pipelineInit = async (root: Root) => {
     const {
@@ -19,6 +20,7 @@ export const pipelineInit = async (root: Root) => {
         materials,
         deviceData,
         particles,
+        energySystem,
     } = root
 
     if (deviceData.isMobileDevice) {
@@ -49,6 +51,15 @@ export const pipelineInit = async (root: Root) => {
     studio.add(floor.mesh)
     
     await lab.init(root)
+
+    //const arr = []
+    //for (let i = 0; i < 10; ++i) {
+    //    arr.push(new THREE.Vector3(Math.random() * 10 - 5, .3, Math.random() * 10 - 5))
+    //}
+    energySystem.init(root, lab.centersHousesDarks)
+    //ticker.on(energySystem.update.bind(energySystem))
+    //studio.add(energySystem.m)
+    
     
     if (!IS_DEV_START_ORBIT) {
         studio.setFogNearFar(.2, 1)
