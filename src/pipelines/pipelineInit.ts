@@ -21,6 +21,7 @@ export const pipelineInit = async (root: Root) => {
         deviceData,
         particles,
         energySystem,
+        antigravSystem,
     } = root
 
     if (deviceData.isMobileDevice) {
@@ -53,6 +54,7 @@ export const pipelineInit = async (root: Root) => {
     await lab.init(root)
 
     energySystem.init(root, lab.centersHousesDarks)
+    antigravSystem.init(root, lab.centersHousesColumns)
 
     if (!IS_DEV_START_ORBIT) {
         studio.setFogNearFar(.2, 1)

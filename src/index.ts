@@ -11,6 +11,7 @@ import { Ui } from "./entities/Ui"
 import { Phisics } from "./entities/Phisics"
 import { Labyrinth } from './entityLabyrinth/Labyrinth'
 import { EnergySystem } from "entities/EnergySystem"
+import { AntigravSystem } from "entities/AntigravSystem"
 import { AudioManager } from "./entities/AudioManager"
 import { Materials } from "./entities/Materials"
 import { pipelineInit } from "./pipelines/pipelineInit"
@@ -37,6 +38,7 @@ export type Root = {
     audio: AudioManager,
     materials: Materials,
     energySystem: EnergySystem,
+    antigravSystem: AntigravSystem,
 }
 
 
@@ -63,6 +65,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         audio: new AudioManager(),
         materials: new Materials(),
         energySystem: new EnergySystem(),
+        antigravSystem: new AntigravSystem(),
     }
 
     await pipelineInit(root)

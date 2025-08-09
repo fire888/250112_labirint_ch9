@@ -168,4 +168,11 @@ export class Phisics {
         this.playerBody.velocity.x = 0
         this.playerBody.velocity.z = 0
     }
+
+    switchToAntiGravity () {
+        this.world.gravity.set(0, 5, 0)
+    }
+    switchToGravity () {
+        this.world.gravity.set(0, -9.82, 0)
+    }
 }
