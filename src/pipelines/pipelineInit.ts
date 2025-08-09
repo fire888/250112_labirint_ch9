@@ -18,6 +18,7 @@ export const pipelineInit = async (root: Root) => {
         audio,
         materials,
         deviceData,
+        particles,
     } = root
 
     if (deviceData.isMobileDevice) {
@@ -60,9 +61,9 @@ export const pipelineInit = async (root: Root) => {
     // smallTriangles.m.position.x = 3 * 5
     // smallTriangles.m.position.z = 3 * 5
 
-    // particles.init(root)
-    // ticker.on(particles.update.bind(particles))
-    // studio.add(particles.m)
+    particles.init(root)
+    ticker.on(particles.update.bind(particles))
+    studio.add(particles.m)
 
     //audio.init(root)
     //ticker.on(audio.update.bind(audio))

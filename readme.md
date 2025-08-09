@@ -32,7 +32,8 @@ V -small level for phones
 V -add game info 
 V -black inner houses
 V -SSAO for desctop ?
-- add sprites
+V - add sprites
+- add fly point
 -connect verticies by indicies ?
 
 
