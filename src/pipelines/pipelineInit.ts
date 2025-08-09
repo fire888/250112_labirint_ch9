@@ -2,6 +2,7 @@ import { pause } from 'helpers/htmlHelpers'
 import { Root } from '../index'
 import { Tween, Interpolation, Easing, update } from '@tweenjs/tween.js'
 import { COLOR_FOG_PLAY } from '../constants/CONSTANTS'
+import { IS_DEV_START_ORBIT } from '../constants/CONSTANTS'
 
 export const pipelineInit = async (root: Root) => {
     const {
@@ -45,13 +46,12 @@ export const pipelineInit = async (root: Root) => {
 
     floor.init(root)
     studio.add(floor.mesh)
-
+    
     await lab.init(root)
-
-
-
-
-    //studio.add(lab.mesh)
+    
+    if (!IS_DEV_START_ORBIT) {
+        studio.setFogNearFar(.2, 1)
+    }
 
     //energySystem.init(root, lab.posesSleepEnds)
 
@@ -70,25 +70,24 @@ export const pipelineInit = async (root: Root) => {
     //phisics.stopPlayerBody()
     ui.init(root)
 
-    await ui.hideStartScreen()
-    controls.init(root)
+    if (IS_DEV_START_ORBIT) {
+        await ui.hideStartScreenForce()
+    } else {
+        await ui.hideStartScreen()
+    }
+
+    controls.init(root, IS_DEV_START_ORBIT)
     ticker.on(controls.update.bind(controls))
 
     await pause(100)
 
-    controls.disconnect()
-    await studio.cameraFlyToLevel()
-    phisics.setPlayerPosition(...root.appData.playerStartPosition)
-    studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
-    controls.connect()
-    
-    //await studio.cameraFlyToLevel()
-    //controls.init(root)
-    //controls.enablePointer()
-    //controls.disconnect()
-    //ticker.on(controls.update.bind(controls))
-
-    //controls.connect()
+    if (!IS_DEV_START_ORBIT) {
+        controls.disconnect()
+        await studio.cameraFlyToLevel()
+        phisics.setPlayerPosition(...root.appData.playerStartPosition)
+        studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
+        controls.connect()
+    }
 
     //audio.playAmbient()
 }

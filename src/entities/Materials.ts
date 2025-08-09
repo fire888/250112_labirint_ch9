@@ -20,7 +20,34 @@ export class Materials {
             vertexColors: true,
             envMap: root.loader.assets.cubeSky,
             reflectivity: .6 
-        }) 
+        })
+        
+        this.walls00.onBeforeCompile = (shader) => {
+            shader.vertexShader =
+                `attribute float forcemat;
+                varying float vForceMat;
+                ` + shader.vertexShader
+
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <begin_vertex>',
+                `
+                #include <begin_vertex>
+                vForceMat = forcemat;
+                `
+            )
+
+            shader.fragmentShader =
+                `varying float vForceMat;
+                ` + shader.fragmentShader;
+
+            shader.fragmentShader = shader.fragmentShader.replace(
+                '#include <tonemapping_fragment>',
+                `
+                gl_FragColor.rgb *= (vForceMat - .5);
+                #include <tonemapping_fragment>
+                `
+            )
+        }
 
         {
             const map = root.loader.assets.roadImg

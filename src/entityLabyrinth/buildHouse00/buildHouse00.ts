@@ -4,7 +4,7 @@ import { wall00 } from '../../geometry/wall00/wall00'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
 import { createArea00 } from "geometry/area00/area00"
 import { _M, A3 } from '../../geometry/_m'
-import { COLOR_BLUE_D, COLOR_DARK_INTERIOR } from "constants/CONSTANTS"
+import { COLOR_BLUE_D, COLOR_DARK_INTERIOR, OUTER_HOUSE_FORCE, INNER_HOUSE_FORCE } from "constants/CONSTANTS"
 import { tileMapWall, } from "geometry/tileMapWall"
 import { 
     IdataForFillWall, 
@@ -202,5 +202,18 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
         uv.push(...area.uv)
     }
 
-    return { v, uv, c, vCollide }
+    const forceMat = []
+    for (let i = 0; i < c.length; i += 3) {
+        if (
+            c[i] === COLOR_DARK_INTERIOR[0] && 
+            c[i + 1] === COLOR_DARK_INTERIOR[1] && 
+            c[i + 2] === COLOR_DARK_INTERIOR[2]
+        ) {
+            forceMat.push(INNER_HOUSE_FORCE)
+        } else {
+            forceMat.push(OUTER_HOUSE_FORCE)
+        }
+    }
+
+    return { v, uv, c, vCollide, forceMat }
 }

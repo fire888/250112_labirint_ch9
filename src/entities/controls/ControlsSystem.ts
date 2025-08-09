@@ -12,7 +12,7 @@ export class ControlsSystem {
     _currentWalkingControls: ControlsPointer | ControlsPhone | null
     _isDisabled = false
 
-    init (root: Root) {
+    init (root: Root, isStartOrbit: boolean) {
         this._root = root
     
         const { 
@@ -33,7 +33,13 @@ export class ControlsSystem {
         this._currentWalkingControls = deviceData.device === 'desktop' 
             ? this._pointer
             : this._phone
-        this._currentWalkingControls.enable()
+
+        if (isStartOrbit) {
+            this._orbit.enable()
+            ui.toggleVisibleButtonLock(true) 
+        } else {
+            this._currentWalkingControls.enable()
+        }
         
         // click on buttonPointerLock: enable pointerLock and hide phoneControls  
         ui.lockButton.onclick = () => {
@@ -47,7 +53,7 @@ export class ControlsSystem {
                 this._currentWalkingControls = this._pointer
                 this._phone.disable()
                 this._orbit.disable()
-                ui.toggleVisibleLock(false) 
+                ui.toggleVisibleButtonLock(false) 
 
                 root.studio.addFog()            
             })
@@ -61,7 +67,7 @@ export class ControlsSystem {
                 return
             }
             this._currentWalkingControls = this._phone
-            ui.toggleVisibleLock(true) 
+            ui.toggleVisibleButtonLock(true) 
             this._phone.enable()
         }) 
 
@@ -109,6 +115,6 @@ export class ControlsSystem {
         this._currentWalkingControls = null
         this._pointer.disable()
         this._phone.disable()
-        ui.toggleVisibleLock(false) 
+        ui.toggleVisibleButtonLock(false) 
     }
 }

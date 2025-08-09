@@ -315,7 +315,8 @@ export const _M = {
         v: number[], 
         uv?: number[], 
         uv2?: number[], 
-        c?: number[], 
+        c?: number[],
+        forceMat?: number[],
         material?: MeshBasicMaterial | MeshPhongMaterial | THREE.MeshPhysicalMaterial | THREE.MeshStandardMaterial,
     }) => {
 
@@ -324,6 +325,7 @@ export const _M = {
             uv = [],
             uv2 = [], 
             c = [],
+            forceMat = [],
             material = new MeshBasicMaterial({ color: 0x777777 }) 
         } = data
     
@@ -342,6 +344,10 @@ export const _M = {
         if (uv2.length > 0) {
             const uv2F32 = new Float32Array(uv2)
             geometry.setAttribute('uv2', new BufferAttribute(uv2F32, 2))
+        }
+        if (forceMat.length > 0) {
+            const forceMatF32 = new Float32Array(forceMat)
+            geometry.setAttribute('forcemat', new BufferAttribute(forceMatF32, 1))
         }
         return new Mesh(geometry, material)
     },

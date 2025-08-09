@@ -66,7 +66,12 @@ export class Ui {
         }, 300)
     }
 
-    toggleVisibleLock (visible) {
+    async hideStartScreenForce () {
+        const startScreen = document.body.getElementsByClassName('start-screen')[0]
+        document.body.removeChild(startScreen)
+    }
+
+    toggleVisibleButtonLock (visible) {
         this._infoButton.style.display = visible ? 'block' : 'none'
         this.lockButton.style.display = visible ? 'flex' : 'none'
     }
@@ -157,7 +162,7 @@ export class Ui {
 
     _showInfo () {
         this._infoButton.style.display = 'none'
-        this.toggleVisibleLock(false)
+        this.toggleVisibleButtonLock(false)
         this._root.controls.disconnect()
 
         const wrapper = document.createElement('div')
@@ -173,7 +178,7 @@ export class Ui {
         close.style.cursor = 'pointer'
         close.addEventListener('pointerdown', () => {
             this._infoButton.style.display = 'block'
-            this.toggleVisibleLock(true)
+            this.toggleVisibleButtonLock(true)
             this._root.controls.connect()
             document.body.removeChild(wrapper)
         })

@@ -141,7 +141,7 @@ const createFloor = (floorData: ISingleFloorData, N_FLOOR: number): IArrayForBuf
 
         for (let i = 0; i < breakPoiasParts.length; ++i) { 
             const poiasPart = constructorPoiasBottom(
-                breakPoiasParts[i].endX - breakPoiasParts[i].startX, 
+                breakPoiasParts[i].endX - breakPoiasParts[i].startX,
                 H_POIAS_BOTTOM, 
                 poiasD,
             )

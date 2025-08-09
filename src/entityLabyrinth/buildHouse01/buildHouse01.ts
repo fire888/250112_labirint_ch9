@@ -7,6 +7,7 @@ import {
     IdataForFillWall_TMP, 
     addTypeFullIdataForFillWall 
 } from "types/GeomTypes"
+import { OUTER_HOUSE_FORCE } from "constants/CONSTANTS"
 
 
 const D = .2
@@ -148,5 +149,10 @@ export const buildHouse01 = (perimeter: IPerimeter): IArrayForBuffers => {
         }
     }
 
-    return { v, uv, c, vCollide }
+    const forceMat = []
+    for (let i = 0; i < v.length; i += 3) {
+        forceMat.push(OUTER_HOUSE_FORCE)
+    }
+
+    return { v, uv, c, vCollide, forceMat }
 }

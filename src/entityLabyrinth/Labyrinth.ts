@@ -118,11 +118,12 @@ export class Labyrinth {
         this._root.studio.add(strict)
         {
             houses.forEach(h => {
-                const { v, uv, c, vCollide = [] } = h
+                const { v, uv, c, forceMat = [], vCollide = [] } = h
                 const m = _M.createMesh({ 
                     v, 
                     uv,
                     c,
+                    forceMat,
                     material: this._root.materials.walls00,
                 })
                 strict.add(m)

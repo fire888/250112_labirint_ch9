@@ -48,11 +48,9 @@ export class Studio {
         this.camera.position.set(1, 30, 70)
         this.camera.lookAt(150, 1, 150)
 
-        this.spotLight = new SpotLight(0xffffff, 10)
-        this.spotLight.intensity = 10
-        this.spotLight.intensity = 30
-        this.spotLight.position.set(0, 3, 5);
-        this.spotLight.angle = Math.PI * .2;
+        this.spotLight = new SpotLight(0xffffff, 30)
+        this.spotLight.position.set(0, 3, 5)
+        this.spotLight.angle = Math.PI * .2
         this.spotLight.penumbra = 1
         this.spotLight.decay = 1
         this.spotLight.distance = 300
@@ -70,14 +68,15 @@ export class Studio {
 
         this.scene.background = root.loader.assets.cubeSky
         this.envMap = root.loader.assets.cubeSky
-        this.fog = new THREE.Fog(0x0e2535, .2, 1)
+        this.fog = new THREE.Fog(0x0e2535, .2, 1000)
         this.addFog()
 
-        this.amb = new THREE.AmbientLight(0x5e4a8d, 4)
+        //this.amb = new THREE.AmbientLight(0x5e4a8d, 4)
+        this.amb = new THREE.AmbientLight(0x897fa0, 3) 
         this.scene.add(this.amb)
 
-        this.dirLight = new DirectionalLight(0x2b2241, 15)
-        this.dirLight = new DirectionalLight( 0x97e6eb, 30)
+        this.dirLight = new DirectionalLight(0x97e6eb, 30)
+        //this.dirLight = new DirectionalLight(0xffffff, 15)
         this.dirLight.position.set(-3, 3, -2)
         this.scene.add(this.dirLight)
 
@@ -183,5 +182,10 @@ export class Studio {
 
     removeFog() {
         this.scene.fog = null
+    }
+
+    setFogNearFar(near = .2, far = 100) {
+        this.fog.near = near
+        this.fog.far = far
     }
 }
