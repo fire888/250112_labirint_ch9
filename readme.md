@@ -30,8 +30,9 @@ V -add collisions
 V -collisions colomns sides
 V -small level for phones
 V -add game info 
--black inner houses
--SSAO for desctop ?
+V -black inner houses
+V -SSAO for desctop ?
+- add sprites
 -connect verticies by indicies ?
 
 

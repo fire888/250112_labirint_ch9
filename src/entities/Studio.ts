@@ -6,7 +6,6 @@ import {
     DirectionalLight,
     WebGLRenderer,
     Texture,
-    EquirectangularReflectionMapping,
     SRGBColorSpace,
     Object3D,
     AxesHelper,
@@ -14,18 +13,22 @@ import {
 } from 'three'
 import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js'
 import { Root } from "../index"
-import { Tween, Interpolation, Easing } from '@tweenjs/tween.js'
+import { Tween, Easing } from '@tweenjs/tween.js'
 
-const params = {
-    threshold: 0.65,
-    strength: 0.2,
-    radius: 0,
+// const params = {
+//     threshold: 0.65,
+//     strength: 0.2,
+//     radius: 0,
 
-    focus: 500.0,
-    aperture: 5,
-    maxblur: 0.01
-}
+//     focus: 500.0,
+//     aperture: 5,
+//     maxblur: 0.01
+// }
 
 export class Studio {
     containerDom: HTMLElement
@@ -36,10 +39,10 @@ export class Studio {
     dirLight: DirectionalLight
     renderer: WebGLRenderer
     envMap: Texture
-    composer: EffectComposer
     _root: Root
     spotLight: SpotLight
-    amb: THREE.AmbientLight 
+    amb: THREE.AmbientLight
+    composer: EffectComposer | null
 
     init (root: Root) {
         this._root = root
@@ -71,12 +74,10 @@ export class Studio {
         this.fog = new THREE.Fog(0x0e2535, .2, 1000)
         this.addFog()
 
-        //this.amb = new THREE.AmbientLight(0x5e4a8d, 4)
         this.amb = new THREE.AmbientLight(0x897fa0, 3) 
         this.scene.add(this.amb)
 
         this.dirLight = new DirectionalLight(0x97e6eb, 30)
-        //this.dirLight = new DirectionalLight(0xffffff, 15)
         this.dirLight.position.set(-3, 3, -2)
         this.scene.add(this.dirLight)
 
@@ -85,7 +86,25 @@ export class Studio {
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.containerDom.appendChild(this.renderer.domElement)
 
-    
+        if (root.appData.isBigLevel) {
+            this.composer = new EffectComposer(this.renderer)
+            const renderPass = new RenderPass(this.scene, this.camera)
+            this.composer.addPass(renderPass)
+
+            const ssaoPass = new SSAOPass(this.scene, this.camera, window.innerWidth, window.innerHeight)
+            // ssaoPass.kernelRadius = 5
+            // ssaoPass.minDistance = 0.001
+            // ssaoPass.maxDistance = .3
+            ssaoPass.kernelRadius = 10
+            ssaoPass.minDistance = 0.001
+            ssaoPass.maxDistance = 15
+            ssaoPass.enabled = true
+            this.composer.addPass(ssaoPass)
+
+            const outputPass = new OutputPass()
+            this.composer.addPass(outputPass)
+        }
+
         window.addEventListener( 'resize', this.onWindowResize.bind(this))
         this.onWindowResize()
     }
@@ -93,7 +112,12 @@ export class Studio {
     render () {
         this.camera.getWorldPosition(this.spotLight.position)
         this.spotLight.position.y += .1
-        this.renderer.render(this.scene, this.camera)
+
+        if (this._root.appData.isBigLevel) {
+            this.composer.render(140)
+        } else {
+            this.renderer.render(this.scene, this.camera)
+        }
     }
 
     onWindowResize() {
