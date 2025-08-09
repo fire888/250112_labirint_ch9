@@ -52,20 +52,11 @@ export const pipelineInit = async (root: Root) => {
     
     await lab.init(root)
 
-    //const arr = []
-    //for (let i = 0; i < 10; ++i) {
-    //    arr.push(new THREE.Vector3(Math.random() * 10 - 5, .3, Math.random() * 10 - 5))
-    //}
     energySystem.init(root, lab.centersHousesDarks)
-    //ticker.on(energySystem.update.bind(energySystem))
-    //studio.add(energySystem.m)
-    
-    
+
     if (!IS_DEV_START_ORBIT) {
         studio.setFogNearFar(.2, 1)
     }
-
-    //energySystem.init(root, lab.posesSleepEnds)
 
     // smallTriangles.init()
     // studio.add(smallTriangles.m)
