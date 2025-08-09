@@ -133,6 +133,19 @@ export const buildHouse01 = (perimeter: IPerimeter): IArrayForBuffers => {
         _M.translateVertices(r.vCollide, X, 0, Z)
         vCollide.push(...r.vCollide)
 
+
+        { // top collision
+            const vTopC = _M.createPolygon(
+                [0, 0, -.5],
+                [wallsData[i].w, 0, -.5],
+                [wallsData[i].w, 0, .5],
+                [0, 0, .5],
+            )
+            _M.rotateVerticesY(vTopC, -angle)
+            _M.translateVertices(vTopC, X, wallsData[i].h + .1, Z)
+            vCollide.push(...vTopC)
+        }
+
         const prevWall = wallsData[i - 1] ? wallsData[i - 1] : wallsData[wallsData.length - 1]
 
         // ANGLE CONNECT TOP POIAS WITH PREVIOUS WALL 

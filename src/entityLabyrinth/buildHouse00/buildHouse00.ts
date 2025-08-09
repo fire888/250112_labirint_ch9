@@ -182,6 +182,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
     v.push(...area.v)
     c.push(...area.c)
     uv.push(...area.uv)
+    vCollide.push(...area.v)
 
     // roof bottom side
     {
