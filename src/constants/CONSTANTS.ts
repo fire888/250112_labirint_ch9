@@ -26,6 +26,7 @@ export const COLOR_DARK: A3 = _M.hexToNormalizedRGB('000000')
 export const COLOR_DARK_INTERIOR: A3 = _M.hexToNormalizedRGB('000000') 
 
 export const IS_DEV_START_ORBIT = false
+//export const IS_DEV_START_ORBIT = true
 
 export const INNER_HOUSE_FORCE: number = 0
 export const OUTER_HOUSE_FORCE: number = 1.5
