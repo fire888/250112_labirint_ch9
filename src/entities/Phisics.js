@@ -28,8 +28,8 @@ export class Phisics {
     init (root) {
         this.world = new World()
         this.world.gravity.set(0, -9.82, 0)
-        this.world.quatNormalizeSkip = 0;
-        this.world.quatNormalizeFast = false;
+        this.world.quatNormalizeSkip = 0
+        this.world.quatNormalizeFast = false
 
         var solver = new GSSolver()
 
@@ -44,7 +44,7 @@ export class Phisics {
         this.world.broadphase.useBoundingBoxes = true;
 
         // Create a slippery material (friction coefficient = 0.0)
-        this.physicsMaterial = new Material("slipperyMaterial");
+        this.physicsMaterial = new Material("slipperyMaterial")
         var physicsContactMaterial = new ContactMaterial(
             this.physicsMaterial,
             this.physicsMaterial,
@@ -142,7 +142,7 @@ export class Phisics {
 
     update () {
         if (!this.playerBody) {
-            return;
+            return
         }
         this.world.fixedStep()
         if (this.cannonDebugger) this.cannonDebugger.update()
@@ -174,5 +174,9 @@ export class Phisics {
     }
     switchToGravity () {
         this.world.gravity.set(0, -9.82, 0)
+    }
+
+    switchToGravityGorizontalBoost () {
+        this.world.gravity.set(0, 0, 100)
     }
 }

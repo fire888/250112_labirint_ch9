@@ -2,32 +2,25 @@ import { Root } from '../index'
 import { pause } from '../helpers/htmlHelpers'
 import * as THREE from 'three'
 
-export const pipelinePlay = async (root: Root) => {
+const LEVELS = [
+    {
+        percentCompleteEnergy: .2,
+    }
+]
+
+export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     const {
         phisics,
         energySystem,
         antigravSystem,
+        antigravLast,
         ticker,
+        ui,
+        controls,
+        studio
     } = root
 
-    // energy get *******************************************/
-    let isFullEnergy = false
-    phisics.onCollision(energySystem.nameSpace, (name: string) => {
-
-        // audio.playEnergy()
-        energySystem.animateMovieHide(name)
-        setTimeout(() => phisics.removeMeshFromCollision(name), 300)
-        if (isFullEnergy) {
-             return;
-        }
-        // const percentageItemsGetted = energySystem.getPercentageItemsGetted()
-        // const multipyPercentage = Math.min(1., percentageItemsGetted / ENERGY_PERCENTAGE_MUST_GET)
-        // if (multipyPercentage < 1) {
-        //     return;
-        // }
-        // isFullEnergy = true
-    })
-
+    // antigrav activity **********************************/
     let isNormalGravity = true
     const camPos = new THREE.Vector2(root.studio.camera.position.x, root.studio.camera.position.z)
     ticker.on((t: number) => {
@@ -50,21 +43,46 @@ export const pipelinePlay = async (root: Root) => {
             isNormalGravity = true
         }
     })
-    //     phisics.onCollision(antigravSystem.nameSpace, (name: string) => {
 
-    //     // audio.playEnergy()
-    //     energySystem.animateMovieHide(name)
-    //     setTimeout(() => phisics.removeMeshFromCollision(name), 300)
-    //     if (isFullEnergy) {
-    //          return;
-    //     }
-    //     // const percentageItemsGetted = energySystem.getPercentageItemsGetted()
-    //     // const multipyPercentage = Math.min(1., percentageItemsGetted / ENERGY_PERCENTAGE_MUST_GET)
-    //     // if (multipyPercentage < 1) {
-    //     //     return;
-    //     // }
-    //     // isFullEnergy = true
-    // })
+    let nextStepResolve = () => {}
 
-    await pause(10000000000000)
+    // energy get *******************************************/
+    let isFullEnergy = false
+    phisics.onCollision(energySystem.nameSpace, (name: string) => {
+        // audio.playEnergy()
+        energySystem.animateMovieHide(name)
+        setTimeout(() => phisics.removeMeshFromCollision(name), 300)
+        if (isFullEnergy) {
+             return;
+        }
+        const percentageItemsGetted = energySystem.getPercentageItemsGetted()
+        const { percentCompleteEnergy } = LEVELS[currentIndexLevel]
+        const multipyPercentage = Math.min(1., percentageItemsGetted / percentCompleteEnergy)
+        ui.setEnergyLevel(multipyPercentage)        
+        if (multipyPercentage < 1) {
+             return;
+        }
+        isFullEnergy = true
+        antigravLast.activate()
+        phisics.onCollision(antigravLast.nameSpaceTrigger, (name: string) => {
+            controls.disableMove()
+            phisics.removeMeshFromCollision(name)
+            phisics.switchToGravityGorizontalBoost()
+            ui.toggleVisibleEnergy(false) 
+
+            const unsubscribe = ticker.on(() => {
+                if (studio.camera.position.z > 300) {
+                    unsubscribe()
+                    nextStepResolve()
+                }
+            })
+        })
+    })
+
+    const waitLevelComplete = () => new Promise((resolve) => {
+        // @ts-ignore:next-line
+        nextStepResolve = resolve
+    })
+
+    await waitLevelComplete()
 }

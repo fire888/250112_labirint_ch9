@@ -18,7 +18,7 @@ export const _M = {
     createPolygon: function(v0: A3, v1: A3, v2: A3, v3: A3) { return  [...v0, ...v1, ...v2, ...v0, ...v2, ...v3] },
     fillColorFace: (c: A3) => [...c, ...c, ...c, ...c, ...c, ...c],
     createUv: (v1: A2, v2: A2, v3: A2, v4: A2) => [...v1, ...v2, ...v3, ...v1, ...v3, ...v4],
-    createBevel4P: function (v0: A3, v1: A3, v2: A3, v3: A3, height: number = 1): number[] {
+    createBevel4P: function (v0: A3, v1: A3, v2: A3, v3: A3, height: number = 1, isCap: boolean = false): number[] {
         const v: number[] = []
         v.push(
             ..._M.createPolygon(
@@ -45,6 +45,12 @@ export const _M = {
                 [v0[0], v0[1] + height, v0[2]],
                 [v3[0], v3[1] + height, v3[2]],
             ),
+            ...(isCap ? _M.createPolygon(
+                [v0[0], v0[1] + height, v0[2]],
+                [v1[0], v1[1] + height, v1[2]],
+                [v2[0], v2[1] + height, v2[2]],
+                [v3[0], v3[1] + height, v3[2]],
+            ) : [])
         )
         return v
     },

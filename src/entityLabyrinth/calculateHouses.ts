@@ -1,6 +1,6 @@
 import { IArea, IArrayForBuffers, SegmentType } from "types/GeomTypes";
-import { buildHouse00 } from "./buildHouse00/buildHouse00"
-import { buildHouse01 } from "./buildHouse01/buildHouse01"
+import { buildHouse00 } from "../geometry/house00/buildHouse00"
+import { buildHouse01 } from "../geometry/house01/buildHouse01"
 
 export const calculateHouses = (areasData: IArea[]): IArrayForBuffers[] => {
     const houses: IArrayForBuffers[] = []

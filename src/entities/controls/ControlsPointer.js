@@ -6,6 +6,7 @@ import { Tween, Interpolation } from '@tweenjs/tween.js'
 export class ControlsPointer {
     isEnabled = false
 
+    _isMoveDisabled = false
     _cameraFree = false
 
     _timeLastLocked = null
@@ -92,18 +93,25 @@ export class ControlsPointer {
         this._dirLeft.copy(this._dirForward).applyAxisAngle(this._topVec, Math.PI * .5)
 
         if (this._moveForward || this._moveBackward || this._tweenSpeedForward) {
-            this._dirForward.x *= this._currentSpeedForward
-            this._dirForward.z *= this._currentSpeedForward
-            this._resultDir.add(this._dirForward)
+            if (!this._isMoveDisabled) {
+                this._dirForward.x *= this._currentSpeedForward
+                this._dirForward.z *= this._currentSpeedForward
+                this._resultDir.add(this._dirForward)
+            }
         }
         if (this._moveLeft || this._moveRight || this._tweenSpeedLeft) {
-            this._dirLeft.x *= this._currentSpeedLeft
-            this._dirLeft.z *= this._currentSpeedLeft
-            this._resultDir.add(this._dirLeft)
+            if (!this._isMoveDisabled) {
+                this._dirLeft.x *= this._currentSpeedLeft
+                this._dirLeft.z *= this._currentSpeedLeft
+                this._resultDir.add(this._dirLeft)
+            }
         }
 
-        playerCollision.velocity.x = this._resultDir.x
-        playerCollision.velocity.z = this._resultDir.z
+        if (!this._isMoveDisabled) {
+            playerCollision.velocity.x = this._resultDir.x
+            playerCollision.velocity.z = this._resultDir.z
+        }
+
 
         this.camera.position.x = playerCollision.position.x
         this.camera.position.y = playerCollision.position.y
@@ -166,6 +174,20 @@ export class ControlsPointer {
         this.controls.addEventListener('unlock', cb)
     }
 
+    disableMove () {
+        this._isMoveDisabled = true
+        this._moveForward = false
+        this._moveBackward = false
+        this._moveLeft = false
+        this._moveRight = false
+        this._changeForwardSpeedTo(0)
+        this._changeLeftSpeedTo(0)
+    }
+
+    enableMove () {
+        this._isMoveDisabled = false
+    }
+
     _changeForwardSpeedTo(v) {
         if (this._tweenSpeedForward) {
             this._tweenSpeedForward.stop()
@@ -208,26 +230,34 @@ export class ControlsPointer {
         switch ( event.code ) {
             case 'ArrowUp':
             case 'KeyW':
-                if (!this._moveForward) this._changeForwardSpeedTo(this._maxSpeedForward)
-                this._moveForward = true
+                if (!this._isMoveDisabled) {
+                    if (!this._moveForward) this._changeForwardSpeedTo(this._maxSpeedForward)
+                    this._moveForward = true
+                }
                 break
 
             case 'ArrowDown':
             case 'KeyS':
-                if (!this._moveBackward) this._changeForwardSpeedTo(-this._maxSpeedForward)
-                this._moveBackward = true
+                if (!this._isMoveDisabled) {
+                    if (!this._moveBackward) this._changeForwardSpeedTo(-this._maxSpeedForward)
+                    this._moveBackward = true
+                }
                 break    
 
             case 'ArrowLeft':
             case 'KeyA':
-                if (!this._moveLeft) this._changeLeftSpeedTo(this._maxSpeedLeft)
-                this._moveLeft = true
+                if (!this._isMoveDisabled) {
+                    if (!this._moveLeft) this._changeLeftSpeedTo(this._maxSpeedLeft)
+                    this._moveLeft = true
+                }
                 break
 
             case 'ArrowRight':
             case 'KeyD':
-                if (!this._moveRight) this._changeLeftSpeedTo(-this._maxSpeedLeft)
-                this._moveRight = true
+                if (!this._isMoveDisabled) {
+                    if (!this._moveRight) this._changeLeftSpeedTo(-this._maxSpeedLeft)
+                    this._moveRight = true
+                }
                 break
         }
     }

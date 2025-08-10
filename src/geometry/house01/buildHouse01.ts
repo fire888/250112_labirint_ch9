@@ -1,25 +1,22 @@
-import { Root } from "../../index"
 import { IPerimeter, ElemType, IArrayForBuffers } from "types/GeomTypes"
-import { wall00 } from '../../geometry/wall00/wall00'
+import { wall01 } from '../wall01/wall01'
 import { createAnglePoias01 } from "geometry/poias01/poias01"
-import { createArea00 } from "geometry/area00/area00"
-import { _M, A3 } from '../../geometry/_m'
-import { COLOR_BLUE_D, COLOR_DARK_INTERIOR, OUTER_HOUSE_FORCE, INNER_HOUSE_FORCE } from "constants/CONSTANTS"
-import { tileMapWall, } from "geometry/tileMapWall"
+import { _M } from 'geometry/_m'
 import { 
     IdataForFillWall, 
     IdataForFillWall_TMP, 
     addTypeFullIdataForFillWall 
 } from "types/GeomTypes"
+import { OUTER_HOUSE_FORCE } from "constants/CONSTANTS"
+
 
 const D = .2
 
-export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
-
-    const H = Math.random() * 12 + 3 
+export const buildHouse01 = (perimeter: IPerimeter): IArrayForBuffers => {
+    const H = Math.random() * 60 + 3 
 
     const v: number[] = [] 
-    const uv: number[] = [] 
+    const uv: number[] = []
     const c: number[] = []
     const vCollide: number[] = []
 
@@ -116,8 +113,8 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
     }
 
     for (let i = 0; i < wallsData.length; ++i) {
-        const r = wall00(wallsData[i])
-        
+        const r = wall01(wallsData[i])
+
         const { angle, X, Z, buffer, indicies } = wallsData[i]
 
         _M.rotateVerticesY(r.v, -angle)
@@ -132,10 +129,21 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
             c.push(r.c[j])
         }
 
-        { /// collision
-            _M.rotateVerticesY(r.vCollide, -angle)
-            _M.translateVertices(r.vCollide, X, 0, Z)
-            vCollide.push(...r.vCollide)
+        _M.rotateVerticesY(r.vCollide, -angle)
+        _M.translateVertices(r.vCollide, X, 0, Z)
+        vCollide.push(...r.vCollide)
+
+
+        { // top collision
+            const vTopC = _M.createPolygon(
+                [0, 0, -.5],
+                [wallsData[i].w, 0, -.5],
+                [wallsData[i].w, 0, .5],
+                [0, 0, .5],
+            )
+            _M.rotateVerticesY(vTopC, -angle)
+            _M.translateVertices(vTopC, X, wallsData[i].h + .1, Z)
+            vCollide.push(...vTopC)
         }
 
         const prevWall = wallsData[i - 1] ? wallsData[i - 1] : wallsData[wallsData.length - 1]
@@ -152,68 +160,11 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
         for (let j = 0; j < poias.c.length; ++j) {
             c.push(poias.c[j])
         }
-
-        // CAP INNER CORNERS
-        const p1: A3 = [
-            prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3],
-            0,
-            prevWall.buffer[prevWall.indicies[`field_wall_innerEnd`] * 3 + 2],
-        ]
-        const p0: A3 = [
-            buffer[indicies[`field_wall_innerStart`] * 3],
-            0,
-            buffer[indicies[`field_wall_innerStart`] * 3 + 2],
-        ]
-        const p2: A3 = [...p1]
-        p2[1] = H
-
-        const p3: A3 = [...p0]
-        p3[1] = H
-
-        v.push(..._M.createPolygon(p0, p1, p2, p3))
-        uv.push(..._M.createUv([0, 0], [0, 0], [0, 0], [0, 0]))
-        c.push(..._M.fillColorFace(COLOR_DARK_INTERIOR))
-    }
-
-    // roof
-    const centerYOffset = 2
-    const area = createArea00(perimeter, COLOR_BLUE_D, tileMapWall.roofTree, centerYOffset)           
-    _M.translateVertices(area.v, 0, H, 0)
-    v.push(...area.v)
-    c.push(...area.c)
-    uv.push(...area.uv)
-    vCollide.push(...area.v)
-
-    // roof bottom side
-    {
-        const perimeterReverse = perimeter.slice().reverse()
-        const area = createArea00(perimeterReverse, COLOR_DARK_INTERIOR, tileMapWall.emptyTree, 0)           
-        _M.translateVertices(area.v, 0, H, 0)
-        v.push(...area.v)
-        c.push(...area.c)
-        uv.push(...area.uv)
-    }
-
-    // first floor
-    {
-        const area = createArea00(perimeter, COLOR_DARK_INTERIOR, tileMapWall.emptyTree, 0)           
-        _M.translateVertices(area.v, 0, .01, 0)
-        v.push(...area.v)
-        c.push(...area.c)
-        uv.push(...area.uv)
     }
 
     const forceMat = []
-    for (let i = 0; i < c.length; i += 3) {
-        if (
-            c[i] === COLOR_DARK_INTERIOR[0] && 
-            c[i + 1] === COLOR_DARK_INTERIOR[1] && 
-            c[i + 2] === COLOR_DARK_INTERIOR[2]
-        ) {
-            forceMat.push(INNER_HOUSE_FORCE)
-        } else {
-            forceMat.push(OUTER_HOUSE_FORCE)
-        }
+    for (let i = 0; i < v.length; i += 3) {
+        forceMat.push(OUTER_HOUSE_FORCE)
     }
 
     return { v, uv, c, vCollide, forceMat }

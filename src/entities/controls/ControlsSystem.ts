@@ -117,4 +117,9 @@ export class ControlsSystem {
         this._phone.disable()
         ui.toggleVisibleButtonLock(false) 
     }
+
+    disableMove() {
+        this._pointer.disableMove()
+        //this._phone.disableMove()
+    }
 }

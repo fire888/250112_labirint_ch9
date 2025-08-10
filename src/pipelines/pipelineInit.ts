@@ -22,6 +22,7 @@ export const pipelineInit = async (root: Root) => {
         particles,
         energySystem,
         antigravSystem,
+        antigravLast,
     } = root
 
     if (deviceData.isMobileDevice) {
@@ -41,7 +42,6 @@ export const pipelineInit = async (root: Root) => {
     materials.init(root)
 
     studio.init(root)
-    //studio.addAxisHelper()
     ticker.on(studio.render.bind(studio))
 
     phisics.init(root)
@@ -55,6 +55,7 @@ export const pipelineInit = async (root: Root) => {
 
     energySystem.init(root, lab.centersHousesDarks)
     antigravSystem.init(root, lab.centersHousesColumns)
+    antigravLast.init(root, new THREE.Vector3(-1, 0, -155))
 
     if (!IS_DEV_START_ORBIT) {
         studio.setFogNearFar(.2, 1)
@@ -74,6 +75,7 @@ export const pipelineInit = async (root: Root) => {
 
     //phisics.stopPlayerBody()
     ui.init(root)
+    ui.setEnergyLevel(0)
 
     if (IS_DEV_START_ORBIT) {
         await ui.hideStartScreenForce()

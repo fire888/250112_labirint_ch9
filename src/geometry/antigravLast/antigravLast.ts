@@ -4,7 +4,7 @@ import { OUTER_HOUSE_FORCE } from "constants/CONSTANTS"
 import { createAntigrav } from "geometry/antigrav/antigrav"
 import { createPilaster04 } from "geometry/pilaster04/pilaster04"
 
-export const buildLastPortal = (): IArrayForBuffers => {
+export const buildAntigravLast = (): IArrayForBuffers => {
     const v: number[] = [] 
     const uv: number[] = []
     const c: number[] = []

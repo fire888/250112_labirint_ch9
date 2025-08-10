@@ -9,7 +9,6 @@ import * as THREE from "three"
 import { IArrayForBuffers, SegmentType, IArea } from "types/GeomTypes";
 import { pause } from "helpers/htmlHelpers"
 import { calculateHouses } from "./calculateHouses"
-import { buildLastPortal } from './buildLastPortal/buildLastPortal'
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810') 
 
@@ -71,28 +70,6 @@ export class Labyrinth {
             })
         }
         console.log('[TIME:] COMPLETE SCHEME:', ((Date.now() - d) / 1000).toFixed(2))
-
-        console.log('[MESSAGE:] START CREATE LAST_PORTAL')
-        d = Date.now()
-        {
-            const lastPortal = buildLastPortal()
-            const m = _M.createMesh({
-                ...lastPortal,
-                material: this._root.materials.walls00
-            })
-            m.position.z = -155
-            m.position.x = -1 
-            this._root.studio.add(m)
-
-            const collisionMesh = _M.createMesh({
-                v: lastPortal.vCollide,
-                material: this._root.materials.collision
-            })
-            collisionMesh.position.z = -155
-            collisionMesh.position.x = -1 
-            this._root.phisics.addMeshToCollision(collisionMesh)
-        }
-        console.log('[TIME:] COMPLETE CALCULATE HOUSES', ((Date.now() - d) / 1000).toFixed(2))
 
         // /** walls */
         console.log('[MESSAGE:] START CALCULATE WALLS')
