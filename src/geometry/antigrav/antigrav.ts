@@ -3,7 +3,9 @@ import { tileMapWall } from "../tileMapWall"
 import { createTopElem_00 } from "geometry/topElem00/topElem_00"
 
 
-export const createAntigrav = () => {
+export const createAntigrav = (
+    radius: number | null = null
+) => {
     const v: number[] = [] 
     const uv: number[] = [] 
     const c: number[] = []
@@ -13,11 +15,19 @@ export const createAntigrav = () => {
     const h2 = Math.random() * .2 + h1 + .05 
     const h3 = .12
 
-    const r2 = 1 + Math.random() * .5
-    const r3 = r2 + .3
-    const r4 = r3 + .05
-    const r1 = r2 - .3
-    const r0 = r1 - .1 
+    let r2 = 1 + Math.random() * .5
+    let r3 = r2 + .3
+    let r4 = r3 + .05
+    let r1 = r2 - .3
+    let r0 = r1 - .1 
+
+    if (radius !== null) {
+        r2 = radius - .2 * Math.random()
+        r3 = radius
+        r4 = r3 + .05
+        r1 = r2 - .3
+        r0 = r1 - .1 
+    }
 
     const N = 6 + Math.floor(Math.random() * 10)
 
@@ -70,7 +80,7 @@ export const createAntigrav = () => {
             x, .15, z,
             0, .15, 0, 
         )
-        uv.push(0, 0, 0, 0, 0, 0)
+        uv.push(...tileMapWall.stoneTree)
         c.push(
             0, 0, 0,
             0, 0, 0,
