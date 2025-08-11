@@ -33,8 +33,12 @@ V -add game info
 V -black inner houses
 V -SSAO for desctop ?
 V - add sprites
-- add fly point
-- add cristalls in houses
+V - add fly point
+V - add cristalls in houses
+V - end page blue bug
+- ground more big
+- particles last portal activated movies
+V - lastGraviti activated - change collision 
 -connect verticies by indicies ?
 
 

@@ -123,49 +123,39 @@ export class Ui {
         const wrapper = document.createElement('div')
         wrapper.style.opacity = 0
         wrapper.classList.add('final-page')
-        
-        wrapper.appendChild(createOffset(20))
 
         const complete = document.createElement('div')
-        complete.classList.add('dark')
+        complete.classList.add('top20px')
         complete.innerHTML = 'You are done,'
         complete.style.opacity = 0
         wrapper.appendChild(complete)
 
         const complete2 = document.createElement('div')
-        complete2.classList.add('dark')
+        complete2.classList.add('bottom20px')
         complete2.innerHTML = 'thank you for playing!'
         complete2.style.opacity = 0
         wrapper.appendChild(complete2)
 
-        wrapper.appendChild(createOffset(20))
-
         const prev = document.createElement('div')
-        prev.classList.add('dark')
         prev.innerHTML = 'Previous chapters:'
         prev.style.opacity = 0
         wrapper.appendChild(prev)
 
         const list = createChaptersList()
+        list.classList.add('bottom20px')
         list.style.opacity = 0
         wrapper.appendChild(list)
 
-        wrapper.appendChild(createOffset(20))
-        wrapper.appendChild(createOffset(20))
-
         const bottom = document.createElement('div')
-        bottom.classList.add('dark')
         bottom.style.opacity = 0
         bottom.innerHTML = 'Next chapter comming soon,'
         wrapper.appendChild(bottom)
 
         const bottom1 = document.createElement('div')
-        bottom1.classList.add('dark')
+        bottom1.classList.add('bottom60px')
         bottom1.style.opacity = 0
         bottom1.innerHTML = 'to be continued...'
         wrapper.appendChild(bottom1)
-
-        wrapper.appendChild(createOffset(60))
 
         document.body.appendChild(wrapper)
 
@@ -208,7 +198,6 @@ export class Ui {
         wrapper.appendChild(createOffset(20))
 
         const close = document.createElement('div')
-        close.classList.add('dark')
         close.innerHTML = 'Close'
         close.style.textAlign = 'right'
         close.style.textDecoration = 'underline'
@@ -224,7 +213,6 @@ export class Ui {
         wrapper.appendChild(createOffset(20))
 
         const prev = document.createElement('div')
-        prev.classList.add('dark')
         prev.innerHTML = 'Previous chapters:'
         wrapper.appendChild(prev)
 
@@ -237,7 +225,6 @@ export class Ui {
 
         {
             const prev = document.createElement('div')
-            prev.classList.add('dark')
             prev.innerHTML = 'To fly around level press key \'O\''
             wrapper.appendChild(prev)
         }
@@ -246,7 +233,6 @@ export class Ui {
 
         // {
         //     const prev = document.createElement('div')
-        //     prev.classList.add('dark')
         //     prev.innerHTML = 'Example of generation level: <a href="https://js.otrisovano.ru/2D/maze/00/" target="_blank">link</a>'
         //     wrapper.appendChild(prev)
         // }
@@ -255,7 +241,6 @@ export class Ui {
 
         // {
         //     const prev = document.createElement('div')
-        //     prev.classList.add('dark')
         //     prev.innerHTML = 'Source code: <a href="https://github.com/fire888/240612_labirint_ch8" target="_blank">github</a>'
         //     wrapper.appendChild(prev)
         // }
@@ -302,10 +287,9 @@ const createChaptersList = () => {
     LIST[LIST.length - 1].push('current chapter')
 
     const list = document.createElement('div')
-    list.classList.add('dark')
 
     const createListElem = (n, link, text, additionalText = null) => {
-        const l = document.createElement('div')
+        const l = document.createElement('p')
 
         const num = document.createElement('span')
         num.innerHTML = n + '.&nbsp;&nbsp;'

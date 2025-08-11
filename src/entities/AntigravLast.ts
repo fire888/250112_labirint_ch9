@@ -63,11 +63,11 @@ export class AntigravLast {
         console.log('[MESSAGE:] ACTIVATE LAST_PORTAL')
 
         const v = _M.createBevel4P(
-            [1, 0, 0],
-            [-1, 0, 0],
+            [1, 0, -50],
+            [-1, 0, -50],
             [-1, 0, 100],
             [1, 0, 100],
-            2,
+            2.5,
             true
         )
 

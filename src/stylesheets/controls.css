@@ -168,6 +168,21 @@
     align-items: center;
     font-style: italic;
 }
+.final-page div {
+    padding-left: 30px;
+    padding-right: 30px;
+    min-width: 250px;
+    background-color: #11194386;
+}
+.top20px {
+    padding-top: 20px;
+}
+.bottom20px {
+    padding-bottom: 20px;
+}
+.bottom60px {
+    min-height: 80px;
+}
 .final-page a {
     color: #ffffff;
 }
