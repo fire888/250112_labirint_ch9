@@ -5,8 +5,14 @@ import {
     PointsMaterial,
     Points,
     AdditiveBlending,
+    Vector3,
 } from 'three'
 import { Root } from '../index'
+
+enum ModeUpdate {
+    NORMAL = 'NORMAL',
+    ANTIGRAV = 'ANTIGRAV'
+}
 
 export class Particles {
     _root: Root
@@ -14,7 +20,10 @@ export class Particles {
     _vertices: number[]
     _speeds: number[]
     _timesLive: number[]
+    _positionAntigrav: Vector3 = new Vector3()
+    _mode: ModeUpdate = ModeUpdate.NORMAL 
     m: Points
+
     init (root: Root) {
         this._root = root
 
@@ -58,6 +67,41 @@ export class Particles {
             return
         }
 
+        if (this._mode === ModeUpdate.NORMAL) {
+            this._updateByCamera()
+        }
+
+        if (this._mode === ModeUpdate.ANTIGRAV) {
+            this._updateByAntigrav()
+        }
+    }
+
+    startForcreMovieAntigrav(p: Vector3) {
+        this._positionAntigrav.x = p.x
+        this._positionAntigrav.y = p.y + 5
+        this._positionAntigrav.z = p.z - 10
+        
+        this._mode = ModeUpdate.ANTIGRAV
+
+        const poses = this._geometry.attributes.position.array
+        for (let i = 0; i < this._speeds.length; i += 3) {
+            const diffX = this._positionAntigrav.x - poses[i]
+            const diffY = this._positionAntigrav.y - poses[i + 1]
+            const diffZ = this._positionAntigrav.z - poses[i + 2]
+
+            const d = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ)
+
+            this._speeds[i] = diffX / d / 3
+            this._speeds[i + 1] = diffY / d / 3
+            this._speeds[i + 2] = diffZ / d / 3
+        }
+
+        for (let i = 0; i < this._timesLive.length; ++i) {
+            this._timesLive[i] = -1000
+        }
+    }
+
+    _updateByCamera() {
         for (let i = 0; i < this._timesLive.length; ++i) {
             this._timesLive[i] -= 1
             if (this._timesLive[i] < 0) {
@@ -81,6 +125,48 @@ export class Particles {
             this._vertices[i + 1] += this._speeds[i + 1]
             this._vertices[i + 2] += this._speeds[i + 2]
         }
+
+        this._geometry.attributes.position.needsUpdate = true
+    }
+
+    _updateByAntigrav() {
+        for (let i = 0; i < this._speeds.length; i += 3) {
+            this._vertices[i] += this._speeds[i]
+            this._vertices[i + 1] += this._speeds[i + 1]
+            this._vertices[i + 2] += this._speeds[i + 2]
+
+            const j = i / 3
+
+            // move to the antigrav
+            if (this._timesLive[j] === -1000) {
+                if (
+                    Math.abs(this._positionAntigrav.x - this._vertices[i]) < Math.abs(this._speeds[i] * 3) &&
+                    Math.abs(this._positionAntigrav.y - this._vertices[i + 1]) < Math.abs(this._speeds[i + 1] * 3) &&
+                    Math.abs(this._positionAntigrav.z - this._vertices[i + 2]) < Math.abs(this._speeds[i + 2] * 3)
+                ) {
+                    this._timesLive[j] = 100 + Math.floor(Math.random() * 200)
+                    this._speeds[i] = 0
+                    this._speeds[i + 1] = 0
+                    this._speeds[i + 2] = .6
+
+                    this._vertices[i] = Math.random() * 1 - .5 + this._positionAntigrav.x
+                    this._vertices[i + 1] = Math.random() * 1 - .5 + this._positionAntigrav.y
+                }
+            }
+
+            // move from the antigrav
+            if (this._timesLive[j] > 0) {
+                this._timesLive[j] -= 1
+            }
+            // reset to the antigrav
+            if (this._timesLive[j] === 0) {
+                this._timesLive[j] = 100 + Math.floor(Math.random() * 200)
+                this._vertices[i] = Math.random() * 1 - .5 + this._positionAntigrav.x
+                this._vertices[i + 1] = Math.random() * 1 - .5 + this._positionAntigrav.y
+                this._vertices[i + 2] = Math.random() * -50 + this._positionAntigrav.z
+            }
+        }
+
 
         this._geometry.attributes.position.needsUpdate = true
     }

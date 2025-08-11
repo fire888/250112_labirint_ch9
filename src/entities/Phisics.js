@@ -177,6 +177,6 @@ export class Phisics {
     }
 
     switchToGravityGorizontalBoost () {
-        this.world.gravity.set(0, 0, 100)
+        this.world.gravity.set(0, 0, 75)
     }
 }

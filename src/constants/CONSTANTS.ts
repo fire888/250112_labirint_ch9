@@ -8,8 +8,8 @@ const PHISICS_CONF = {
     IS_DEBUG: false
 }
 
-const PLAYER_START_POS_BIG_LEVEL: number[] = [30, .7, -200]
-const PLAYER_START_POS_SMALL_LEVEL: number[] = [30, .7, -50]
+const PLAYER_START_POS_BIG_LEVEL: number[] = [-1, .7, -200]
+const PLAYER_START_POS_SMALL_LEVEL: number[] = [-1, .7, -50]
 
 export const CONSTANTS = {
     PHISICS_CONF, 

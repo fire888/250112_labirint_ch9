@@ -95,4 +95,8 @@ export class AntigravLast {
 
         // TODO: destroy mesh trigger
     }
+
+    getPosition () { 
+        return this._m ? this._m.position : null 
+    }
 }

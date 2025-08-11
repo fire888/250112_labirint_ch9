@@ -1,5 +1,4 @@
 import { Root } from '../index'
-import { pause } from '../helpers/htmlHelpers'
 import * as THREE from 'three'
 
 const LEVELS = [
@@ -18,7 +17,8 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         ticker,
         ui,
         controls,
-        studio
+        studio,
+        particles,
     } = root
 
     // antigrav activity **********************************/
@@ -52,19 +52,26 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     phisics.onCollision(energySystem.nameSpace, (name: string) => {
         // audio.playEnergy()
         energySystem.animateMovieHide(name)
-        setTimeout(() => phisics.removeMeshFromCollision(name), 300)
+        setTimeout(() => phisics.removeMeshFromCollision(name), 50)
+        
         if (isFullEnergy) {
-             return;
+             return
         }
+        
         const percentageItemsGetted = energySystem.getPercentageItemsGetted()
         const { percentCompleteEnergy } = LEVELS[currentIndexLevel]
         const multipyPercentage = Math.min(1., percentageItemsGetted / percentCompleteEnergy)
         ui.setEnergyLevel(multipyPercentage)        
+        
         if (multipyPercentage < 1) {
              return;
         }
+        
         isFullEnergy = true
         antigravLast.activate()
+        const p = antigravLast.getPosition()
+        particles.startForcreMovieAntigrav(p)
+        
         phisics.onCollision(antigravLast.nameSpaceTrigger, (name: string) => {
             controls.disableMove()
             phisics.removeMeshFromCollision(name)
