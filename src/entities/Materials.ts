@@ -69,7 +69,7 @@ export class Materials {
             const map = root.loader.assets.noise00
             map.wrapS = THREE.RepeatWrapping
             map.wrapT = THREE.RepeatWrapping
-            map.repeat.set(12, 25)
+            map.repeat.set(50, 50)
         }
         this.desert = new THREE.MeshPhongMaterial({
             color: 0x323341,

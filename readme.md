@@ -36,9 +36,10 @@ V - add sprites
 V - add fly point
 V - add cristalls in houses
 V - end page blue bug
-- ground more big
-- particles last portal activated movies
+V - ground more big
 V - lastGraviti activated - change collision 
+- particles last portal activated movies
+
 -connect verticies by indicies ?
 
 
