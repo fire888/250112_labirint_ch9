@@ -1,12 +1,6 @@
 import { Root } from '../index'
 import * as THREE from 'three'
-
-const LEVELS = [
-    {
-        percentCompleteEnergy: .2,
-        //percentCompleteEnergy: .001,
-    }
-]
+import { LEVELS, COLOR_FOG_PLAY } from '../constants/CONSTANTS'
 
 export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     const {
@@ -19,12 +13,14 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         controls,
         studio,
         particles,
+        lab,
     } = root
 
     // antigrav activity **********************************/
     let isNormalGravity = true
     const camPos = new THREE.Vector2(root.studio.camera.position.x, root.studio.camera.position.z)
-    ticker.on((t: number) => {
+    
+    const unsubscribeAntgrav = ticker.on((t: number) => {
         camPos.set(root.studio.camera.position.x, root.studio.camera.position.z)
         
         let isNear = false
@@ -93,4 +89,40 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     })
 
     await waitLevelComplete()
+
+    lab.clear()
+    antigravSystem.destroy()
+    antigravLast.destroy()
+    energySystem.destroy()
+
+    const currentIndexLevelNext = currentIndexLevel + 1
+    
+    if (LEVELS[currentIndexLevelNext] === undefined) {
+        return
+    }
+
+    const levelData = LEVELS[currentIndexLevelNext]
+
+    unsubscribeAntgrav()
+
+    await lab.build(levelData)
+    energySystem.init(root, lab.centersHousesDarks)
+    antigravSystem.init(root, lab.centersHousesColumns)
+    antigravLast.init(root, new THREE.Vector3(
+        levelData.positionTeleporter[0], 0, levelData.positionTeleporter[1]
+    ))
+    studio.setFogNearFar(.2, 1)
+    particles.startFlyPlayerAround()
+    phisics.stopPlayerBody()
+    ui.setEnergyLevel(0)
+    phisics.switchToGravity()
+
+    const startPos = [levelData.playerStartPosition[0], .7, levelData.playerStartPosition[1]]
+    await studio.cameraFlyToLevel(startPos)
+    phisics.setPlayerPosition(...startPos)
+    studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
+    controls.enableMove()
+    ui.toggleVisibleEnergy(true)
+    
+    await pipelinePlay(root, currentIndexLevelNext)
 }

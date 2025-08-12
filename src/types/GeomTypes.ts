@@ -129,5 +129,14 @@ export type IArea = {
     perimeter: IPerimeter,
     perimeterInner: IPerimeter,
     typeSegment: SegmentType,
-} 
+}
 
+export type ILevelConf = {
+    SX: number,
+    SY: number,
+    N: number,
+    repeats: [number, number][],
+    positionTeleporter: [number, number],
+    percentCompleteEnergy: number,
+    playerStartPosition: [number, number],
+}

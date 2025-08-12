@@ -30,7 +30,7 @@ export class AntigravLast {
                 v: lastPortal.vCollide,
                 material: this._root.materials.collision
             })
-            this._collisionMesh.name = 'antigravLast'
+            this._collisionMesh.name = this.nameSpace
             this._collisionMesh.position.copy(point)
             this._root.phisics.addMeshToCollision(this._collisionMesh)
         }
@@ -91,7 +91,8 @@ export class AntigravLast {
 
         this._collisionMesh.geometry.dispose()
         this._collisionMesh = null
-        this._root.phisics.removeMeshFromCollision('antigravLast')
+        this._root.phisics.removeMeshFromCollision(this.nameSpace)
+        this._root.phisics.removeMeshFromCollision(this.nameSpaceTrigger)
 
         // TODO: destroy mesh trigger
     }

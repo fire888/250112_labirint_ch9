@@ -141,9 +141,7 @@ export class Studio {
         this.scene.add(axesHelper)
     }
 
-    cameraFlyToLevel () {
-        const { playerStartPosition } = this._root.appData
-
+    cameraFlyToLevel (playerStartPosition: number[]) {
         const time = 5000
 
         const savedPos = new THREE.Vector3().fromArray([playerStartPosition[0], playerStartPosition[1], playerStartPosition[2] - 10])

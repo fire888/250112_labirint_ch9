@@ -115,7 +115,6 @@ export class Phisics {
         body.quaternion.z = mesh.quaternion.z
         body.quaternion.w = mesh.quaternion.w
  
-        
         this.world.addBody(body)
         this._bodies.push(body)
     }

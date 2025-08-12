@@ -1,17 +1,13 @@
 import { Voronoi } from "./rhill-voronoi-core";
 import { Root } from "../index";
-import * as THREE from "three";
-import { _M } from "geometry/_m"; 
+import { _M } from "geometry/_m";
+import { ILevelConf } from "types/GeomTypes"; 
 var Offset = require('polygon-offset');
 
-export const createScheme = (root: Root) => {
-    const voronoi = new Voronoi();
-    //const S = 100
-    const SX = 150
-    const SY = 150
-    const N = 70
-
-    const RN = 10 
+export const createScheme = (root: Root, params: ILevelConf) => {
+    const { SX = 150, SY = 150, N = 70 } = params
+    
+    const voronoi = new Voronoi()
 
     const points: [number, number][] = []
     const setPoint = () => {
@@ -43,10 +39,6 @@ export const createScheme = (root: Root) => {
     points.forEach(e => {
         sites.push({ x: e[0], y: e[1] })
     })
-    // const START = SX / RN * .5
-    // for (let i = 0; i < RN; ++i) {
-    //     sites.push({ x: SX / (RN) * i + START, y: SY * .5 + Math.random() * 10 - 5})
-    // }
 
     const diagram = voronoi.compute(sites, bbox);
 

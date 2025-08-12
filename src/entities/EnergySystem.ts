@@ -9,6 +9,7 @@ type Energy = {
     collisionName: string,
     m: Mesh,
     isActive: boolean,
+    unsubscribe: () => void
 }
 
 export class EnergySystem {
@@ -38,17 +39,6 @@ export class EnergySystem {
             const m = _M.createMesh({ 
                 v,
                 c, 
-                // material: new MeshPhongMaterial({ 
-                //     color: new Color(
-                //         _M.ran(.8, 1),
-                //         _M.ran(.2, 1),
-                //         _M.ran(.2, 1),
-                //     ),
-                //     envMap: root.loader.assets.cubeSky,
-                //     reflectivity: _M.ran(.2, 1),
-                //     vertexColors: true
-                // }) 
-
                 material: new MeshBasicMaterial({ 
                     color: new Color(
                         _M.ran(.8, 1.2),
@@ -60,18 +50,18 @@ export class EnergySystem {
             })
             m.scale.set(.3, .3, .3)
             m.position.x = p.x
-            m.position.y = p.y + .1      
+            m.position.y = p.y + .4      
             m.position.z = p.z
             root.studio.add(m)
-            root.ticker.on((t: number) => {
+            const unsubscribe = root.ticker.on((t: number) => {
                 m.rotation.y += t * 0.001
             })
 
             const vCol = _M.createPolygon(
-                [p.x - .5, p.y + .1, p.z + .5],
-                [p.x + .5, p.y + .1, p.z + .5],
-                [p.x + .5, p.y + .1, p.z - .5],
-                [p.x - .5, p.y + .1, p.z - .5],
+                [p.x - .5, p.y + .2, p.z + .5],
+                [p.x + .5, p.y + .2, p.z + .5],
+                [p.x + .5, p.y + .2, p.z - .5],
+                [p.x - .5, p.y + .2, p.z - .5],
             )
             const collisionM = _M.createMesh({
                 v: vCol,
@@ -81,7 +71,7 @@ export class EnergySystem {
             collisionM.name = collisionName
             this._root.phisics.addMeshToCollision(collisionM)
 
-            this._items.push({ collisionName, m, isActive: true })
+            this._items.push({ collisionName, m, isActive: true, unsubscribe })
 
             ++namePrefix
         }
@@ -133,7 +123,8 @@ export class EnergySystem {
 
     destroy () {
         for (let i = 0; i < this._items.length; ++i) {
-            const { m, collisionName } = this._items[i]
+            const { m, collisionName, unsubscribe } = this._items[i]
+            unsubscribe()
             this._root.studio.remove(m)
             this._items[i].m.geometry.dispose()
             // @ts-ignore:next-line

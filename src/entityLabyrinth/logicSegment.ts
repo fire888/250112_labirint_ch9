@@ -1,7 +1,14 @@
 import { SegmentType } from "../types/GeomTypes";
 import { _M } from "../geometry/_m";
 
-export const checkTypeSegment = (perimeter: [number, number][]) => {
+export const checkTypeSegment = (perimeter: [number, number][], i: number, length: number) => {
+    if (i === 0) {
+        //return SegmentType.HOUSE_00
+        return SegmentType.AREA_00
+    }
+    if (i === 1) {
+        return SegmentType.HOUSE_01
+    }
     let isWallShort = false
     for (let i = 1; i < perimeter.length; ++i) {
         const cur = perimeter[i]
@@ -34,9 +41,6 @@ export const checkTypeSegment = (perimeter: [number, number][]) => {
     if (Math.random() < .2) {
         type = SegmentType.HOUSE_01
     }
-    // if (isSmallAngle || isWallShort) { 
-    //     type = SegmentType.AREA_00
-    // }
 
     return type
 }

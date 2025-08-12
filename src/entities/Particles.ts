@@ -101,6 +101,15 @@ export class Particles {
         }
     }
 
+    startFlyPlayerAround() {
+        for ( let i = 0; i < this._speeds.length; i += 3) {
+            this._speeds[i] = Math.random() * .01 - .005
+            this._speeds[i + 1] = Math.random() * .01 - .005
+            this._speeds[i + 2] = Math.random() * .01 - .005
+        }
+        this._mode = ModeUpdate.NORMAL
+    }
+
     _updateByCamera() {
         for (let i = 0; i < this._timesLive.length; ++i) {
             this._timesLive[i] -= 1

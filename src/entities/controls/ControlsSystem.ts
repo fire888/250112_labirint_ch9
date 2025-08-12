@@ -122,4 +122,9 @@ export class ControlsSystem {
         this._pointer.disableMove()
         this._phone.disableMove()
     }
+
+    enableMove() {
+        this._pointer.enableMove()
+        this._phone.enableMove()
+    }
 }

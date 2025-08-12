@@ -6,59 +6,51 @@ import { createArea00 } from "geometry/area00/area00"
 import { tileMapWall } from "geometry/tileMapWall"
 import * as THREE from "three"
 
-import { IArrayForBuffers, SegmentType, IArea } from "types/GeomTypes";
+import { IArrayForBuffers, SegmentType, IArea, ILevelConf } from "types/GeomTypes";
 import { pause } from "helpers/htmlHelpers"
 import { calculateHouses } from "./calculateHouses"
 
-const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810') 
+const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810')
+const COLLISION_NAME_KEY = 'LAB_COLLISION'
 
 export class Labyrinth {
     _root: Root
     _houses: THREE.Mesh[] = []
     _roads: THREE.Mesh[] = []
     _stricts: THREE.Group[] = []
+    _collisionsNames: string[] = []
     centersHousesDarks: THREE.Vector3[] = []
     centersHousesColumns: THREE.Vector3[] = []
 
     constructor() {}
-    async init (root: Root, params = {}) {
+    async init (root: Root) {
         this._root = root
-
-
-        const iterate = async () => {
-            await this.build()
-            //setTimeout(iterate, 10000)
-        }
-
-        iterate()
     }
 
-    async build () {
+    async build (params: ILevelConf) {
         const { isBigLevel } = this._root.appData
         
         console.log('[MESSAGE:] START SCHEME')
         let d = Date.now()
-        const scheme = createScheme(this._root)
+        const scheme = createScheme(this._root, params)
 
         const areasData: IArea[] = []
 
         for (let i = 0; i < scheme.length; ++i) {
             const area = _M.area(scheme[i].area)
             const center = _M.center(scheme[i].area) 
-            const typeSegment = checkTypeSegment(scheme[i].offset)
+            const typeSegment = checkTypeSegment(scheme[i].offset, i, scheme.length)
 
-            if (isBigLevel) {
-                for (let i = 0; i < 2; ++i) {
-                    for (let j = 0; j < 2; ++j) {
-                        if (typeSegment === SegmentType.HOUSE_00) {
-                            this.centersHousesDarks.push(new THREE.Vector3(center[0] + i * 152 - 152, .5, center[1] + j * 152 - 152))
-                        }  else if (typeSegment === SegmentType.HOUSE_01) {
-                            this.centersHousesColumns.push(new THREE.Vector3(center[0] + i * 152 - 152, .5, center[1] + j * 152 - 152))
-                        }
-                    }
+            for (let i = 0; i < params.repeats.length; ++i) {
+                const offset = params.repeats[i]
+                if (typeSegment === SegmentType.HOUSE_00) {
+                    this.centersHousesDarks.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
+                }  else if (
+                    typeSegment === SegmentType.HOUSE_01 ||
+                    typeSegment === SegmentType.AREA_00
+                ) {
+                    this.centersHousesColumns.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
                 }
-            } else {
-                this.centersHousesDarks.push(new THREE.Vector3(center[0], .5, center[1]))
             }
 
             areasData.push({
@@ -77,34 +69,19 @@ export class Labyrinth {
         const houses: IArrayForBuffers[] = calculateHouses(areasData)
         console.log('[TIME:] COMPLETE CALCULATE HOUSES', ((Date.now() - d) / 1000).toFixed(2))
 
-        console.log('[MESSAGE:] START REMOVE PREV')
-        d = Date.now()
-        await this.clear()
-        console.log('[TIME:] COMPLETE REMOVE PREV', ((Date.now() - d) / 1000).toFixed(2))
-
         console.log('[MESSAGE:] START ADD WALLS')
         d = Date.now()
-        if (isBigLevel) {
-            for (let i = 0; i < 2; ++i) {
-                for (let j = 0; j < 2; ++j) {
-                    this._buildStrict(houses, i * 152 - 152, j * 152 - 152)
-                }    
-            }
-        } else {
-            this._buildStrict(houses, 0, 0)
+        for (let i = 0; i < params.repeats.length; ++i) {
+            const offset = params.repeats[i]
+            this._buildStrict(houses, offset[0], offset[1])  
         }
         console.log('[TIME:] COMPLETE ADD WALLS:', ((Date.now() - d) / 1000).toFixed(2))
 
         console.log('[MESSAGE:] START ADD ROADS ')
         d = Date.now()
-        if (isBigLevel) {
-            for (let i = 0; i < 2; ++i) {
-                for (let j = 0; j < 2; ++j) {
-                    this._buildRoads(areasData, i * 152 - 152, j * 152 - 152)
-                }    
-            }
-        } else {
-            this._buildRoads(areasData, 0, 0)
+        for (let i = 0; i < params.repeats.length; ++i) {
+            const offset = params.repeats[i]
+            this._buildRoads(areasData, offset[0], offset[1])
         }
         console.log('[TIME:] COMPLETE ADD ROADS', ((Date.now() - d) / 1000).toFixed(2))
     }
@@ -115,6 +92,11 @@ export class Labyrinth {
             h.geometry.dispose()
         })
         this._houses = []
+        this.centersHousesDarks = []
+        this.centersHousesColumns = []
+
+        this._collisionsNames.forEach(n => this._root.phisics.removeMeshFromCollision(n))
+        this._collisionsNames = [] 
 
         this._roads.forEach(h => {
             h.parent.remove(h)
@@ -148,6 +130,8 @@ export class Labyrinth {
                     v: vCollide,
                     material: this._root.materials.collision
                 })
+                collisionMesh.name = COLLISION_NAME_KEY + '_' + Math.floor(Math.random() * 1000)
+                this._collisionsNames.push(collisionMesh.name)
                 collisionMesh.position.add(strict.position) 
                 this._root.phisics.addMeshToCollision(collisionMesh)
             })
@@ -190,7 +174,7 @@ export class Labyrinth {
             c,
             material: this._root.materials.road
         })
-        m.position.y = .1
+        m.position.y = .05
         strict.add(m)
         this._roads.push(m)
     } 

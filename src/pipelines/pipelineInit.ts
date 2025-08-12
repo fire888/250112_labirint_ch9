@@ -1,8 +1,7 @@
 import { pause } from 'helpers/htmlHelpers'
 import { Root } from '../index'
-import { Tween, Interpolation, Easing, update } from '@tweenjs/tween.js'
-import { COLOR_FOG_PLAY } from '../constants/CONSTANTS'
-import { IS_DEV_START_ORBIT } from '../constants/CONSTANTS'
+import { update } from '@tweenjs/tween.js'
+import { COLOR_FOG_PLAY, IS_DEV_START_ORBIT, LEVELS } from '../constants/CONSTANTS'
 import * as THREE from 'three'
 
 export const pipelineInit = async (root: Root) => {
@@ -52,10 +51,13 @@ export const pipelineInit = async (root: Root) => {
     studio.add(floor.mesh)
     
     await lab.init(root)
+    await lab.build(LEVELS[0])
 
     energySystem.init(root, lab.centersHousesDarks)
     antigravSystem.init(root, lab.centersHousesColumns)
-    antigravLast.init(root, new THREE.Vector3(-1, 0, -155))
+    antigravLast.init(root, new THREE.Vector3(
+        LEVELS[0].positionTeleporter[0], 0, LEVELS[0].positionTeleporter[1]
+    ))
 
     if (!IS_DEV_START_ORBIT) {
         studio.setFogNearFar(.2, 1)
@@ -90,8 +92,9 @@ export const pipelineInit = async (root: Root) => {
 
     if (!IS_DEV_START_ORBIT) {
         controls.disconnect()
-        await studio.cameraFlyToLevel()
-        phisics.setPlayerPosition(...root.appData.playerStartPosition)
+        const startPos = [LEVELS[0].playerStartPosition[0], .7, LEVELS[0].playerStartPosition[1]]
+        await studio.cameraFlyToLevel(startPos)
+        phisics.setPlayerPosition(...startPos)
         studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
         controls.connect()
     }
