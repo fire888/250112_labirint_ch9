@@ -82,6 +82,7 @@ export class Ui {
     async hideStartScreenForce () {
         const startScreen = document.body.getElementsByClassName('start-screen')[0]
         document.body.removeChild(startScreen)
+        opacityByTransition(this._countEnergyInner, 1, 5)
     }
 
     toggleVisibleButtonLock (visible) {

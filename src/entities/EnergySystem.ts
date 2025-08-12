@@ -1,6 +1,6 @@
 import { Root } from "../index";
 import { _M } from "geometry/_m";
-import { Mesh, MeshBasicMaterial, MeshPhongMaterial, Color } from 'three'
+import { Mesh, MeshBasicMaterial, Color } from 'three'
 import { createEnergyV } from "../geometry/energy/energy"
 import { Tween, Interpolation} from '@tweenjs/tween.js'
 import * as THREE from 'three'
@@ -30,21 +30,32 @@ export class EnergySystem {
         for (let i = 0; i < points.length; ++i) {
             const p = points[i]
 
-            const { v } = createEnergyV({ 
+            const { v, c } = createEnergyV({ 
                 t: _M.ran(.5, 2),
                 rad: _M.ran(.1, .2),
                 l: _M.ran(.2, .3),
             })
             const m = _M.createMesh({ 
-                v, 
-                material: new MeshPhongMaterial({ 
+                v,
+                c, 
+                // material: new MeshPhongMaterial({ 
+                //     color: new Color(
+                //         _M.ran(.8, 1),
+                //         _M.ran(.2, 1),
+                //         _M.ran(.2, 1),
+                //     ),
+                //     envMap: root.loader.assets.cubeSky,
+                //     reflectivity: _M.ran(.2, 1),
+                //     vertexColors: true
+                // }) 
+
+                material: new MeshBasicMaterial({ 
                     color: new Color(
-                        _M.ran(.8, 1),
-                        _M.ran(.2, 1),
-                        _M.ran(.2, 1),
+                        _M.ran(.8, 1.2),
+                        _M.ran(.2, 1.2),
+                        _M.ran(.2, 1.2),
                     ),
-                    envMap: root.loader.assets.cubeSky,
-                    reflectivity: _M.ran(.2, 1),
+                    vertexColors: true
                 }) 
             })
             m.scale.set(.3, .3, .3)

@@ -3,8 +3,8 @@ import * as THREE from 'three'
 
 const LEVELS = [
     {
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: .2,
+        //percentCompleteEnergy: .001,
     }
 ]
 
