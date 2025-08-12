@@ -8,6 +8,8 @@ export class ControlsPhone {
     _isRight = false
     _isEnabled = false
 
+    _isDisabledMovie = false
+
     _currentSpeedForward = 0.
     _maxSpeedForward = 5.
     _tweenSpeedForward = null
@@ -27,6 +29,9 @@ export class ControlsPhone {
         this._moveForwardDiv.classList.add('control')
         this._moveForwardDiv.classList.add('butt-front')
         this._moveForwardDiv.addEventListener("pointerdown", () => {
+            if (this._isDisabledMovie) {
+                return
+            }
             if (!this._isForward) this._changeForwardSpeedTo(-this._maxSpeedForward)
             this._isForward = true
         })
@@ -44,6 +49,9 @@ export class ControlsPhone {
         this._moveBackDiv.classList.add('control')
         this._moveBackDiv.classList.add('butt-back')
         this._moveBackDiv.addEventListener("pointerdown", () => {
+            if (this._isDisabledMovie) {
+                return
+            }
             if (!this._isBack) this._changeForwardSpeedTo(this._maxSpeedForward)
             this._isBack = true
         })
@@ -111,12 +119,12 @@ export class ControlsPhone {
         this._obj.position.x = 0
         this._obj.position.z = 0
         this._obj.rotation.y += this._currentSpeedLeft
-        this._obj.translateZ(this._currentSpeedForward)
 
-        const summSpeed = Math.abs(this._currentSpeedLeft) + Math.abs(this._currentSpeedForward)
-
-        playerBody.velocity.x = this._obj.position.x
-        playerBody.velocity.z = this._obj.position.z
+        if (!this._isDisabledMovie) {
+            this._obj.translateZ(this._currentSpeedForward)
+            playerBody.velocity.x = this._obj.position.x
+            playerBody.velocity.z = this._obj.position.z
+        }
 
         this._root.studio.camera.position.x = playerBody.position.x
         this._root.studio.camera.position.y = playerBody.position.y
@@ -127,6 +135,7 @@ export class ControlsPhone {
         this._root.studio.camera.quaternion.z = this._obj.quaternion.z
         this._root.studio.camera.quaternion.w = this._obj.quaternion.w
 
+        const summSpeed = Math.abs(this._currentSpeedLeft) + Math.abs(this._currentSpeedForward)
         this._timeRot += delta
         this._vecRotMovie.x = Math.sin(this._timeRot * 0.03) * .0015 * summSpeed * this._strengthIdle
         this._vecRotMovie.z = Math.sin(this._timeRot * 0.02) * .0015 * summSpeed * this._strengthIdle
@@ -169,6 +178,14 @@ export class ControlsPhone {
         this._moveRightDiv.style.display = 'none'
 
         this._isEnabled = false
+    }
+
+    disableMove() {
+        this._isDisabledMovie = true
+    }
+
+    enableMove() {
+        this._isDisabledMovie = false
     }
 
     _onKeyUp(event) {

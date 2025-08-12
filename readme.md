@@ -38,7 +38,9 @@ V - add cristalls in houses
 V - end page blue bug
 V - ground more big
 V - lastGraviti activated - change collision 
-- particles last portal activated movies
+V - particles last portal activated movies
+- energy black with outline 
+V - phone controls add disable movie
 
 -connect verticies by indicies ?
 
