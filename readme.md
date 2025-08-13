@@ -45,10 +45,11 @@ V - phone controls add disable movie
 - add single antigrav and antigravLast and energy without buildings ?
 - add many single energies
 - add many single antygravs
-- start/End reset fog
+- add reset ui screen
+- start/end reset fog
 - config colorFog colorLevelLights colorsHouses colorsRoads colorsGround
-- add music
-- optimize assts
+V - add music
+V - optimize assets
 
 
 NODE v20.11.0
