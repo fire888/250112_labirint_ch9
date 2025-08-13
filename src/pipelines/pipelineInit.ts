@@ -70,6 +70,10 @@ export const pipelineInit = async (root: Root) => {
     ui.init(root)
     ui.setEnergyLevel(0)
 
+    materials.changeWallMaterial(LEVELS[0].materialWalls)
+    materials.changeRoadMaterial(LEVELS[0].materialRoad)
+    materials.changeDesertMaterial(LEVELS[0].materialGround)
+
     if (IS_DEV_START_ORBIT) {
         await ui.hideStartScreenForce()
     } else {
@@ -90,7 +94,7 @@ export const pipelineInit = async (root: Root) => {
         const startPos = [LEVELS[0].playerStartPosition[0], .7, LEVELS[0].playerStartPosition[1]]
         await studio.cameraFlyToLevel(startPos)
         phisics.setPlayerPosition(...startPos)
-        studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
+        studio.animateFogTo(LEVELS[0].fogFar, LEVELS[0].fogColor, 4000)
         controls.connect()
     }
 }

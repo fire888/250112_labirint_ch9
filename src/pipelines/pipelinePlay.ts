@@ -133,6 +133,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         levelData.positionTeleporter[0], 0, levelData.positionTeleporter[1]
     ))
     studio.setFogNearFar(.2, 1)
+    studio.setFogColor(COLOR_FOG_PLAY)
     ui.toggleVisibleDark(false)
     particles.startFlyPlayerAround()
     phisics.stopPlayerBody()
@@ -142,7 +143,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     const startPos = [levelData.playerStartPosition[0], .7, levelData.playerStartPosition[1]]
     await studio.cameraFlyToLevel(startPos)
     phisics.setPlayerPosition(...startPos)
-    studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
+    studio.animateFogTo(levelData.fogFar, levelData.fogColor, 4000)
     controls.enableMove()
     ui.toggleVisibleEnergy(true)
     

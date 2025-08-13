@@ -210,4 +210,8 @@ export class Studio {
         this.fog.near = near
         this.fog.far = far
     }
+
+    setFogColor(color: THREE.Color) {
+        this.fog.color = color
+    }   
 }

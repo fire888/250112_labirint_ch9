@@ -81,4 +81,24 @@ export class Materials {
 
         this.collision = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
     }
+
+    changeWallMaterial(data: { color: THREE.Color, emissive: THREE.Color, specular: THREE.Color }) {
+        this.walls00.color = data.color
+        this.walls00.emissive = data.emissive
+        this.walls00.specular = data.specular
+        this.walls00.needsUpdate = true
+    }
+
+    changeRoadMaterial(data: { color: THREE.Color, emissive: THREE.Color }) {
+        this.road.color = data.color
+        this.road.emissive = data.emissive
+        this.road.needsUpdate = true
+    }
+
+    changeDesertMaterial(data: { color: THREE.Color, emissive: THREE.Color, specular: THREE.Color }) {
+        this.desert.color = data.color
+        this.desert.emissive = data.emissive
+        this.desert.specular = data.specular
+        this.desert.needsUpdate = true
+    }
 }

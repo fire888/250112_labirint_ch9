@@ -124,8 +124,6 @@ export class Ui {
     }
 
     async showFinalPage () {
-        this.finalDark.style.opacity = 0
-        //document.body.appendChild(finalDark)
 
         const wrapper = document.createElement('div')
         wrapper.style.opacity = 0
@@ -165,11 +163,6 @@ export class Ui {
         wrapper.appendChild(bottom1)
 
         document.body.appendChild(wrapper)
-
-        await pause(300)
-        await opacityByTransition(this.finalDark, 1, 300)
-
-        await pause(300)
         await opacityByTransition(wrapper, 1, 300)
 
         await pause(300)

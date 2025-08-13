@@ -46,6 +46,22 @@ export type ILevelConf = {
     positionTeleporter: [number, number],
     percentCompleteEnergy: number,
     playerStartPosition: [number, number],
+    fogColor: THREE.Color,
+    fogFar: number,
+    materialWalls: {
+        color: THREE.Color,
+        emissive: THREE.Color,
+        specular: THREE.Color,
+    },
+    materialRoad: {
+        color: THREE.Color,
+        emissive: THREE.Color,
+    },
+    materialGround: {
+        color: THREE.Color,
+        emissive: THREE.Color,
+        specular: THREE.Color,
+    },
 }
 
 export interface IHoleData {
