@@ -34,10 +34,10 @@ export class Ui {
     }
 
     async hideStartScreen () {
-        const finalDark = document.createElement('div')
-        finalDark.classList.add('final-dark')
-        finalDark.style.opacity = 1
-        document.body.appendChild(finalDark)
+        this.finalDark = document.createElement('div')
+        this.finalDark.classList.add('final-dark')
+        this.finalDark.style.opacity = 1
+        document.body.appendChild(this.finalDark)
 
         const loaderCont = document.body.getElementsByClassName('loader')[0]
 
@@ -71,10 +71,10 @@ export class Ui {
         //await pause(100)
 
         setTimeout(async () => {
-            await opacityByTransition(finalDark, 0, 300)
-            await pause(300)
+            this.toggleVisibleDark(false)
+            await pause(600)
             document.body.removeChild(startScreen)
-            document.body.removeChild(finalDark)
+            //document.body.removeChild(this.finalDark)
             await opacityByTransition(this._countEnergyInner, 1, 300)
         }, 300)
     }
@@ -92,6 +92,14 @@ export class Ui {
 
     toggleVisibleEnergy (visible) {
         opacityByTransition(this._countEnergy, visible ? 1 : 0, 300) 
+    }
+
+    toggleVisibleDark(visible) {
+        opacityByTransition(this.finalDark, visible ? 1 : 0, 300) 
+        if (visible) document.body.appendChild(this.finalDark)
+        if (!visible) setTimeout(() => {
+            document.body.removeChild(this.finalDark)
+        }, 320)
     }
     
     setEnergyLevel (val) {
@@ -116,10 +124,8 @@ export class Ui {
     }
 
     async showFinalPage () {
-        const finalDark = document.createElement('div')
-        finalDark.classList.add('final-dark')
-        finalDark.style.opacity = 0
-        document.body.appendChild(finalDark)
+        this.finalDark.style.opacity = 0
+        //document.body.appendChild(finalDark)
 
         const wrapper = document.createElement('div')
         wrapper.style.opacity = 0
@@ -161,7 +167,7 @@ export class Ui {
         document.body.appendChild(wrapper)
 
         await pause(300)
-        await opacityByTransition(finalDark, 1, 300)
+        await opacityByTransition(this.finalDark, 1, 300)
 
         await pause(300)
         await opacityByTransition(wrapper, 1, 300)
@@ -185,7 +191,7 @@ export class Ui {
         await opacityByTransition(bottom1, 1, 300)
 
         await pause(300)
-        await opacityByTransition(finalDark, 0, 5000)
+        await opacityByTransition(this.finalDark, 0, 5000)
     }
 
     _showInfo () {

@@ -1,6 +1,7 @@
 import { Root } from '../index'
 import * as THREE from 'three'
 import { LEVELS, COLOR_FOG_PLAY } from '../constants/CONSTANTS'
+import { pause } from 'helpers/htmlHelpers'
 
 export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     const {
@@ -84,12 +85,22 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
             phisics.switchToGravityGorizontalBoost()
             ui.toggleVisibleEnergy(false)
             unsubscribeAntgrav()
+
+            let isStarted = false 
             const unsubscribe = ticker.on(() => {
-                if (studio.camera.position.z > 300) {
-                    unsubscribe()
-                    nextStepResolve()
-                    audio.stopFly()
+                if (studio.camera.position.z < 230) {
+                    return;
                 }
+                if (isStarted) {
+                    return
+                }
+                isStarted = true
+                unsubscribe()
+                ui.toggleVisibleDark(true)
+                setTimeout(() => {
+                    audio.stopFly()
+                    nextStepResolve()
+                }, 300)
             })
         })
     })
@@ -100,7 +111,6 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     })
 
     await waitLevelComplete()
-
     lab.clear()
     antigravSystem.destroy()
     antigravLast.destroy()
@@ -112,6 +122,8 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         return
     }
 
+    await pause(200)
+
     const levelData = LEVELS[currentIndexLevelNext]
 
     await lab.build(levelData)
@@ -121,6 +133,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         levelData.positionTeleporter[0], 0, levelData.positionTeleporter[1]
     ))
     studio.setFogNearFar(.2, 1)
+    ui.toggleVisibleDark(false)
     particles.startFlyPlayerAround()
     phisics.stopPlayerBody()
     ui.setEnergyLevel(0)
