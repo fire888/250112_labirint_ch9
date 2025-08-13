@@ -5,22 +5,24 @@ import {
     CubeTextureLoader, 
     CubeTexture 
 } from 'three'
-import sprite from '../assets/sprite.webp'
+
 import audioAmbient from '../assets/ambient.mp3'
 import steps from '../assets/steps_metal.mp3'
 import audioBzink from '../assets/bzink.mp3'
 import audioDoor from '../assets/door.mp3'
 import audioFly from '../assets/fly.mp3'
-import roadImg from '../assets/road_stone.jpg'
-import wallTile from '../assets/tiles_wall.png'
-import noise00 from '../assets/noise00.jpg'
 
-import nx from '../assets/sky/nx.jpg'
-import ny from '../assets/sky/ny.jpg'
-import nz from '../assets/sky/nz.jpg'
-import px from '../assets/sky/px.jpg'
-import py from '../assets/sky/py.jpg'
-import pz from '../assets/sky/pz.jpg'
+import roadImg from '../assets/road_stone.webp'
+import wallTile from '../assets/tiles_wall.webp'
+import noise00 from '../assets/noise00.webp'
+import sprite from '../assets/sprite.webp'
+
+import nx from '../assets/sky/nx.webp'
+import ny from '../assets/sky/ny.webp'
+import nz from '../assets/sky/nz.webp'
+import px from '../assets/sky/px.webp'
+import py from '../assets/sky/py.webp'
+import pz from '../assets/sky/pz.webp'
 
 type Assets = {
     sprite: Texture,
@@ -88,16 +90,14 @@ export class LoaderAssets {
             }
 
             const promises = [
-                loadTexture('sprite', sprite),
-
                 loadAudio('soundAmbient', audioAmbient),
                 loadAudio('soundStepsMetal', steps),
                 loadAudio('soundBzink', audioBzink),
                 loadAudio('soundDoor', audioDoor),
                 loadAudio('soundFly', audioFly),
                 
+                loadTexture('sprite', sprite),
                 loadTexture('roadImg', roadImg),
-                //loadTexture('lightMap', lightMap),
                 loadTexture('mapWall_01', wallTile),
                 loadTexture('noise00', noise00),
 

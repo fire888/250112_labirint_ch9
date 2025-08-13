@@ -63,19 +63,10 @@ export const pipelineInit = async (root: Root) => {
         studio.setFogNearFar(.2, 1)
     }
 
-    // smallTriangles.init()
-    // studio.add(smallTriangles.m)
-    // smallTriangles.m.position.x = 3 * 5
-    // smallTriangles.m.position.z = 3 * 5
-
     particles.init(root)
     ticker.on(particles.update.bind(particles))
     studio.add(particles.m)
 
-    //audio.init(root)
-    //ticker.on(audio.update.bind(audio))
-
-    //phisics.stopPlayerBody()
     ui.init(root)
     ui.setEnergyLevel(0)
 
@@ -85,11 +76,15 @@ export const pipelineInit = async (root: Root) => {
         await ui.hideStartScreen()
     }
 
+    audio.init(root)
+    ticker.on(audio.update.bind(audio))
+    audio.playAmbient()
+    
     controls.init(root, IS_DEV_START_ORBIT)
     ticker.on(controls.update.bind(controls))
 
     await pause(100)
-
+    
     if (!IS_DEV_START_ORBIT) {
         controls.disconnect()
         const startPos = [LEVELS[0].playerStartPosition[0], .7, LEVELS[0].playerStartPosition[1]]
@@ -98,6 +93,4 @@ export const pipelineInit = async (root: Root) => {
         studio.animateFogTo(100, COLOR_FOG_PLAY, 4000)
         controls.connect()
     }
-
-    //audio.playAmbient()
 }

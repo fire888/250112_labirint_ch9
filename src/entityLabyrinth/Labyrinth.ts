@@ -106,6 +106,7 @@ export class Labyrinth {
                     forceMat,
                     material: this._root.materials.walls00,
                 })
+                m.frustumCulled = false
                 strict.add(m)
                 m.position.y = .1
                 this._houses.push(m)

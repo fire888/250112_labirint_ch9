@@ -24,6 +24,7 @@ export class Phisics {
     _cbsOnCollision = []
     _bodies = []
     _bodiesToRemove = []
+    isGround = false
 
     init (root) {
         this.world = new World()
@@ -70,6 +71,7 @@ export class Phisics {
 
         this._levelsPhisicsMeshes = []
 
+
         if (root.CONSTANTS.PHISICS_CONF.IS_DEBUG) {
             this.cannonDebugger = new CannonDebugger(root.studio.scene, this.world, {})
         }
@@ -93,6 +95,19 @@ export class Phisics {
         this.playerBody._object3D.rotation.y = Math.PI
 
         this.world.addBody(this.playerBody)
+
+        this.world.addEventListener('beginContact', (event) => {
+            const { bodyA, bodyB } = event;
+            if (bodyA.id === 0 && bodyB.id === 1) {
+                this.isGround = true 
+            }
+        })
+        this.world.addEventListener('endContact', (event) => {
+            const { bodyA, bodyB } = event;
+            if (bodyA.id === 0 && bodyB.id === 1) {
+                this.isGround = false
+            }
+        })
     }
     
     addMeshToCollision (mesh) {

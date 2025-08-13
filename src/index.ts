@@ -29,7 +29,6 @@ export type Root = {
     studio: Studio,
     controls: ControlsSystem,
     floor: Floor,
-    // smallTriangles: SmallTriangles,
     particles: Particles,
     loader: LoaderAssets,
     deviceData: DeviceData,

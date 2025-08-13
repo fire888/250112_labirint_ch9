@@ -14,6 +14,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         studio,
         particles,
         lab,
+        audio,
     } = root
 
     // antigrav activity **********************************/
@@ -51,7 +52,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     // energy get *******************************************/
     let isFullEnergy = false
     phisics.onCollision(energySystem.nameSpace, (name: string) => {
-        // audio.playEnergy()
+        audio.playEnergy()
         energySystem.animateMovieHide(name)
         setTimeout(() => phisics.removeMeshFromCollision(name), 50)
         
@@ -76,6 +77,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         // final fly
         phisics.onCollision(antigravLast.nameSpaceTrigger, (name: string) => {
             isEnabledAntigrav = false
+            audio.playFly()
             antigravLast.removeStonesFromPhisics()
             phisics.removeMeshFromCollision(name)
             controls.disableMove()
@@ -86,6 +88,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
                 if (studio.camera.position.z > 300) {
                     unsubscribe()
                     nextStepResolve()
+                    audio.stopFly()
                 }
             })
         })

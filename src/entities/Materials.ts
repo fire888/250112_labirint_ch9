@@ -76,7 +76,7 @@ export class Materials {
             specular: 0x733d8a,
             map: root.loader.assets.noise00,
             bumpMap: root.loader.assets.noise00,
-            bumpScale: 2,
+            bumpScale: 4,
         })
 
         this.collision = new THREE.MeshBasicMaterial({ color: 0x00ff00 })

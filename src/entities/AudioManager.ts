@@ -57,7 +57,7 @@ export class AudioManager {
         const obj = { v: 0 } 
         new Tween(obj)
             .interpolation(Interpolation.Linear)
-            .to({ v: .35 }, 400)
+            .to({ v: .2 }, 400)
             .onUpdate(() => {
                 this._soundAmbient.setVolume(obj.v)
             })
@@ -144,6 +144,9 @@ export class AudioManager {
             return;
         }
         if (this._steps.isPlaying) {
+            return;
+        }
+        if (!this._root.phisics.isGround) {
             return;
         }
             
