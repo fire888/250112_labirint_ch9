@@ -20,7 +20,12 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     let isNormalGravity = true
     const camPos = new THREE.Vector2(root.studio.camera.position.x, root.studio.camera.position.z)
     
+    let isEnabledAntigrav = true
     const unsubscribeAntgrav = ticker.on((t: number) => {
+        if (!isEnabledAntigrav) {
+            return
+        }
+
         camPos.set(root.studio.camera.position.x, root.studio.camera.position.z)
         
         let isNear = false
@@ -68,12 +73,15 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         const p = antigravLast.getPosition()
         particles.startForcreMovieAntigrav(p)
         
+        // final fly
         phisics.onCollision(antigravLast.nameSpaceTrigger, (name: string) => {
-            controls.disableMove()
+            isEnabledAntigrav = false
+            antigravLast.removeStonesFromPhisics()
             phisics.removeMeshFromCollision(name)
+            controls.disableMove()
             phisics.switchToGravityGorizontalBoost()
-            ui.toggleVisibleEnergy(false) 
-
+            ui.toggleVisibleEnergy(false)
+            unsubscribeAntgrav()
             const unsubscribe = ticker.on(() => {
                 if (studio.camera.position.z > 300) {
                     unsubscribe()
@@ -103,11 +111,9 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
 
     const levelData = LEVELS[currentIndexLevelNext]
 
-    unsubscribeAntgrav()
-
     await lab.build(levelData)
-    energySystem.init(root, lab.centersHousesDarks)
-    antigravSystem.init(root, lab.centersHousesColumns)
+    energySystem.init(root, lab.positionsEnergy)
+    antigravSystem.init(root, lab.positionsAntigravs)
     antigravLast.init(root, new THREE.Vector3(
         levelData.positionTeleporter[0], 0, levelData.positionTeleporter[1]
     ))

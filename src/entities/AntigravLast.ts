@@ -89,12 +89,24 @@ export class AntigravLast {
         this._m.geometry.dispose()
         this._m = null
 
-        this._collisionMesh.geometry.dispose()
-        this._collisionMesh = null
-        this._root.phisics.removeMeshFromCollision(this.nameSpace)
+        if (this._collisionMesh !== null) {
+            this._collisionMesh.geometry.dispose()
+            this._collisionMesh = null
+            this._root.phisics.removeMeshFromCollision(this.nameSpace)
+        }
+
         this._root.phisics.removeMeshFromCollision(this.nameSpaceTrigger)
 
         // TODO: destroy mesh trigger
+    }
+
+    removeStonesFromPhisics() {
+        if (!this._collisionMesh) {
+            return
+        }
+        this._collisionMesh.geometry.dispose()
+        this._collisionMesh = null
+        this._root.phisics.removeMeshFromCollision(this.nameSpace)
     }
 
     getPosition () { 

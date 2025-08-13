@@ -53,8 +53,8 @@ export const pipelineInit = async (root: Root) => {
     await lab.init(root)
     await lab.build(LEVELS[0])
 
-    energySystem.init(root, lab.centersHousesDarks)
-    antigravSystem.init(root, lab.centersHousesColumns)
+    energySystem.init(root, lab.positionsEnergy)
+    antigravSystem.init(root, lab.positionsAntigravs)
     antigravLast.init(root, new THREE.Vector3(
         LEVELS[0].positionTeleporter[0], 0, LEVELS[0].positionTeleporter[1]
     ))

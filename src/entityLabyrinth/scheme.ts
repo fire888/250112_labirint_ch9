@@ -1,10 +1,10 @@
 import { Voronoi } from "./rhill-voronoi-core";
 import { Root } from "../index";
 import { _M } from "geometry/_m";
-import { ILevelConf } from "types/GeomTypes"; 
+import { ILevelConf, TSchemeElem } from "types/GeomTypes"
 var Offset = require('polygon-offset');
 
-export const createScheme = (root: Root, params: ILevelConf) => {
+export const createScheme = (root: Root, params: ILevelConf): TSchemeElem[] => {
     const { SX = 150, SY = 150, N = 70 } = params
     
     const voronoi = new Voronoi()
@@ -65,10 +65,7 @@ export const createScheme = (root: Root, params: ILevelConf) => {
     //     root.studio.add(line)
     // }
 
-    const arr: {
-        area: [number, number][],
-        offset: [number, number][]
-    }[] = []
+    const arr: TSchemeElem[] = []
 
     for (let i = 0; i < diagram.cells.length; ++i) {
         const cell = diagram.cells[i]
@@ -80,7 +77,6 @@ export const createScheme = (root: Root, params: ILevelConf) => {
             console.log('!!!', cell)
             continue;
         }
-
 
         if (nHalfedges <= 2) { 
             continue

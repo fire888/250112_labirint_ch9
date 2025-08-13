@@ -1,46 +1,68 @@
-import { SegmentType } from "../types/GeomTypes";
+import { SegmentType, IArea, TSchemeElem, ILevelConf, TLabData } from "../types/GeomTypes";
 import { _M } from "../geometry/_m";
+import * as THREE from "three";
 
-export const checkTypeSegment = (perimeter: [number, number][], i: number, length: number) => {
-    if (i === 0) {
-        //return SegmentType.HOUSE_00
-        return SegmentType.AREA_00
+export const calcDataAreas = (scheme: TSchemeElem[], conf: ILevelConf): TLabData => {
+
+    const areasData: IArea[] = []
+    const positionsEnergy: THREE.Vector3[] = []
+    const positionsAntigravs: THREE.Vector3[] = []
+
+    let countHouses00 = 0
+    let countHouses01 = 0
+
+    for (let i = 0; i < scheme.length; ++i) {
+        const area = _M.area(scheme[i].area)
+        const center = _M.center(scheme[i].area) 
+        let typeSegment = SegmentType.HOUSE_00
+        if (Math.random() < .2) {
+            typeSegment = SegmentType.HOUSE_01
+        }
+        if (Math.random() < .05) {
+            typeSegment = SegmentType.AREA_00
+        }
+        if (typeSegment === SegmentType.HOUSE_01) {
+            ++countHouses01
+        }
+        if (typeSegment === SegmentType.HOUSE_00) {
+            ++countHouses00
+        }
+
+        areasData.push({
+            center,
+            area,
+            perimeter: scheme[i].area,
+            perimeterInner: scheme[i].offset,
+            typeSegment,
+        })
     }
-    if (i === 1) {
-        return SegmentType.HOUSE_01
+
+    if (countHouses00 > 2 && countHouses01 === 0) {
+        const random = Math.floor(Math.random() * areasData.length)
+        areasData[random].typeSegment = SegmentType.HOUSE_01
+        ++countHouses01
     }
-    let isWallShort = false
-    for (let i = 1; i < perimeter.length; ++i) {
-        const cur = perimeter[i]
-        const prev = perimeter[i - 1]
-        if (_M.dist(prev, cur) < 1.3) {
-            isWallShort = true
-            break
+
+    if (countHouses01 === 0 || countHouses00 === 0) {
+        positionsEnergy.push(new THREE.Vector3(0, 10, 10))
+        positionsAntigravs.push(new THREE.Vector3(0, .1, 10))   
+    }
+
+    for (let i = 0; i < areasData.length; ++i) {
+        const { center, typeSegment } = areasData[i]
+        for (let j = 0; j < conf.repeats.length; ++j) {
+            const offset = conf.repeats[j]
+            if (typeSegment === SegmentType.HOUSE_00) {
+                positionsEnergy.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
+            } else if (typeSegment === SegmentType.HOUSE_01) {
+                positionsAntigravs.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
+            }
         }
     }
 
-    const angles = []
-    for (let i = 0; i < perimeter.length; ++i) {
-        const cur = perimeter[i]
-        const prev = perimeter[i - 1] ? perimeter[i - 1] : perimeter[perimeter.length - 1]
-        const angle = _M.angleFromCoords(cur[0] - prev[0], cur[1] - prev[1])
-        angles.push(angle)
+    return {
+        areasData,
+        positionsEnergy,
+        positionsAntigravs,
     }
-
-    let isSmallAngle = false
-    for (let i = 0; i < angles.length; ++i) {
-        const prev = angles[i - 1] ? angles[i - 1] : angles[angles.length - 1]
-        const cur = angles[i]
-        if (Math.abs(cur - prev) < Math.PI * .03) {
-            isSmallAngle = true 
-            break
-        }
-    }
-
-    let type = SegmentType.HOUSE_00
-    if (Math.random() < .2) {
-        type = SegmentType.HOUSE_01
-    }
-
-    return type
 }

@@ -32,19 +32,20 @@ export const COLOR_DARK_INTERIOR: A3 = _M.hexToNormalizedRGB('000000')
 export const INNER_HOUSE_FORCE: number = 0
 export const OUTER_HOUSE_FORCE: number = 1.5
 
+const PERCENT_ENERGY: number = 0.2
+
 export const LEVELS: ILevelConf[] = [
     {
         playerStartPosition: [-1, -30],
-        SX: 20,
-        SY: 20,
+        SX: 18,
+        SY: 18,
         N: 3,
         repeats: [
-            [-21, -15],           
+            [-19, -15],           
             // [1, 0],                      
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -30],
@@ -56,7 +57,7 @@ export const LEVELS: ILevelConf[] = [
             [1, -15],                      
         ],
         positionTeleporter: [0, 0],
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -200],
@@ -70,8 +71,7 @@ export const LEVELS: ILevelConf[] = [
             [-151, 1],           
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
 
 
@@ -85,8 +85,7 @@ export const LEVELS: ILevelConf[] = [
             // [1, 0],                      
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -30],
@@ -98,7 +97,7 @@ export const LEVELS: ILevelConf[] = [
             [1, -15],                      
         ],
         positionTeleporter: [0, 0],
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -200],
@@ -112,8 +111,7 @@ export const LEVELS: ILevelConf[] = [
             [-151, 1],           
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
 
         {
@@ -126,8 +124,7 @@ export const LEVELS: ILevelConf[] = [
             // [1, 0],                      
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -30],
@@ -139,7 +136,7 @@ export const LEVELS: ILevelConf[] = [
             [1, -15],                      
         ],
         positionTeleporter: [0, 0],
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -200],
@@ -153,8 +150,7 @@ export const LEVELS: ILevelConf[] = [
             [-151, 1],           
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
 
         {
@@ -167,8 +163,7 @@ export const LEVELS: ILevelConf[] = [
             // [1, 0],                      
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -30],
@@ -180,7 +175,7 @@ export const LEVELS: ILevelConf[] = [
             [1, -15],                      
         ],
         positionTeleporter: [0, 0],
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -200],
@@ -194,8 +189,7 @@ export const LEVELS: ILevelConf[] = [
             [-151, 1],           
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
 
         {
@@ -208,8 +202,7 @@ export const LEVELS: ILevelConf[] = [
             // [1, 0],                      
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -30],
@@ -221,7 +214,7 @@ export const LEVELS: ILevelConf[] = [
             [1, -15],                      
         ],
         positionTeleporter: [0, 0],
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -200],
@@ -235,8 +228,7 @@ export const LEVELS: ILevelConf[] = [
             [-151, 1],           
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
 
         {
@@ -249,8 +241,7 @@ export const LEVELS: ILevelConf[] = [
             // [1, 0],                      
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -30],
@@ -262,7 +253,7 @@ export const LEVELS: ILevelConf[] = [
             [1, -15],                      
         ],
         positionTeleporter: [0, 0],
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
     {
         playerStartPosition: [-1, -200],
@@ -276,7 +267,6 @@ export const LEVELS: ILevelConf[] = [
             [-151, 1],           
         ],
         positionTeleporter: [0, 0],
-        //percentCompleteEnergy: .2,
-        percentCompleteEnergy: .001,
+        percentCompleteEnergy: PERCENT_ENERGY,
     },
 ]

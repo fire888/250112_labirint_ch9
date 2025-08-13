@@ -1,3 +1,5 @@
+import * as THREE from 'three'
+
 export enum SegmentType {
     HOUSE_00 = 'HOUSE_00',
     HOUSE_01 = 'HOUSE_01',
@@ -15,6 +17,35 @@ export enum ElemType {
     PILASTER_04 = 'PILASTER_04',
     POIAS_00 = 'POIAS_00',
     POIAS_01 = 'POIAS_01',
+}
+
+export type TSchemeElem = {
+    area: [number, number][],
+    offset: [number, number][] | null
+} 
+
+export type IArea = {
+    center: [number, number],
+    area: number,
+    perimeter: IPerimeter,
+    perimeterInner: IPerimeter,
+    typeSegment: SegmentType,
+}
+
+export type TLabData = {
+    areasData: IArea[],
+    positionsEnergy: THREE.Vector3[],
+    positionsAntigravs: THREE.Vector3[],
+}
+
+export type ILevelConf = {
+    SX: number,
+    SY: number,
+    N: number,
+    repeats: [number, number][],
+    positionTeleporter: [number, number],
+    percentCompleteEnergy: number,
+    playerStartPosition: [number, number],
 }
 
 export interface IHoleData {
@@ -121,22 +152,4 @@ export const addTypeFullIdataForFillWall = (draft: Partial<IdataForFillWall>): I
     } else {
         throw new Error('wall draft is incomplete');
     }
-}
-
-export type IArea = {
-    center: [number, number],
-    area: number,
-    perimeter: IPerimeter,
-    perimeterInner: IPerimeter,
-    typeSegment: SegmentType,
-}
-
-export type ILevelConf = {
-    SX: number,
-    SY: number,
-    N: number,
-    repeats: [number, number][],
-    positionTeleporter: [number, number],
-    percentCompleteEnergy: number,
-    playerStartPosition: [number, number],
 }
