@@ -103,24 +103,24 @@ export const pipelineInit = async (root: Root) => {
     // HELPER THEME
     const randomColor = (mult: number = 1) => [Math.random() * mult, Math.random() * mult, Math.random() * mult]
     const action = () => {
-        const background = randomColor()
+        const background = randomColor(.2)
         const s = {
                 fogColor: background,
                 sceneBackground: background,
-                dirLightColor: randomColor(.3),
-                ambientLightColor: randomColor(.3),
+                dirLightColor: randomColor(1),
+                ambientLightColor: randomColor(1),
                 materialWalls: {
-                    color: randomColor(.7),
-                    emissive: randomColor(.3),
+                    color: randomColor(1),
+                    emissive: randomColor(0),
                     specular: randomColor(.5),
                 },
                 materialRoad: {
-                    color: randomColor(.3),
-                    emissive: randomColor(.3),
+                    color: randomColor(1),
+                    emissive: randomColor(0),
                 },
                 materialGround: {
-                    color: randomColor(.3),
-                    emissive: randomColor(.3),
+                    color: randomColor(1),
+                    emissive: randomColor(0),
                     specular: randomColor(.7),
                 },
         }
