@@ -14,7 +14,6 @@ import {
 import * as THREE from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js'
 import { Root } from "../index"
@@ -52,7 +51,7 @@ export class Studio {
         this.camera.position.set(1, 30, 70)
         this.camera.lookAt(150, 1, 150)
 
-        this.spotLight = new SpotLight(0xffffff, 30)
+        this.spotLight = new SpotLight(0xffffff, 15)
         this.spotLight.position.set(0, 3, 5)
         this.spotLight.angle = Math.PI * .2
         this.spotLight.penumbra = 1
@@ -87,6 +86,7 @@ export class Studio {
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.containerDom.appendChild(this.renderer.domElement)
 
+        //root.appData.isBigLevel = false
         if (root.appData.isBigLevel) {
             this.composer = new EffectComposer(this.renderer)
             const renderPass = new RenderPass(this.scene, this.camera)
@@ -157,7 +157,9 @@ export class Studio {
         const startQ = new THREE.Quaternion().copy(this.camera.quaternion) 
         const targetQ = new THREE.Quaternion().copy(savedQ)
 
-        this.ssaoPass.maxDistance = 0
+        if (this.ssaoPass) {
+            this.ssaoPass.maxDistance = 0
+        }
 
         return new Promise(res => {
             this.camera.position.copy(savedPos)
@@ -168,8 +170,11 @@ export class Studio {
                 .easing(Easing.Linear.In)
                 .to({ v: 1 }, time)
                 .onUpdate(() => {
-                    this.ssaoPass.maxDistance = obj.v * 15
-                    this.ssaoPass.minDistance = (1 - obj.v) * 0.2001
+                    if (this.ssaoPass) {
+                        this.ssaoPass.maxDistance = obj.v * 15
+                        this.ssaoPass.minDistance = (1 - obj.v) * 0.2001
+                    }
+
                     this.camera.position.lerpVectors(savedPos, targetPos, obj.v)
                     this.camera.quaternion.slerpQuaternions(startQ, targetQ, Math.min(1., obj.v * 1.3))
                     this.fog.far = startFogFar + (endFogFar - startFogFar) * obj.v
@@ -182,6 +187,8 @@ export class Studio {
     }
 
     hideSSAO (time: number = 3000) {
+        if (!this.ssaoPass) return
+
         const startMax = this.ssaoPass.maxDistance
         const startMin = this.ssaoPass.minDistance
         const targetMax = 0

@@ -2,24 +2,25 @@ import * as THREE from 'three'
 import { Root } from 'index'
 
 export class Materials {
-    walls00: THREE.MeshPhongMaterial
+    walls00: THREE.MeshPhongMaterial | THREE.MeshStandardMaterial
     road: THREE.MeshStandardMaterial
-    desert: THREE.MeshPhongMaterial
+    desert: THREE.MeshPhongMaterial | THREE.MeshStandardMaterial
     collision: THREE.MeshBasicMaterial
 
 
     constructor() {}
     
     init (root: Root) {
-        this.walls00 =  new THREE.MeshPhongMaterial({ 
+        //this.walls00 =  new THREE.MeshPhongMaterial({ 
+        this.walls00 =  new THREE.MeshStandardMaterial({ 
             color: 0xffffff,
             map: root.loader.assets.mapWall_01,
             bumpMap: root.loader.assets.mapWall_01,
             bumpScale: 3,
-            specular: 0x5c7974,
+            //specular: 0x5c7974,
             vertexColors: true,
             envMap: root.loader.assets.cubeSky,
-            reflectivity: .6 
+            //reflectivity: .6 
         })
         
         this.walls00.onBeforeCompile = (shader) => {
@@ -71,9 +72,10 @@ export class Materials {
             map.wrapT = THREE.RepeatWrapping
             map.repeat.set(50, 50)
         }
-        this.desert = new THREE.MeshPhongMaterial({
+        //this.desert = new THREE.MeshPhongMaterial({
+        this.desert = new THREE.MeshStandardMaterial({
             color: 0x323341,
-            specular: 0x733d8a,
+            //specular: 0x733d8a,
             map: root.loader.assets.noise00,
             bumpMap: root.loader.assets.noise00,
             bumpScale: 4,
@@ -85,7 +87,7 @@ export class Materials {
     changeWallMaterial(data: { color: number[], emissive: number[], specular: number[] }) {
         this.walls00.color = new THREE.Color(data.color[0], data.color[1], data.color[2])
         this.walls00.emissive = new THREE.Color(data.emissive[0], data.emissive[1], data.emissive[2])
-        this.walls00.specular = new THREE.Color(data.specular[0], data.specular[1], data.specular[2])
+        //this.walls00.specular = new THREE.Color(data.specular[0], data.specular[1], data.specular[2])
         this.walls00.needsUpdate = true
     }
 
@@ -98,7 +100,7 @@ export class Materials {
     changeDesertMaterial(data: { color: number[], emissive: number[], specular: number[] }) {
         this.desert.color = new THREE.Color().fromArray(data.color)
         this.desert.emissive = new THREE.Color().fromArray(data.emissive)
-        this.desert.specular = new THREE.Color().fromArray(data.specular)
+        //this.desert.specular = new THREE.Color().fromArray(data.specular)
         this.desert.needsUpdate = true
     }
 }
