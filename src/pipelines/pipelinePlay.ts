@@ -97,6 +97,9 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
                 }
                 isStarted = true
                 unsubscribe()
+                ui.setColorDark(
+                    new THREE.Color().fromArray(LEVELS[currentIndexLevel].theme.sceneBackground).getHexString()
+                )
                 ui.toggleVisibleDark(true)
                 studio.hideSSAO(300)
                 setTimeout(() => {

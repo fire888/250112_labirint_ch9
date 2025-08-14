@@ -101,6 +101,10 @@ export class Ui {
             document.body.removeChild(this.finalDark)
         }, 320)
     }
+
+    setColorDark (color) {
+        this.finalDark.style.backgroundColor = '#' + color
+    }
     
     setEnergyLevel (val) {
         const obj = { v: this._currentEnergyMinWidth }
