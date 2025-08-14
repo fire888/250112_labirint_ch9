@@ -42,6 +42,7 @@ export class Studio {
     _root: Root
     spotLight: SpotLight
     amb: THREE.AmbientLight
+    ssaoPass: SSAOPass
     composer: EffectComposer | null
 
     init (root: Root) {
@@ -69,7 +70,7 @@ export class Studio {
         
         root.loader.assets.cubeSky.colorSpace = SRGBColorSpace;
 
-        this.scene.background = root.loader.assets.cubeSky
+        this.scene.background = new THREE.Color(0x0e2535)
         this.envMap = root.loader.assets.cubeSky
         this.fog = new THREE.Fog(0x0e2535, .2, 1000)
         this.addFog()
@@ -91,15 +92,14 @@ export class Studio {
             const renderPass = new RenderPass(this.scene, this.camera)
             this.composer.addPass(renderPass)
 
-            const ssaoPass = new SSAOPass(this.scene, this.camera, window.innerWidth, window.innerHeight)
-            // ssaoPass.kernelRadius = 5
-            // ssaoPass.minDistance = 0.001
-            // ssaoPass.maxDistance = .3
-            ssaoPass.kernelRadius = 10
-            ssaoPass.minDistance = 0.001
-            ssaoPass.maxDistance = 15
-            ssaoPass.enabled = true
-            this.composer.addPass(ssaoPass)
+            this.ssaoPass = new SSAOPass(this.scene, this.camera, window.innerWidth, window.innerHeight)
+            this.ssaoPass.kernelRadius = 10
+            //this.ssaoPass.minDistance = 0.001
+            this.ssaoPass.minDistance = 2
+            //ssaoPass.maxDistance = 15
+            this.ssaoPass.maxDistance = 0
+            this.ssaoPass.enabled = true
+            this.composer.addPass(this.ssaoPass)
 
             const outputPass = new OutputPass()
             this.composer.addPass(outputPass)
@@ -153,9 +153,11 @@ export class Studio {
         this.camera.position.copy(savedPos)
         this.camera.lookAt(targetPos)
         const savedQ = new THREE.Quaternion().copy(this.camera.quaternion)
-        this.camera.lookAt(new THREE.Vector3().copy(targetPos).setY(targetPos.y - 100000))
+        this.camera.lookAt(new THREE.Vector3().copy(targetPos).setZ(targetPos.z + 100000))
         const startQ = new THREE.Quaternion().copy(this.camera.quaternion) 
         const targetQ = new THREE.Quaternion().copy(savedQ)
+
+        this.ssaoPass.maxDistance = 0
 
         return new Promise(res => {
             this.camera.position.copy(savedPos)
@@ -166,6 +168,8 @@ export class Studio {
                 .easing(Easing.Linear.In)
                 .to({ v: 1 }, time)
                 .onUpdate(() => {
+                    this.ssaoPass.maxDistance = obj.v * 15
+                    this.ssaoPass.minDistance = (1 - obj.v) * 0.2001
                     this.camera.position.lerpVectors(savedPos, targetPos, obj.v)
                     this.camera.quaternion.slerpQuaternions(startQ, targetQ, Math.min(1., obj.v * 1.3))
                     this.fog.far = startFogFar + (endFogFar - startFogFar) * obj.v
@@ -177,10 +181,33 @@ export class Studio {
         })
     }
 
-    animateFogTo(far: number, color: THREE.Color, time: number) {
+    hideSSAO (time: number = 3000) {
+        const startMax = this.ssaoPass.maxDistance
+        const startMin = this.ssaoPass.minDistance
+        const targetMax = 0
+        const targetMin = 0.2001
+
+        return new Promise(res => {
+            const obj = { v: 0 }
+            new Tween(obj)
+                .easing(Easing.Linear.In)
+                .to({ v: 1 }, time)
+                .onUpdate(() => {
+                    this.ssaoPass.maxDistance = (1 - obj.v) * startMax
+                    this.ssaoPass.minDistance = startMin + obj.v * (targetMin - startMin)
+                })
+                .onComplete(() => {
+                    res(true)
+                })
+                .start()
+        })
+    }
+
+    animateFogTo(far: number, color: number[], time: number) {
         const startFogFar = this.fog.far
         const endFogFar = far
         const startColor = new THREE.Color().copy(this.fog.color)
+        const endColor = new THREE.Color().fromArray(color)
         
         return new Promise(res => {        
             const obj = { v: 0 }
@@ -189,7 +216,7 @@ export class Studio {
                 .to({ v: 1 }, time)
                 .onUpdate(() => {
                     this.fog.far = startFogFar + (endFogFar - startFogFar) * obj.v
-                    this.fog.color.lerpColors(startColor, color, obj.v)
+                    this.fog.color.lerpColors(startColor, endColor, obj.v)
                 })
                 .onComplete(() => {
                     res(true)
@@ -197,6 +224,48 @@ export class Studio {
                 .start()
         })
     } 
+
+    animateBackgroundTo(color: number[], time: number) {
+        const startColor = new THREE.Color().copy(this.fog.color)
+        const endColor = new THREE.Color().fromArray(color)
+        
+        return new Promise(res => {        
+            const obj = { v: 0 }
+            new Tween(obj)
+                .easing(Easing.Exponential.InOut)
+                .to({ v: 1 }, time)
+                .onUpdate(() => {
+                    // @ts-ignore
+                    this.scene.background.lerpColors(startColor, endColor, obj.v)
+                })
+                .onComplete(() => {
+                    res(true)
+                })
+                .start()
+        })
+    }
+
+    animateLightTo(colorDir: number[], colorAmb: number[], time: number = 3000) {
+        const startColorDir = new THREE.Color().copy(this.dirLight.color)
+        const endColorDir = new THREE.Color().fromArray(colorDir)
+        const startColorAmb = new THREE.Color().copy(this.amb.color)
+        const endColorAmb = new THREE.Color().fromArray(colorAmb)
+
+        return new Promise(res => {        
+            const obj = { v: 0 }
+            new Tween(obj)
+                .easing(Easing.Exponential.InOut)
+                .to({ v: 1 }, time)
+                .onUpdate(() => {
+                    this.dirLight.color.lerpColors(startColorDir, endColorDir, obj.v)
+                    this.amb.color.lerpColors(startColorAmb, endColorAmb, obj.v)
+                })
+                .onComplete(() => {
+                    res(true)
+                })
+                .start()
+        })
+    }
 
     addFog() {
         this.scene.fog = this.fog
@@ -211,7 +280,11 @@ export class Studio {
         this.fog.far = far
     }
 
-    setFogColor(color: THREE.Color) {
-        this.fog.color = color
-    }   
+    setFogColor(color: number[]) {
+        this.fog.color = new THREE.Color().fromArray(color)
+    }
+    
+    setSceneBackground(color: number[]) {
+        this.scene.background = new THREE.Color().fromArray(color)
+    }
 }

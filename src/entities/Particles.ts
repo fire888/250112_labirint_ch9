@@ -102,6 +102,11 @@ export class Particles {
     }
 
     startFlyPlayerAround() {
+        for (let i = 0; i < this._vertices.length; i += 3) {
+            this._vertices[i] += 5000   
+        }
+        this._geometry.attributes.position.needsUpdate = true
+        
         for ( let i = 0; i < this._speeds.length; i += 3) {
             this._speeds[i] = Math.random() * .01 - .005
             this._speeds[i + 1] = Math.random() * .01 - .005

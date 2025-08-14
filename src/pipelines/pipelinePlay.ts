@@ -16,6 +16,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         particles,
         lab,
         audio,
+        materials,
     } = root
 
     // antigrav activity **********************************/
@@ -97,6 +98,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
                 isStarted = true
                 unsubscribe()
                 ui.toggleVisibleDark(true)
+                studio.hideSSAO(300)
                 setTimeout(() => {
                     audio.stopFly()
                     nextStepResolve()
@@ -132,8 +134,10 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     antigravLast.init(root, new THREE.Vector3(
         levelData.positionTeleporter[0], 0, levelData.positionTeleporter[1]
     ))
+    materials.changeWallMaterial(levelData.theme.materialWalls)
+    materials.changeRoadMaterial(levelData.theme.materialRoad)
+    materials.changeDesertMaterial(levelData.theme.materialGround)
     studio.setFogNearFar(.2, 1)
-    studio.setFogColor(COLOR_FOG_PLAY)
     ui.toggleVisibleDark(false)
     particles.startFlyPlayerAround()
     phisics.stopPlayerBody()
@@ -143,7 +147,9 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     const startPos = [levelData.playerStartPosition[0], .7, levelData.playerStartPosition[1]]
     await studio.cameraFlyToLevel(startPos)
     phisics.setPlayerPosition(...startPos)
-    studio.animateFogTo(levelData.fogFar, levelData.fogColor, 4000)
+    studio.animateFogTo(levelData.fogFar, levelData.theme.fogColor, 4000)
+    studio.animateBackgroundTo(levelData.theme.sceneBackground, 3000)
+    studio.animateLightTo(levelData.theme.dirLightColor, levelData.theme.ambientLightColor, 3000)
     controls.enableMove()
     ui.toggleVisibleEnergy(true)
     

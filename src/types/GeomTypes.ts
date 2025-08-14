@@ -38,6 +38,27 @@ export type TLabData = {
     positionsAntigravs: THREE.Vector3[],
 }
 
+export type TTheme = {
+        sceneBackground: number[],
+    fogColor: number[],
+    dirLightColor: number[],
+    ambientLightColor: number[],
+    materialWalls: {
+        color: number[],
+        emissive: number[],
+        specular: number[],
+    },
+    materialRoad: {
+        color: number[],
+        emissive: number[],
+    },
+    materialGround: {
+        color: number[],
+        emissive: number[],
+        specular: number[],
+    },
+}
+
 export type ILevelConf = {
     SX: number,
     SY: number,
@@ -46,22 +67,8 @@ export type ILevelConf = {
     positionTeleporter: [number, number],
     percentCompleteEnergy: number,
     playerStartPosition: [number, number],
-    fogColor: THREE.Color,
     fogFar: number,
-    materialWalls: {
-        color: THREE.Color,
-        emissive: THREE.Color,
-        specular: THREE.Color,
-    },
-    materialRoad: {
-        color: THREE.Color,
-        emissive: THREE.Color,
-    },
-    materialGround: {
-        color: THREE.Color,
-        emissive: THREE.Color,
-        specular: THREE.Color,
-    },
+    theme: TTheme,
 }
 
 export interface IHoleData {
