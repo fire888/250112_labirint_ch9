@@ -334,7 +334,20 @@ export const _M = {
             forceMat = [],
             material = new MeshBasicMaterial({ color: 0x777777 }) 
         } = data
+
+        const geometry = _M.createBufferGeometry({ v, uv, uv2, c, forceMat })
     
+        return new Mesh(geometry, material)
+    },
+    createBufferGeometry: (data: {
+        v: number[], 
+        uv?: number[], 
+        uv2?: number[], 
+        c?: number[],
+        forceMat?: number[],
+    }): BufferGeometry => {
+        const { v = [], uv = [], uv2 = [], c = [], forceMat = [] } = data
+
         const geometry = new BufferGeometry()
         const vF32 = new Float32Array(v)
         geometry.setAttribute('position', new BufferAttribute(vF32, 3))
@@ -355,7 +368,7 @@ export const _M = {
             const forceMatF32 = new Float32Array(forceMat)
             geometry.setAttribute('forcemat', new BufferAttribute(forceMatF32, 1))
         }
-        return new Mesh(geometry, material)
+        return geometry
     },
     createLabel(t: string, color: [number, number, number] = [1, 1, 1], scale = 1) {
         const canvas = document.createElement( 'canvas' );

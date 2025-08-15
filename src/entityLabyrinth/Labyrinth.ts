@@ -12,6 +12,11 @@ import { calculateHouses } from "./calculateHouses"
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810')
 const COLLISION_NAME_KEY = 'LAB_COLLISION'
 
+type THousesGeomeries = {
+    geometry: THREE.BufferGeometry,
+    vCollide: number[]
+}
+
 export class Labyrinth {
     _root: Root
     _houses: THREE.Mesh[] = []
@@ -38,6 +43,53 @@ export class Labyrinth {
         console.log('[MESSAGE:] START CALCULATE WALLS')
         d = Date.now()
         const houses: IArrayForBuffers[] = calculateHouses(this._labSheme.areasData)
+        const housesMergedGeometries: {
+            geometry: THREE.BufferGeometry,
+            vCollide: number[]
+        }[] = []
+        
+        let countVerticies = 0
+        let v = []
+        let c = []
+        let uv = []
+        let forceMat = []
+        let vCollide = []
+
+        for (let i = 0; i < houses.length; ++i) {
+            countVerticies += houses[i].v.length / 3
+            for (let j = 0; j < houses[i].v.length; j += 3) {
+                v.push(houses[i].v[j], houses[i].v[j + 1], houses[i].v[j + 2])
+            }
+            for (let j = 0; j < houses[i].c.length; j += 3) {
+                c.push(houses[i].c[j], houses[i].c[j + 1], houses[i].c[j + 2])
+            }
+            for (let j = 0; j < houses[i].uv.length; j += 2) {
+                uv.push(houses[i].uv[j], houses[i].uv[j + 1])
+            }
+            for (let j = 0; j < houses[i].forceMat.length; j += 1) {
+                forceMat.push(houses[i].forceMat[j])
+            }
+            for (let j = 0; j < houses[i].vCollide.length; j += 3) {
+                vCollide.push(houses[i].vCollide[j], houses[i].vCollide[j + 1], houses[i].vCollide[j + 2])
+            }
+
+            if (
+                !houses[i + 1] ||
+                countVerticies + houses[i + 1].v.length / 3  > 200000
+            ) {
+                housesMergedGeometries.push({
+                    geometry: _M.createBufferGeometry({ v, c, uv, forceMat }),
+                    vCollide
+                })
+
+                v = []
+                c = []
+                uv = []
+                forceMat = []
+                vCollide = []
+                countVerticies = 0
+            }
+        }
         console.log('[TIME:] COMPLETE CALCULATE HOUSES', ((Date.now() - d) / 1000).toFixed(2))
 
 
@@ -45,7 +97,7 @@ export class Labyrinth {
         d = Date.now()
         for (let i = 0; i < conf.repeats.length; ++i) {
             const offset = conf.repeats[i]
-            this._buildStrict(houses, offset[0], offset[1])  
+            this._buildStrict(housesMergedGeometries, offset[0], offset[1])  
         }
         console.log('[TIME:] COMPLETE ADD WALLS:', ((Date.now() - d) / 1000).toFixed(2))
 
@@ -96,72 +148,30 @@ export class Labyrinth {
         return this._labSheme.positionsAntigravs
     }
     
-    private _buildStrict (houses: IArrayForBuffers[], x: number, z: number) {
+    private _buildStrict (houses: THousesGeomeries[], x: number, z: number) {
         const strict = new THREE.Group()
         strict.position.x = x
         strict.position.z = z
         this._root.studio.add(strict)
 
-        let countVerticies = 0
-        let v = []
-        let c = []
-        let uv = []
-        let forceMat = []
-        let vCollide = []
-
         for (let i = 0; i < houses.length; ++i) {
-            countVerticies += houses[i].v.length / 3
-            for (let j = 0; j < houses[i].v.length; j += 3) {
-                v.push(houses[i].v[j], houses[i].v[j + 1], houses[i].v[j + 2])
-            }
-            for (let j = 0; j < houses[i].c.length; j += 3) {
-                c.push(houses[i].c[j], houses[i].c[j + 1], houses[i].c[j + 2])
-            }
-            for (let j = 0; j < houses[i].uv.length; j += 2) {
-                uv.push(houses[i].uv[j], houses[i].uv[j + 1])
-            }
-            for (let j = 0; j < houses[i].forceMat.length; j += 1) {
-                forceMat.push(houses[i].forceMat[j])
-            }
-            for (let j = 0; j < houses[i].vCollide.length; j += 3) {
-                vCollide.push(houses[i].vCollide[j], houses[i].vCollide[j + 1], houses[i].vCollide[j + 2])
-            }
+            const { geometry, vCollide } = houses[i]
 
-            if (
-                !houses[i + 1] ||
-                countVerticies + houses[i + 1].v.length / 3  > 200000
-            ) {
-                const m = _M.createMesh({ 
-                    v, 
-                    uv,
-                    c,
-                    forceMat,
-                    material: this._root.materials.walls00,
-                })
-                m.frustumCulled = false
-                strict.add(m)
-                m.position.y = .1
-                this._houses.push(m)
+            const m = new THREE.Mesh(geometry, this._root.materials.walls00)
+            m.frustumCulled = false
+            strict.add(m)
+            m.position.y = .1
+            this._houses.push(m)
 
-                const collisionMesh = _M.createMesh({
-                    v: vCollide,
-                    material: this._root.materials.collision
-                })
-                collisionMesh.name = COLLISION_NAME_KEY + '_' + Math.floor(Math.random() * 1000)
-                this._collisionsNames.push(collisionMesh.name)
-                collisionMesh.position.add(strict.position) 
-                this._root.phisics.addMeshToCollision(collisionMesh)
-
-                v = []
-                c = []
-                uv = []
-                forceMat = []
-                vCollide = []
-                countVerticies = 0
-            }
+            const collisionMesh = _M.createMesh({
+                v: vCollide,
+                material: this._root.materials.collision
+            })
+            collisionMesh.name = COLLISION_NAME_KEY + '_' + Math.floor(Math.random() * 1000)
+            this._collisionsNames.push(collisionMesh.name)
+            collisionMesh.position.add(strict.position) 
+            this._root.phisics.addMeshToCollision(collisionMesh)
         }
-
-        console.log('[MESSAGE:] HOUSES / MESHES: ', houses.length, strict.children.length)
     }
 
     private _buildRoads(areasData: IArea[], x: number, z: number) {
