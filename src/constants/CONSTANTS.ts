@@ -32,8 +32,8 @@ export const COLOR_DARK_INTERIOR: A3 = _M.hexToNormalizedRGB('000000')
 export const INNER_HOUSE_FORCE: number = 0
 export const OUTER_HOUSE_FORCE: number = 1.5
 
-//const PERCENT_ENERGY: number = 0.2
-const PERCENT_ENERGY: number = 0.0001
+const PERCENT_ENERGY: number = 0.2
+// const PERCENT_ENERGY: number = 0.0001
 
 const THEMES_2: TTheme[] = [
 // blue walls orange sky
@@ -226,26 +226,10 @@ const THEMES: TTheme[] = [
 THEMES.push(...THEMES_2)
 
 export const LEVELS: ILevelConf[] = [
-    { // VVV огромный !!! повторить 4 раза
-        playerStartPosition: [-1, -200],
-        SX: 150,
-        SY: 150,
-        N: 70,
-        repeats: [
-            [-151, -151],           
-            [1, -151],           
-            [1, 1],           
-            [-151, 1],           
-        ],
-        positionTeleporter: [0, -151],
-        percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 100,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
-    },
+
     
     // START  /////////////////////////////////////////////////////////
-
-    { // малый
+        { // малый
         playerStartPosition: [-1, -30],
         SX: 18,
         SY: 18,
@@ -261,8 +245,8 @@ export const LEVELS: ILevelConf[] = [
 
     {  // VVV квадрат средний
         playerStartPosition: [-22, -40],
-        SX: 80,
-        SY: 80,
+        SX: 60,
+        SY: 60,
         N: 30,
         repeats: [
             [-20, -20],
@@ -273,26 +257,28 @@ export const LEVELS: ILevelConf[] = [
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
 
-    { // VVV средний Y длинный 2
-        playerStartPosition: [-1, -30],
-        SX: 18,
-        SY: 80,
-        N: 6,
-        repeats: [
-            [2, -15],
-            [-19, -15],
-        ],
-        positionTeleporter: [0, 0],
-        percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 30,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
-    },
+
+
+    // { // VVV средний Y длинный 2
+    //     playerStartPosition: [-1, -30],
+    //     SX: 18,
+    //     SY: 80,
+    //     N: 6,
+    //     repeats: [
+    //         [2, -15],
+    //         [-19, -15],
+    //     ],
+    //     positionTeleporter: [0, 0],
+    //     percentCompleteEnergy: PERCENT_ENERGY,
+    //     fogFar: 30,
+    //     theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    // },
 
     { // VVV средний Y длинный 3
         playerStartPosition: [-1, -30],
         SX: 18,
-        SY: 80,
-        N: 15,
+        SY: 120,
+        N: 60,
         repeats: [
             [2, -15],
             [-19, -15],
@@ -319,7 +305,6 @@ export const LEVELS: ILevelConf[] = [
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
 
-
     { // VVV супер узкий X
         playerStartPosition: [-1, -20],
         SX: 300,
@@ -334,6 +319,7 @@ export const LEVELS: ILevelConf[] = [
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
         isSetForceAntigravNearLastPortal: true,
     },
+
     { // VVV большой - супер много домов ====== focus
         playerStartPosition: [-1, -20],
         SX: 200,
@@ -379,6 +365,7 @@ export const LEVELS: ILevelConf[] = [
         fogFar: 100,
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
+
     { // VVVV большой большие дома
         playerStartPosition: [30, -40],
         SX: 150,
@@ -393,6 +380,7 @@ export const LEVELS: ILevelConf[] = [
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
         isSetForceAntigravNearLastPortal: true,
     },
+
     { // VVVV малый малые дома
         playerStartPosition: [30, -40],
         SX: 50,
@@ -406,6 +394,7 @@ export const LEVELS: ILevelConf[] = [
         fogFar: 30,
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
+
     { // VVVV супер огромный малые дома - ширина
         playerStartPosition: [30, -40],
         SX: 300,
@@ -419,6 +408,7 @@ export const LEVELS: ILevelConf[] = [
         fogFar: 30,
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
+
     { // VVVV длинный y x 2
         playerStartPosition: [30, -40],
         SX: 40,
@@ -433,6 +423,7 @@ export const LEVELS: ILevelConf[] = [
         fogFar: 30,
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
+
     { // VVVV длинный х
         playerStartPosition: [30, -40],
         SX: 250,
@@ -446,6 +437,7 @@ export const LEVELS: ILevelConf[] = [
         fogFar: 30,
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
+    
     { // VVVV средний
         playerStartPosition: [30, -40],
         SX: 130,

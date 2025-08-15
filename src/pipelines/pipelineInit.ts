@@ -24,11 +24,6 @@ export const pipelineInit = async (root: Root) => {
         antigravLast,
     } = root
 
-    if (deviceData.isMobileDevice) {
-        root.appData.isBigLevel = false
-        root.appData.playerStartPosition = [...CONSTANTS.PLAYER_START_POS_SMALL_LEVEL]
-    }
-
     loader.init()
     await loader.loadAssets()
 
@@ -45,7 +40,7 @@ export const pipelineInit = async (root: Root) => {
 
     phisics.init(root)
     ticker.on(phisics.update.bind(phisics))
-    phisics.createPlayerPhisicsBody(root.appData.playerStartPosition)
+    phisics.createPlayerPhisicsBody([0, 0, 0])
 
     floor.init(root)
     studio.add(floor.mesh)

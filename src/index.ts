@@ -20,10 +20,6 @@ import { pipelinePlay } from "./pipelines/pipelinePlay"
 import { pipelineEnd } from "./pipelines/pipelineEnd"
 
 export type Root = {
-    appData: {
-        isBigLevel: boolean,
-        playerStartPosition: number[],
-    },
     CONSTANTS: typeof CONSTANTS,
     ticker: Ticker,
     studio: Studio,
@@ -48,10 +44,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.log("branch:" + __GIT_CURRENT_BRANCH__ + ' commit:' + __HASH_COMMIT__)
 
     const root: Root = {
-        appData: { 
-            isBigLevel: true,
-            playerStartPosition: [...CONSTANTS.PLAYER_START_POS_BIG_LEVEL], 
-        },
         CONSTANTS,
         ticker: new Ticker(),
         studio: new Studio(),

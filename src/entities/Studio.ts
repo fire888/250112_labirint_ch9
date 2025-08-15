@@ -86,24 +86,21 @@ export class Studio {
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.containerDom.appendChild(this.renderer.domElement)
 
-        //root.appData.isBigLevel = false
-        if (root.appData.isBigLevel) {
-            this.composer = new EffectComposer(this.renderer)
-            const renderPass = new RenderPass(this.scene, this.camera)
-            this.composer.addPass(renderPass)
+        this.composer = new EffectComposer(this.renderer)
+        const renderPass = new RenderPass(this.scene, this.camera)
+        this.composer.addPass(renderPass)
 
-            this.ssaoPass = new SSAOPass(this.scene, this.camera, window.innerWidth, window.innerHeight)
-            this.ssaoPass.kernelRadius = 10
-            //this.ssaoPass.minDistance = 0.001
-            this.ssaoPass.minDistance = 2
-            //ssaoPass.maxDistance = 15
-            this.ssaoPass.maxDistance = 0
-            this.ssaoPass.enabled = true
-            this.composer.addPass(this.ssaoPass)
+        this.ssaoPass = new SSAOPass(this.scene, this.camera, window.innerWidth, window.innerHeight)
+        this.ssaoPass.kernelRadius = 10
+        //this.ssaoPass.minDistance = 0.001
+        this.ssaoPass.minDistance = 2
+        //ssaoPass.maxDistance = 15
+        this.ssaoPass.maxDistance = 0
+        this.ssaoPass.enabled = true
+        this.composer.addPass(this.ssaoPass)
 
-            const outputPass = new OutputPass()
-            this.composer.addPass(outputPass)
-        }
+        const outputPass = new OutputPass()
+        this.composer.addPass(outputPass)
 
         window.addEventListener( 'resize', this.onWindowResize.bind(this))
         this.onWindowResize()
@@ -113,7 +110,7 @@ export class Studio {
         this.camera.getWorldPosition(this.spotLight.position)
         this.spotLight.position.y += .1
 
-        if (this._root.appData.isBigLevel) {
+        if (this.composer) {
             this.composer.render(140)
         } else {
             this.renderer.render(this.scene, this.camera)
