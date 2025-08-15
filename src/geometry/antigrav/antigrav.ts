@@ -63,7 +63,7 @@ export const createAntigrav = (
     }
 
     for (let i = 0; i < c.length; i += 3) {
-        forceMat.push(1)
+        forceMat.push(1.2)
     }
 
     for (let i = 0; i < N; ++i) {

@@ -77,5 +77,9 @@ export const buildAntigravLast = (): IArrayForBuffers => {
         v.push(..._v)
     }
 
+    for (let i = 0; i < forceMat.length; ++i) {
+        forceMat[i] = 1.2
+    }
+
     return { v, uv, c, vCollide, forceMat }
 }

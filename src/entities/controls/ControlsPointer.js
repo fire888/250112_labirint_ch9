@@ -119,9 +119,9 @@ export class ControlsPointer {
 
         // camera debounce
         this._timeRot += delta
-        const walkingDebounce = Math.sin(this._timeRot * 0.02) * 0.006 * this._currentSpeedForward
+        const walkingDebounce = Math.sin(this._timeRot * 0.02) * 0.002 * this._currentSpeedForward
         const idleDebounce = 
-            Math.sin(this._timeRot * 0.001) * 0.01 * (this._maxSpeedForward - Math.abs(this._currentSpeedForward)) * this._strengthIdle
+            Math.sin(this._timeRot * 0.001) * 0.0001 * (this._maxSpeedForward - Math.abs(this._currentSpeedForward)) * this._strengthIdle
         this._eulerRot.setFromQuaternion(this.camera.quaternion)
         this._eulerRot.z = walkingDebounce + idleDebounce
         this.camera.quaternion.setFromEuler(this._eulerRot)

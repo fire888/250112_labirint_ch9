@@ -43,9 +43,15 @@ export const calcDataAreas = (scheme: TSchemeElem[], conf: ILevelConf): TLabData
         ++countHouses01
     }
 
-    if (countHouses01 === 0 || countHouses00 === 0) {
-        positionsEnergy.push(new THREE.Vector3(0, 10, 10))
-        positionsAntigravs.push(new THREE.Vector3(0, .1, 10))   
+    if (
+        (countHouses01 < 1 || countHouses00 < 3) ||
+        conf.isSetForceAntigravNearLastPortal
+    ) {
+        const pos = new THREE.Vector3().fromArray([conf.positionTeleporter[0], .1, conf.positionTeleporter[1]])
+        pos.z += 10
+        positionsAntigravs.push(new THREE.Vector3().copy(pos))
+        pos.y += 10
+        positionsEnergy.push(new THREE.Vector3().copy(pos))
     }
 
     for (let i = 0; i < areasData.length; ++i) {

@@ -4,6 +4,8 @@ import { LEVELS, COLOR_FOG_PLAY } from '../constants/CONSTANTS'
 import { pause } from 'helpers/htmlHelpers'
 
 export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
+    console.log('[MESSAGE:] START PLAY LEVEL: ', currentIndexLevel)
+    
     const {
         phisics,
         energySystem,

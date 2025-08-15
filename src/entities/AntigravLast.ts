@@ -39,6 +39,7 @@ export class AntigravLast {
 
     activate () {
         const ui = this._m.geometry.attributes.uv.array
+        // draw black portal 
         for (let i = 0; i < ui.length; i += 6) {
             if (
                 ui[i] ===  tileMapWall.stoneTree[0] && 

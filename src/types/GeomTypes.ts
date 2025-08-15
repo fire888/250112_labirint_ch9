@@ -69,6 +69,7 @@ export type ILevelConf = {
     playerStartPosition: [number, number],
     fogFar: number,
     theme: TTheme,
+    isSetForceAntigravNearLastPortal?: boolean
 }
 
 export interface IHoleData {
