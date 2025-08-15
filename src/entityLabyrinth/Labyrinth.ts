@@ -80,7 +80,12 @@ export class Labyrinth {
         })
         this._roads = []
 
-        await pause(100)
+        for (let i = 0; i < this._stricts.length; ++i) {
+            this._stricts[i].parent.remove(this._stricts[i])
+        }
+        this._stricts = []
+
+        await pause(10)
     }
 
     get positionsEnergy () {
@@ -96,9 +101,36 @@ export class Labyrinth {
         strict.position.x = x
         strict.position.z = z
         this._root.studio.add(strict)
-        {
-            houses.forEach(h => {
-                const { v, uv, c, forceMat = [], vCollide = [] } = h
+
+        let countVerticies = 0
+        let v = []
+        let c = []
+        let uv = []
+        let forceMat = []
+        let vCollide = []
+
+        for (let i = 0; i < houses.length; ++i) {
+            countVerticies += houses[i].v.length / 3
+            for (let j = 0; j < houses[i].v.length; j += 3) {
+                v.push(houses[i].v[j], houses[i].v[j + 1], houses[i].v[j + 2])
+            }
+            for (let j = 0; j < houses[i].c.length; j += 3) {
+                c.push(houses[i].c[j], houses[i].c[j + 1], houses[i].c[j + 2])
+            }
+            for (let j = 0; j < houses[i].uv.length; j += 2) {
+                uv.push(houses[i].uv[j], houses[i].uv[j + 1])
+            }
+            for (let j = 0; j < houses[i].forceMat.length; j += 1) {
+                forceMat.push(houses[i].forceMat[j])
+            }
+            for (let j = 0; j < houses[i].vCollide.length; j += 3) {
+                vCollide.push(houses[i].vCollide[j], houses[i].vCollide[j + 1], houses[i].vCollide[j + 2])
+            }
+
+            if (
+                !houses[i + 1] ||
+                countVerticies + houses[i + 1].v.length / 3  > 200000
+            ) {
                 const m = _M.createMesh({ 
                     v, 
                     uv,
@@ -119,8 +151,17 @@ export class Labyrinth {
                 this._collisionsNames.push(collisionMesh.name)
                 collisionMesh.position.add(strict.position) 
                 this._root.phisics.addMeshToCollision(collisionMesh)
-            })
+
+                v = []
+                c = []
+                uv = []
+                forceMat = []
+                vCollide = []
+                countVerticies = 0
+            }
         }
+
+        console.log('[MESSAGE:] HOUSES / MESHES: ', houses.length, strict.children.length)
     }
 
     private _buildRoads(areasData: IArea[], x: number, z: number) {

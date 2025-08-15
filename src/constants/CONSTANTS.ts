@@ -226,6 +226,100 @@ const THEMES: TTheme[] = [
 THEMES.push(...THEMES_2)
 
 export const LEVELS: ILevelConf[] = [
+    { // VVV огромный !!! повторить 4 раза
+        playerStartPosition: [-1, -200],
+        SX: 150,
+        SY: 150,
+        N: 70,
+        repeats: [
+            [-151, -151],           
+            [1, -151],           
+            [1, 1],           
+            [-151, 1],           
+        ],
+        positionTeleporter: [0, -151],
+        percentCompleteEnergy: PERCENT_ENERGY,
+        fogFar: 100,
+        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    },
+    
+    // START  /////////////////////////////////////////////////////////
+
+    { // малый
+        playerStartPosition: [-1, -30],
+        SX: 18,
+        SY: 18,
+        N: 3,
+        repeats: [
+            [-19, -15],
+        ],
+        positionTeleporter: [0, 0],
+        percentCompleteEnergy: PERCENT_ENERGY,
+        fogFar: 30,
+        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    },
+
+    {  // VVV квадрат средний
+        playerStartPosition: [-22, -40],
+        SX: 80,
+        SY: 80,
+        N: 30,
+        repeats: [
+            [-20, -20],
+        ],
+        positionTeleporter: [-22, -10],
+        percentCompleteEnergy: PERCENT_ENERGY,
+        fogFar: 30,
+        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    },
+
+    { // VVV средний Y длинный 2
+        playerStartPosition: [-1, -30],
+        SX: 18,
+        SY: 80,
+        N: 6,
+        repeats: [
+            [2, -15],
+            [-19, -15],
+        ],
+        positionTeleporter: [0, 0],
+        percentCompleteEnergy: PERCENT_ENERGY,
+        fogFar: 30,
+        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    },
+
+    { // VVV средний Y длинный 3
+        playerStartPosition: [-1, -30],
+        SX: 18,
+        SY: 80,
+        N: 15,
+        repeats: [
+            [2, -15],
+            [-19, -15],
+            [-39, -15],
+        ],
+        positionTeleporter: [0, 0],
+        percentCompleteEnergy: PERCENT_ENERGY,
+        fogFar: 30,
+        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    },
+
+    { // VVVV большой
+        playerStartPosition: [30, -40],
+        SX: 150,
+        SY: 150,
+        N: 70,
+        repeats: [
+            [1, 0],
+            [-151, 0],
+        ],
+        positionTeleporter: [0, 0],
+        percentCompleteEnergy: PERCENT_ENERGY,
+        fogFar: 30,
+        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    },
+
+
     { // VVV супер узкий X
         playerStartPosition: [-1, -20],
         SX: 300,
@@ -240,7 +334,7 @@ export const LEVELS: ILevelConf[] = [
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
         isSetForceAntigravNearLastPortal: true,
     },
-    { // VVV большой - супер много домов
+    { // VVV большой - супер много домов ====== focus
         playerStartPosition: [-1, -20],
         SX: 200,
         SY: 200,
@@ -365,73 +459,21 @@ export const LEVELS: ILevelConf[] = [
         fogFar: 30,
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
-    { // VVVV большой
-        playerStartPosition: [30, -40],
+
+    { // VVV огромный !!! повторить 4 раза
+        playerStartPosition: [-1, -200],
         SX: 150,
         SY: 150,
         N: 70,
         repeats: [
-            [1, 0],
-            [-151, 0],
+            [-151, -151],           
+            [1, -151],           
+            [1, 1],           
+            [-151, 1],           
         ],
-        positionTeleporter: [0, 0],
+        positionTeleporter: [0, -151],
         percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 30,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
-    },
-    {  // VVV квадрат средний
-        playerStartPosition: [-22, -40],
-        SX: 80,
-        SY: 80,
-        N: 30,
-        repeats: [
-            [-20, -20],
-        ],
-        positionTeleporter: [-22, -10],
-        percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 30,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
-    },
-    { // VVV средний Y длинный 3
-        playerStartPosition: [-1, -30],
-        SX: 18,
-        SY: 80,
-        N: 15,
-        repeats: [
-            [2, -15],
-            [-19, -15],
-            [-39, -15],
-        ],
-        positionTeleporter: [0, 0],
-        percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 30,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
-    },
-    { // VVV средний Y длинный 2
-        playerStartPosition: [-1, -30],
-        SX: 18,
-        SY: 80,
-        N: 6,
-        repeats: [
-            [2, -15],
-            [-19, -15],
-        ],
-        positionTeleporter: [0, 0],
-        percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 30,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
-    },
-    { // малый
-        playerStartPosition: [-1, -30],
-        SX: 18,
-        SY: 18,
-        N: 3,
-        repeats: [
-            [-19, -15],
-        ],
-        positionTeleporter: [0, 0],
-        percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 30,
+        fogFar: 100,
         theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     },
 ]

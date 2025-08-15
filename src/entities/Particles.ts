@@ -35,7 +35,7 @@ export class Particles {
 
         const _vertices = []
 
-        for ( let i = 0; i < 500; i ++ ) {
+        for ( let i = 0; i < 300; i ++ ) {
             const x = Math.random() * 100 - 50
             const y = Math.random() * 15
             const z = Math.random() * 100 - 50
