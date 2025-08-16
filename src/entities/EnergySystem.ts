@@ -129,7 +129,6 @@ export class EnergySystem {
     }
 
     destroy () {
-        this._items = []
         this._root.studio.remove(this._m)
         this._m.geometry.dispose()
         this._m = null

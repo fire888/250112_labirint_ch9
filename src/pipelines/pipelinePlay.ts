@@ -118,6 +118,7 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
     })
 
     await waitLevelComplete()
+    
     lab.clear()
     antigravSystem.destroy()
     antigravLast.destroy()
