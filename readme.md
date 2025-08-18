@@ -50,13 +50,14 @@ V - add reset ui screen
 V - config colorFog colorLevelLights colorsHouses colorsRoads colorsGround
 V - add music
 V - optimize assets
-- ambient music empry pause
+- ambient music empty pause
 - add controls phone
-- fix pone cam orientation change location
+- fix phone cam orientation change location
 - if small walls angle - disable pilaster without bottom
 - fix black artefact in small angle walls
 - fix profile outer if pilaster small depth
-
+- ? add shadows
+- ? fix uv on bottom pilasters
 
 NODE v20.11.0
 
@@ -66,4 +67,4 @@ About
 
 Play
 ------------ 
-[Let's play](https://js.otrisovano.ru/android/chapter09/)
+[Let's play](https://otrisovano.ru/adventure/09/)
