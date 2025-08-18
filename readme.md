@@ -47,9 +47,12 @@ V - phone controls add disable movie
 - add many single antygravs
 V - add reset ui screen
 - start/end reset fog
-- config colorFog colorLevelLights colorsHouses colorsRoads colorsGround
+V - config colorFog colorLevelLights colorsHouses colorsRoads colorsGround
 V - add music
 V - optimize assets
+- ambient music empry pause
+- add ccontrols phone
+- fix pone cam orientation change location
 
 
 NODE v20.11.0
@@ -57,10 +60,7 @@ NODE v20.11.0
 About
 ------------   
 3d Adventure.  
-  
-  
-![pic](https://raw.githubusercontent.com/fire888/240612_labirint_ch8/refs/heads/master/templates/start-img.webp)
 
 Play
 ------------ 
-[Let's play](https://js.otrisovano.ru/android/chapter08/)
+[Let's play](https://js.otrisovano.ru/android/chapter09/)
