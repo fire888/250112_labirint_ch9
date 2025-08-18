@@ -66,11 +66,8 @@ export class Studio {
         this.scene = new Scene()
         this.scene.add(this.spotLight)
         this.scene.add(this.camera)
-        
-        root.loader.assets.cubeSky.colorSpace = SRGBColorSpace;
 
         this.scene.background = new THREE.Color(0x0e2535)
-        this.envMap = root.loader.assets.cubeSky
         this.fog = new THREE.Fog(0x0e2535, .2, 1000)
         this.addFog()
 

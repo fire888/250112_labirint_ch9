@@ -6,21 +6,19 @@ export class Materials {
     road: THREE.MeshStandardMaterial
     desert: THREE.MeshPhongMaterial | THREE.MeshStandardMaterial
     collision: THREE.MeshBasicMaterial
-
-
-    constructor() {}
     
     init (root: Root) {
-        //this.walls00 =  new THREE.MeshPhongMaterial({ 
+        {
+            root.loader.assets.cubeSky.colorSpace = THREE.SRGBColorSpace;
+        }
+        
         this.walls00 =  new THREE.MeshStandardMaterial({ 
             color: 0xffffff,
             map: root.loader.assets.mapWall_01,
             bumpMap: root.loader.assets.mapWall_01,
             bumpScale: 3,
-            //specular: 0x5c7974,
             vertexColors: true,
             envMap: root.loader.assets.cubeSky,
-            //reflectivity: .6 
         })
         
         this.walls00.onBeforeCompile = (shader) => {
@@ -61,7 +59,6 @@ export class Materials {
             color: 0xffffff,
             map: root.loader.assets.roadImg,
             bumpMap: root.loader.assets.roadImg,
-            //bumpScale: 7,
             bumpScale: 17,
             vertexColors: true,
         })
@@ -72,10 +69,9 @@ export class Materials {
             map.wrapT = THREE.RepeatWrapping
             map.repeat.set(50, 50)
         }
-        //this.desert = new THREE.MeshPhongMaterial({
+
         this.desert = new THREE.MeshStandardMaterial({
             color: 0x323341,
-            //specular: 0x733d8a,
             map: root.loader.assets.noise00,
             bumpMap: root.loader.assets.noise00,
             bumpScale: 4,
@@ -85,40 +81,20 @@ export class Materials {
     }
 
     changeWallMaterial(data: { color: number[], emissive: number[], specular: number[] }) {
-        // data.emissive.forEach((element, i) => {
-        //     data.emissive[i] = element * .4
-        // })
-        // data.color.forEach((element, i) => {
-        //     data.color[i] = element * 1.2
-        // })
-        this.walls00.color = new THREE.Color(data.color[0], data.color[1], data.color[2])
-        this.walls00.emissive = new THREE.Color(data.emissive[0], data.emissive[1], data.emissive[2])
-        //this.walls00.specular = new THREE.Color(data.specular[0], data.specular[1], data.specular[2])
+        this.walls00.color.fromArray(data.color)
+        this.walls00.emissive.fromArray(data.emissive)
         this.walls00.needsUpdate = true
     }
 
     changeRoadMaterial(data: { color: number[], emissive: number[] }) {
-        // data.emissive.forEach((element, i) => {
-        //     data.emissive[i] = element * .4
-        // })
-        // data.color.forEach((element, i) => {
-        //     data.color[i] = element * 1.2
-        // })
-        this.road.color = new THREE.Color(data.color[0], data.color[1], data.color[2])
-        this.road.emissive = new THREE.Color(data.emissive[0], data.emissive[1], data.emissive[2])
+        this.road.color.fromArray(data.color)
+        this.road.emissive.fromArray(data.emissive)
         this.road.needsUpdate = true
     }
 
     changeDesertMaterial(data: { color: number[], emissive: number[], specular: number[] }) {
-        // data.emissive.forEach((element, i) => {
-        //     data.emissive[i] = element * .4
-        // })
-        // data.color.forEach((element, i) => {
-        //     data.color[i] = element * 1.2
-        // })
-        this.desert.color = new THREE.Color().fromArray(data.color)
-        this.desert.emissive = new THREE.Color().fromArray(data.emissive)
-        //this.desert.specular = new THREE.Color().fromArray(data.specular)
+        this.desert.color.fromArray(data.color)
+        this.desert.emissive.fromArray(data.emissive)
         this.desert.needsUpdate = true
     }
 }
