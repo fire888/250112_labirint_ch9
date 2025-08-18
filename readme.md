@@ -51,8 +51,11 @@ V - config colorFog colorLevelLights colorsHouses colorsRoads colorsGround
 V - add music
 V - optimize assets
 - ambient music empry pause
-- add ccontrols phone
+- add controls phone
 - fix pone cam orientation change location
+- if small walls angle - disable pilaster without bottom
+- fix black artefact in small angle walls
+- fix profile outer if pilaster small depth
 
 
 NODE v20.11.0
