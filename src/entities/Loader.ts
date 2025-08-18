@@ -17,13 +17,6 @@ import wallTile from '../assets/tiles_wall.webp'
 import noise00 from '../assets/noise00.webp'
 import sprite from '../assets/sprite.webp'
 
-import nx from '../assets/sky/nx.webp'
-import ny from '../assets/sky/ny.webp'
-import nz from '../assets/sky/nz.webp'
-import px from '../assets/sky/px.webp'
-import py from '../assets/sky/py.webp'
-import pz from '../assets/sky/pz.webp'
-
 type Assets = {
     sprite: Texture,
     soundAmbient: any,
@@ -35,7 +28,6 @@ type Assets = {
     lightMap: Texture,
     mapWall_01: Texture,
     noise00: Texture,
-    cubeSky: CubeTexture,
 }
 type ResultLoad = {
     key: keyof Assets,
@@ -56,7 +48,6 @@ export class LoaderAssets {
         lightMap: null,
         mapWall_01: null,
         noise00: null,
-        cubeSky: null,
     }
 
     init () {}
@@ -100,8 +91,6 @@ export class LoaderAssets {
                 loadTexture('roadImg', roadImg),
                 loadTexture('mapWall_01', wallTile),
                 loadTexture('noise00', noise00),
-
-                loadCubeTexture('cubeSky', [px, nx, py, ny, pz, nz]),
             ]
 
             Promise.all(promises).then(result => {

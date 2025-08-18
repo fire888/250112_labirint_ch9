@@ -26,7 +26,7 @@ export class AudioManager {
         this._steps.setBuffer(root.loader.assets.soundStepsMetal)
         this._steps.setLoop(true)
         this._steps.playbackRate = 1.5
-        this._steps.setVolume(.6)
+        this._steps.setVolume(.3)
 
         this._energy = new Audio(listener)
         this._energy.setBuffer(root.loader.assets.soundBzink)

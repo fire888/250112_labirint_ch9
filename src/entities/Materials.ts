@@ -8,17 +8,12 @@ export class Materials {
     collision: THREE.MeshBasicMaterial
     
     init (root: Root) {
-        {
-            root.loader.assets.cubeSky.colorSpace = THREE.SRGBColorSpace;
-        }
-        
         this.walls00 =  new THREE.MeshStandardMaterial({ 
             color: 0xffffff,
             map: root.loader.assets.mapWall_01,
             bumpMap: root.loader.assets.mapWall_01,
             bumpScale: 3,
             vertexColors: true,
-            envMap: root.loader.assets.cubeSky,
         })
         
         this.walls00.onBeforeCompile = (shader) => {
