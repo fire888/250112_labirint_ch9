@@ -77,6 +77,8 @@ export class ControlsSystem {
                 if (this._orbit.isEnabled) {
                     this._orbit.disable()
                     this._currentWalkingControls.enable()
+
+                    root.studio.addFog()
                 } else {
                     this._currentWalkingControls.disable()
                     this._orbit.enable()
@@ -103,9 +105,11 @@ export class ControlsSystem {
     }
 
     connect () {
-        this._pointer.cameraConnect()
         if (this._phone.constructor.name === this._currentWalkingControls.constructor.name) {
             this._phone.enable()
+        }
+        if (this._pointer.constructor.name === this._currentWalkingControls.constructor.name) {
+            this._pointer.cameraConnect()
         }
     }
 
@@ -126,5 +130,8 @@ export class ControlsSystem {
     enableMove() {
         this._pointer.enableMove()
         this._phone.enableMove()
+        if (this._currentWalkingControls.constructor.name === this._phone.constructor.name) { 
+            this._phone.enable() 
+        }
     }
 }

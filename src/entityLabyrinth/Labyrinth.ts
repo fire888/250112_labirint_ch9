@@ -40,7 +40,7 @@ export class Labyrinth {
         console.log('[TIME:] COMPLETE SCHEME:', ((Date.now() - d) / 1000).toFixed(2))
 
 
-        console.log('[MESSAGE:] START CALCULATE WALLS')
+        console.log('[MESSAGE:] START CALCULATE HOUSES')
         d = Date.now()
         const houses: IArrayForBuffers[] = calculateHouses(this._labSheme.areasData)
         const housesMergedGeometries: {
@@ -93,13 +93,13 @@ export class Labyrinth {
         console.log('[TIME:] COMPLETE CALCULATE HOUSES', ((Date.now() - d) / 1000).toFixed(2))
 
 
-        console.log('[MESSAGE:] START ADD WALLS')
+        console.log('[MESSAGE:] START ADD HOUSES')
         d = Date.now()
         for (let i = 0; i < conf.repeats.length; ++i) {
             const offset = conf.repeats[i]
             this._buildStrict(housesMergedGeometries, offset[0], offset[1])  
         }
-        console.log('[TIME:] COMPLETE ADD WALLS:', ((Date.now() - d) / 1000).toFixed(2))
+        console.log('[TIME:] COMPLETE ADD HOUSES:', ((Date.now() - d) / 1000).toFixed(2))
 
 
         console.log('[MESSAGE:] START ADD ROADS ')

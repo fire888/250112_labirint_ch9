@@ -50,9 +50,10 @@ V - add reset ui screen
 V - config colorFog colorLevelLights colorsHouses colorsRoads colorsGround
 V - add music
 V - optimize assets
-- ambient music empty pause
+V - fix orbit fog
+V - ambient music empty pause
 - add controls phone
-- fix phone cam orientation change location
+V - fix phone cam orientation change location
 - if small walls angle - disable pilaster without bottom
 - fix black artefact in small angle walls
 - fix profile outer if pilaster small depth
