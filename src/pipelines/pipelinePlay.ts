@@ -77,7 +77,10 @@ export const pipelinePlay = async (root: Root, currentIndexLevel = 0) => {
         antigravLast.activate()
         const p = antigravLast.getPosition()
         particles.startForcreMovieAntigrav(p)
-        
+        setTimeout(() => {
+                audio.playDoor()
+        }, 1000)
+
         // final fly
         phisics.onCollision(antigravLast.nameSpaceTrigger, (name: string) => {
             isEnabledAntigrav = false
