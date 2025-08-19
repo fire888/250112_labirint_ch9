@@ -14,7 +14,6 @@ import {
 const D = .2
 
 export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
-
     const H = Math.random() * 12 + 3 
 
     const v: number[] = [] 
@@ -26,13 +25,28 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
 
     const wallsData_TMP: IdataForFillWall_TMP[] = []
 
+    // filter short walls
+    const perimeterFiltered = [perimeter[0]]
     for (let i = 1; i < perimeter.length; ++i) {
         const prev = perimeter[i - 1]
-        const cur =  perimeter[i]
+        const curr = perimeter[i]
+
+        /** проверяем очень короткие стены */
+        const d1 = curr[0] - prev[0]
+        const d2 = curr[1] - prev[1]
+        const d = Math.sqrt(d1 * d1 + d2 * d2)
+        if (d > .3) {
+            perimeterFiltered.push(perimeter[i])
+        }
+    }
+
+    for (let i = 1; i < perimeterFiltered.length; ++i) {
+        const prev = perimeterFiltered[i - 1]
+        const cur =  perimeterFiltered[i]
 
         /** проверяем что следующая точка не лежит на предыдущей */
         if (cur[0] === prev[0] && cur[1] === prev[1]) {
-            continue;
+           continue;
         }
 
         const wallDataSheme_tmp: IdataForFillWall_TMP = {
@@ -176,7 +190,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
 
     // roof
     const centerYOffset = 2
-    const area = createArea00(perimeter, COLOR_BLUE_D, tileMapWall.roofTree, centerYOffset)           
+    const area = createArea00(perimeterFiltered, COLOR_BLUE_D, tileMapWall.roofTree, centerYOffset)           
     _M.translateVertices(area.v, 0, H, 0)
     v.push(...area.v)
     c.push(...area.c)
@@ -185,7 +199,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
 
     // roof bottom side
     {
-        const perimeterReverse = perimeter.slice().reverse()
+        const perimeterReverse = perimeterFiltered.slice().reverse()
         const area = createArea00(perimeterReverse, COLOR_DARK_INTERIOR, tileMapWall.emptyTree, 0)           
         _M.translateVertices(area.v, 0, H, 0)
         v.push(...area.v)
@@ -195,7 +209,7 @@ export const buildHouse00 = (perimeter: IPerimeter): IArrayForBuffers => {
 
     // first floor
     {
-        const area = createArea00(perimeter, COLOR_DARK_INTERIOR, tileMapWall.emptyTree, 0)           
+        const area = createArea00(perimeterFiltered, COLOR_DARK_INTERIOR, tileMapWall.emptyTree, 0)           
         _M.translateVertices(area.v, 0, .01, 0)
         v.push(...area.v)
         c.push(...area.c)

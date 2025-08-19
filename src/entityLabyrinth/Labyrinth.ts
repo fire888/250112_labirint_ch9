@@ -8,6 +8,8 @@ import * as THREE from "three"
 import { IArrayForBuffers, SegmentType, IArea, ILevelConf, TSchemeElem, TLabData } from "types/GeomTypes";
 import { pause } from "helpers/htmlHelpers"
 import { calculateHouses } from "./calculateHouses"
+import { buildExamples } from "./buildExamples"
+import { IS_DEBUG_SHOW_BUILD_HOUSES_EXAMPLES } from "constants/CONSTANTS"
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810')
 const COLLISION_NAME_KEY = 'LAB_COLLISION'
@@ -31,7 +33,9 @@ export class Labyrinth {
     }
 
     async build (conf: ILevelConf) {
-
+        if (IS_DEBUG_SHOW_BUILD_HOUSES_EXAMPLES) {
+            buildExamples(this._root)
+        }
 
         console.log('[MESSAGE:] START SCHEME')
         let d = Date.now()

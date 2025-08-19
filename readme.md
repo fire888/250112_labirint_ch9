@@ -55,7 +55,7 @@ V - ambient music empty pause
 - add controls phone
 V - fix phone cam orientation change location
 - if small walls angle - disable pilaster without bottom
-- fix black artefact in small angle walls
+V - fix black artefact in small angle walls
 - fix profile outer if pilaster small depth
 - ? add shadows
 - ? fix uv on bottom pilasters
