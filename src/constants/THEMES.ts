@@ -184,3 +184,5 @@ const THEMES_2: TTheme[] = [
 ]
 
 export const THEMES: TTheme[] = [...THEMES_1, ...THEMES_2]
+
+export const THEMES_START: TTheme[] = [THEMES[0], THEMES[1], THEMES[2]]

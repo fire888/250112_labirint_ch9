@@ -1,6 +1,6 @@
 import { _M, A3 } from "../geometry/_m"
 import { ILevelConf } from "types/GeomTypes"
-import { THEMES, THEME_NORMAL } from "./THEMES"
+import { THEMES, THEMES_START} from "./THEMES"
 import * as THREE from 'three'
 
 // DEBUG FLAGS ************************************* / 
@@ -44,48 +44,53 @@ export const INNER_HOUSE_FORCE: number = 0
 export const OUTER_HOUSE_FORCE: number = 1.5
 
 export const LEVELS: ILevelConf[] = [
-    // { // VVVV большой тест
-    //     playerStartPosition: [30, -40],
-    //     SX: 40,
-    //     SY: 40,
-    //     N: 15,
+    // { // VVV огромный !!! повторить 4 раза
+    //     playerStartPosition: [-1, -200],
+    //     SX: 150,
+    //     SY: 150,
+    //     N: 70,
     //     repeats: [
-    //         [1, 0],
-    //         //[-151, 0],
+    //         [-151, -151],           
+    //         [1, -151],           
+    //         [1, 1],           
+    //         [-151, 1],           
+    //     ],
+    //     positionTeleporter: [0, -151],
+    //     percentCompleteEnergy: PERCENT_ENERGY,
+    //     fogFar: 100,
+    //     theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+    // },
+
+
+    // START  /////////////////////////////////////////////////////////
+    // { // малый
+    //     playerStartPosition: [-1, -30],
+    //     SX: 18,
+    //     SY: 18,
+    //     N: 3,
+    //     repeats: [
+    //         [-19, -15],
     //     ],
     //     positionTeleporter: [0, 0],
     //     percentCompleteEnergy: PERCENT_ENERGY,
     //     fogFar: 30,
-    //     theme: THEME_NORMAL,
+    //     theme: THEMES[Math.floor(Math.random() * THEMES.length)],
     // },
-
-    // START  /////////////////////////////////////////////////////////
-    { // малый
-        playerStartPosition: [-1, -30],
-        SX: 18,
-        SY: 18,
-        N: 3,
-        repeats: [
-            [-19, -15],
-        ],
-        positionTeleporter: [0, 0],
-        percentCompleteEnergy: PERCENT_ENERGY,
-        fogFar: 30,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
-    },
 
     {  // VVV квадрат средний
         playerStartPosition: [-22, -40],
-        SX: 60,
-        SY: 60,
-        N: 30,
+        SX: 80,
+        SY: 80,
+        N: 50,
         repeats: [
             [-20, -20],
         ],
         positionTeleporter: [-22, -10],
         percentCompleteEnergy: PERCENT_ENERGY,
         fogFar: 30,
-        theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+        //theme: THEMES[Math.floor(Math.random() * THEMES.length)],
+        theme: THEMES_START[Math.floor(Math.random() * THEMES_START.length)],
+        isSetForceAntigravNearLastPortal: true,
     },
 
     { // VVV средний Y длинный 3
