@@ -23,14 +23,14 @@ export class Ui {
         this._countEnergyInner.style.opacity = 0
         this._countEnergy.appendChild(this._countEnergyInner)
 
-        this._infoButton = document.createElement('div')
-        this._infoButton.classList.add('butt-info')
-        this._infoButton.classList.add('control-small')
-        this._infoButton.style.display = 'none'
-        this._infoButton.addEventListener('pointerdown', () => {
-            this._showInfo()
-        })
-        document.body.appendChild(this._infoButton) 
+        // this._infoButton = document.createElement('div')
+        // this._infoButton.classList.add('butt-info')
+        // this._infoButton.classList.add('control-small')
+        // this._infoButton.style.display = 'none'
+        // this._infoButton.addEventListener('pointerdown', () => {
+        //     this._showInfo()
+        // })
+        // document.body.appendChild(this._infoButton) 
     }
 
     async hideStartScreen () {
@@ -86,7 +86,9 @@ export class Ui {
     }
 
     toggleVisibleButtonLock (visible) {
-        this._infoButton.style.display = visible ? 'block' : 'none'
+        if (this._infoButton) { 
+            this._infoButton.style.display = visible ? 'block' : 'none'
+        }
         this.lockButton.style.display = visible ? 'flex' : 'none'
     }
 
@@ -140,52 +142,48 @@ export class Ui {
         wrapper.appendChild(complete)
 
         const complete2 = document.createElement('div')
-        complete2.classList.add('bottom20px')
+        complete2.classList.add('bottom60px')
         complete2.innerHTML = 'thank you for playing!'
         complete2.style.opacity = 0
         wrapper.appendChild(complete2)
 
-        const prev = document.createElement('div')
-        prev.innerHTML = 'Previous chapters:'
-        prev.style.opacity = 0
-        wrapper.appendChild(prev)
+        // const prev = document.createElement('div')
+        // prev.innerHTML = 'Previous chapters:'
+        // prev.style.opacity = 0
+        // wrapper.appendChild(prev)
 
-        const list = createChaptersList()
-        list.classList.add('bottom20px')
-        list.style.opacity = 0
-        wrapper.appendChild(list)
+        // const list = createChaptersList()
+        // list.classList.add('bottom20px')
+        // list.style.opacity = 0
+        // wrapper.appendChild(list)
 
-        const bottom = document.createElement('div')
-        bottom.style.opacity = 0
-        bottom.innerHTML = 'Next chapter comming soon,'
-        wrapper.appendChild(bottom)
+        // const bottom = document.createElement('div')
+        // bottom.style.opacity = 0
+        // bottom.innerHTML = 'Next chapter comming soon,'
+        // wrapper.appendChild(bottom)
 
-        const bottom1 = document.createElement('div')
-        bottom1.classList.add('bottom60px')
-        bottom1.style.opacity = 0
-        bottom1.innerHTML = 'to be continued...'
-        wrapper.appendChild(bottom1)
+        //const bottom1 = document.createElement('div')
+        //bottom1.classList.add('bottom60px')
+        //bottom1.style.opacity = 0
+        //bottom1.innerHTML = 'to be continued...'
+        //wrapper.appendChild(bottom1)
 
         document.body.appendChild(wrapper)
-        await opacityByTransition(wrapper, 1, 300)
+        opacityByTransition(wrapper, 1, 300)
+        opacityByTransition(complete, 1, 300)
+        opacityByTransition(complete2, 1, 300)
 
-        await pause(300)
-        await opacityByTransition(complete, 1, 300)
+        //await pause(300)
+        //await opacityByTransition(prev, 1, 300)
 
-        await pause(300)
-        await opacityByTransition(complete2, 1, 300)
+        //await pause(300)
+        //await opacityByTransition(list, 1, 300)
 
-        await pause(300)
-        await opacityByTransition(prev, 1, 300)
+        //await pause(300)
+        //await opacityByTransition(bottom, 1, 300)
 
-        await pause(300)
-        await opacityByTransition(list, 1, 300)
-
-        await pause(300)
-        await opacityByTransition(bottom, 1, 300)
-
-        await pause(500)
-        await opacityByTransition(bottom1, 1, 300)
+        //await pause(500)
+        //await opacityByTransition(bottom1, 1, 300)
 
         await pause(300)
         await opacityByTransition(this.finalDark, 0, 5000)
