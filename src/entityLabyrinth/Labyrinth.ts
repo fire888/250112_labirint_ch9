@@ -7,9 +7,10 @@ import { tileMapWall } from "geometry/tileMapWall"
 import * as THREE from "three"
 import { IArrayForBuffers, SegmentType, IArea, ILevelConf, TSchemeElem, TLabData } from "types/GeomTypes";
 import { pause } from "helpers/htmlHelpers"
-import { calculateHouses } from "./calculateHouses"
 import { buildExamples } from "./buildExamples"
 import { IS_DEBUG_SHOW_BUILD_HOUSES_EXAMPLES } from "constants/CONSTANTS"
+import { buildHouse00 } from "../geometry/house00/buildHouse00"
+import { buildHouse01 } from "../geometry/house01/buildHouse01"
 
 const COLOR_FLOOR: A3 = _M.hexToNormalizedRGB('090810')
 const COLLISION_NAME_KEY = 'LAB_COLLISION'
@@ -43,10 +44,24 @@ export class Labyrinth {
         this._labSheme = calcDataAreas(scheme, conf)
         console.log('[TIME:] COMPLETE SCHEME:', ((Date.now() - d) / 1000).toFixed(2))
 
-
         console.log('[MESSAGE:] START CALCULATE HOUSES')
         d = Date.now()
-        const houses: IArrayForBuffers[] = calculateHouses(this._labSheme.areasData)
+        const houses: IArrayForBuffers[] = []
+        for (let i = 0; i < this._labSheme.areasData.length; ++i) {
+            try {
+                if (this._labSheme.areasData[i].typeSegment === SegmentType.HOUSE_00) {
+                    const houseData: IArrayForBuffers = buildHouse00(this._labSheme.areasData[i].perimeterInner)
+                    houses.push(houseData) 
+                }
+                if (this._labSheme.areasData[i].typeSegment === SegmentType.HOUSE_01) {
+                    const houseData: IArrayForBuffers = buildHouse01(this._labSheme.areasData[i].perimeterInner)
+                    houses.push(houseData)                    
+                }
+            } catch (e) {   
+                console.error('[ERROR:] CALCULATE HOUSES', e)
+            }
+        }
+
         const housesMergedGeometries: {
             geometry: THREE.BufferGeometry,
             vCollide: number[]

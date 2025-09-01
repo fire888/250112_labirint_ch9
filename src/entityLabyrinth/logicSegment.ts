@@ -12,29 +12,33 @@ export const calcDataAreas = (scheme: TSchemeElem[], conf: ILevelConf): TLabData
     let countHouses01 = 0
 
     for (let i = 0; i < scheme.length; ++i) {
-        const area = _M.area(scheme[i].area)
-        const center = _M.center(scheme[i].area) 
-        let typeSegment = SegmentType.HOUSE_00
-        if (Math.random() < .2) {
-            typeSegment = SegmentType.HOUSE_01
-        }
-        if (Math.random() < .05) {
-            typeSegment = SegmentType.AREA_00
-        }
-        if (typeSegment === SegmentType.HOUSE_01) {
-            ++countHouses01
-        }
-        if (typeSegment === SegmentType.HOUSE_00) {
-            ++countHouses00
-        }
+        try {
+            const area = _M.area(scheme[i].area)
+            const center = _M.center(scheme[i].area) 
+            let typeSegment = SegmentType.HOUSE_00
+            if (Math.random() < .2) {
+                typeSegment = SegmentType.HOUSE_01
+            }
+            if (Math.random() < .05) {
+                typeSegment = SegmentType.AREA_00
+            }
+            if (typeSegment === SegmentType.HOUSE_01) {
+                ++countHouses01
+            }
+            if (typeSegment === SegmentType.HOUSE_00) {
+                ++countHouses00
+            }
 
-        areasData.push({
-            center,
-            area,
-            perimeter: scheme[i].area,
-            perimeterInner: scheme[i].offset,
-            typeSegment,
-        })
+            areasData.push({
+                center,
+                area,
+                perimeter: scheme[i].area,
+                perimeterInner: scheme[i].offset,
+                typeSegment,
+            })
+        } catch (e) {
+            console.error('[ERROR:] CALCULATE AREAS', e)
+        }
     }
 
     if (countHouses00 > 2 && countHouses01 === 0) {
@@ -55,14 +59,18 @@ export const calcDataAreas = (scheme: TSchemeElem[], conf: ILevelConf): TLabData
     }
 
     for (let i = 0; i < areasData.length; ++i) {
-        const { center, typeSegment } = areasData[i]
-        for (let j = 0; j < conf.repeats.length; ++j) {
-            const offset = conf.repeats[j]
-            if (typeSegment === SegmentType.HOUSE_00) {
-                positionsEnergy.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
-            } else if (typeSegment === SegmentType.HOUSE_01) {
-                positionsAntigravs.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
+        try {
+            const { center, typeSegment } = areasData[i]
+            for (let j = 0; j < conf.repeats.length; ++j) {
+                const offset = conf.repeats[j]
+                if (typeSegment === SegmentType.HOUSE_00) {
+                    positionsEnergy.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
+                } else if (typeSegment === SegmentType.HOUSE_01) {
+                    positionsAntigravs.push(new THREE.Vector3(center[0] + offset[0], .1, center[1] + offset[1]))
+                }
             }
+        } catch (e) {
+            console.error('[ERROR:] CALCULATE POSITION ENERGY/ANTIGRAVS', e)
         }
     }
 
