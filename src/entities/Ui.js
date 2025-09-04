@@ -1,5 +1,6 @@
 import { Tween, Interpolation } from '@tweenjs/tween.js'
 import { pause, elementClickOnce } from '../helpers/htmlHelpers'
+import { IS_OLD_GAMES_INFO } from 'constants/CONSTANTS'
 
 const ENERGY_MAX_WIDTH = 30
 
@@ -23,14 +24,16 @@ export class Ui {
         this._countEnergyInner.style.opacity = 0
         this._countEnergy.appendChild(this._countEnergyInner)
 
-        // this._infoButton = document.createElement('div')
-        // this._infoButton.classList.add('butt-info')
-        // this._infoButton.classList.add('control-small')
-        // this._infoButton.style.display = 'none'
-        // this._infoButton.addEventListener('pointerdown', () => {
-        //     this._showInfo()
-        // })
-        // document.body.appendChild(this._infoButton) 
+        if (IS_OLD_GAMES_INFO) {
+            this._infoButton = document.createElement('div')
+            this._infoButton.classList.add('butt-info')
+            this._infoButton.classList.add('control-small')
+            this._infoButton.style.display = 'none'
+            this._infoButton.addEventListener('pointerdown', () => {
+                this._showInfo()
+            })
+            document.body.appendChild(this._infoButton)
+        }
     }
 
     async hideStartScreen () {
@@ -130,63 +133,89 @@ export class Ui {
     }
 
     async showFinalPage () {
+        if (!IS_OLD_GAMES_INFO) {
+            const wrapper = document.createElement('div')
+            wrapper.style.opacity = 0
+            wrapper.classList.add('final-page')
 
-        const wrapper = document.createElement('div')
-        wrapper.style.opacity = 0
-        wrapper.classList.add('final-page')
+            const complete = document.createElement('div')
+            complete.classList.add('top20px')
+            complete.innerHTML = 'You are done,'
+            complete.style.opacity = 0
+            wrapper.appendChild(complete)
 
-        const complete = document.createElement('div')
-        complete.classList.add('top20px')
-        complete.innerHTML = 'You are done,'
-        complete.style.opacity = 0
-        wrapper.appendChild(complete)
+            const complete2 = document.createElement('div')
+            complete2.classList.add('bottom60px')
+            complete2.innerHTML = 'thank you for playing!'
+            complete2.style.opacity = 0
+            wrapper.appendChild(complete2)
 
-        const complete2 = document.createElement('div')
-        complete2.classList.add('bottom60px')
-        complete2.innerHTML = 'thank you for playing!'
-        complete2.style.opacity = 0
-        wrapper.appendChild(complete2)
+            document.body.appendChild(wrapper)
+            opacityByTransition(wrapper, 1, 300)
+            opacityByTransition(complete, 1, 300)
+            opacityByTransition(complete2, 1, 300)
 
-        // const prev = document.createElement('div')
-        // prev.innerHTML = 'Previous chapters:'
-        // prev.style.opacity = 0
-        // wrapper.appendChild(prev)
+            await pause(300)
+            await opacityByTransition(this.finalDark, 0, 5000)
+        
+        } else {
+            const wrapper = document.createElement('div')
+            wrapper.style.opacity = 0
+            wrapper.classList.add('final-page')
 
-        // const list = createChaptersList()
-        // list.classList.add('bottom20px')
-        // list.style.opacity = 0
-        // wrapper.appendChild(list)
+            const complete = document.createElement('div')
+            complete.classList.add('top20px')
+            complete.innerHTML = 'You are done,'
+            complete.style.opacity = 0
+            wrapper.appendChild(complete)
 
-        // const bottom = document.createElement('div')
-        // bottom.style.opacity = 0
-        // bottom.innerHTML = 'Next chapter comming soon,'
-        // wrapper.appendChild(bottom)
+            const complete2 = document.createElement('div')
+            complete2.classList.add('bottom20px')
+            complete2.innerHTML = 'thank you for playing!'
+            complete2.style.opacity = 0
+            wrapper.appendChild(complete2)
 
-        //const bottom1 = document.createElement('div')
-        //bottom1.classList.add('bottom60px')
-        //bottom1.style.opacity = 0
-        //bottom1.innerHTML = 'to be continued...'
-        //wrapper.appendChild(bottom1)
+            const prev = document.createElement('div')
+            prev.innerHTML = 'Previous chapters:'
+            prev.style.opacity = 0
+            wrapper.appendChild(prev)
 
-        document.body.appendChild(wrapper)
-        opacityByTransition(wrapper, 1, 300)
-        opacityByTransition(complete, 1, 300)
-        opacityByTransition(complete2, 1, 300)
+            const list = createChaptersList()
+            list.classList.add('bottom20px')
+            list.style.opacity = 0
+            wrapper.appendChild(list)
 
-        //await pause(300)
-        //await opacityByTransition(prev, 1, 300)
+            const bottom = document.createElement('div')
+            bottom.style.opacity = 0
+            bottom.innerHTML = 'Next chapter comming soon,'
+            wrapper.appendChild(bottom)
 
-        //await pause(300)
-        //await opacityByTransition(list, 1, 300)
+            const bottom1 = document.createElement('div')
+            bottom1.classList.add('bottom60px')
+            bottom1.style.opacity = 0
+            bottom1.innerHTML = 'to be continued...'
+            wrapper.appendChild(bottom1)
 
-        //await pause(300)
-        //await opacityByTransition(bottom, 1, 300)
+            document.body.appendChild(wrapper)
+            opacityByTransition(wrapper, 1, 300)
+            opacityByTransition(complete, 1, 300)
+            opacityByTransition(complete2, 1, 300)
 
-        //await pause(500)
-        //await opacityByTransition(bottom1, 1, 300)
+            await pause(300)
+            await opacityByTransition(prev, 1, 300)
 
-        await pause(300)
-        await opacityByTransition(this.finalDark, 0, 5000)
+            await pause(300)
+            await opacityByTransition(list, 1, 300)
+
+            await pause(300)
+            await opacityByTransition(bottom, 1, 300)
+
+            await pause(500)
+            await opacityByTransition(bottom1, 1, 300)
+
+            await pause(300)
+            await opacityByTransition(this.finalDark, 0, 5000)
+        }
     }
 
     _showInfo () {
@@ -200,8 +229,8 @@ export class Ui {
         wrapper.appendChild(createOffset(20))
 
         const close = document.createElement('div')
-        close.innerHTML = 'Close'
-        close.style.textAlign = 'right'
+        close.innerHTML = '<span class="colW">Close</span>'
+        close.style.textAlign = 'center'
         close.style.textDecoration = 'underline'
         close.style.cursor = 'pointer'
         close.addEventListener('pointerdown', () => {
@@ -227,25 +256,18 @@ export class Ui {
 
         {
             const prev = document.createElement('div')
-            prev.innerHTML = 'To fly around level press key \'O\''
+            prev.innerHTML = 'To fly around level press key <span class="colW">\'O\'</span> <br> To change theme press key <span class="colW">\'N\'</span>'
             wrapper.appendChild(prev)
         }
 
         wrapper.appendChild(createOffset(20))
 
-        // {
-        //     const prev = document.createElement('div')
-        //     prev.innerHTML = 'Example of generation level: <a href="https://js.otrisovano.ru/2D/maze/00/" target="_blank">link</a>'
-        //     wrapper.appendChild(prev)
-        // }
-
-        // wrapper.appendChild(createOffset(20))
-
-        // {
-        //     const prev = document.createElement('div')
-        //     prev.innerHTML = 'Source code: <a href="https://github.com/fire888/240612_labirint_ch8" target="_blank">github</a>'
-        //     wrapper.appendChild(prev)
-        // }
+        {
+            const prev = document.createElement('div')
+            prev.innerHTML = 'Example of generation level: <a href="https://otrisovano.ru/generator-models/?s=8" target="_blank">link</a>' +
+            '<br>Source code: <a href="https://github.com/fire888/250112_labirint_ch9" target="_blank">github</a>'
+            wrapper.appendChild(prev)
+        }
 
         wrapper.appendChild(createOffset(60))
 

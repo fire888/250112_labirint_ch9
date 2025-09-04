@@ -18,6 +18,9 @@ const PERCENT_ENERGY: number = 0.2
 export const IS_DEBUG_SHOW_BUILD_HOUSES_EXAMPLES: boolean = false
 //export const IS_DEBUG_SHOW_BUILD_HOUSES_EXAMPLES: boolean = true
 
+export const IS_OLD_GAMES_INFO = true
+//export const IS_OLD_GAMES_INFO = false
+
 // ************************************************/ 
 
 const PLAYER_START_POS_BIG_LEVEL: number[] = [-1, .7, -200]
