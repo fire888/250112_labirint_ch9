@@ -222,7 +222,6 @@ export class Ui {
         this._infoButton.style.display = 'none'
         this.toggleVisibleButtonLock(false)
         this.toggleVisibleEnergy(false)
-        //this._root.controls.disconnect()
 
         const wrapper = document.createElement('div')
         wrapper.classList.add('final-page')
@@ -238,7 +237,6 @@ export class Ui {
             this._infoButton.style.display = 'block'
             this.toggleVisibleButtonLock(true)
             this.toggleVisibleEnergy(true)
-            //this._root.controls.connect()
             document.body.removeChild(wrapper)
         })
         wrapper.appendChild(close)
