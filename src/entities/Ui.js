@@ -221,7 +221,8 @@ export class Ui {
     _showInfo () {
         this._infoButton.style.display = 'none'
         this.toggleVisibleButtonLock(false)
-        this._root.controls.disconnect()
+        this.toggleVisibleEnergy(false)
+        //this._root.controls.disconnect()
 
         const wrapper = document.createElement('div')
         wrapper.classList.add('final-page')
@@ -236,7 +237,8 @@ export class Ui {
         close.addEventListener('pointerdown', () => {
             this._infoButton.style.display = 'block'
             this.toggleVisibleButtonLock(true)
-            this._root.controls.connect()
+            this.toggleVisibleEnergy(true)
+            //this._root.controls.connect()
             document.body.removeChild(wrapper)
         })
         wrapper.appendChild(close)

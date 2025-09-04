@@ -8,11 +8,9 @@
     border: 1px solid #e4f9ff; 
     min-height: 4vh;
     overflow: hidden;
-    background-color: #181d3855;
-    color: #e4f9ff;
     cursor: pointer;
     margin: 1vh;
-    -webkit-tap-highlight-color: transparent;
+    /* -webkit-tap-highlight-color: transparent; */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -30,7 +28,13 @@
     border-radius: 150px; 
     background-size: contain;
     box-sizing: content-box;
+
+    background-color: #181d3848;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
+
 .control:focus {
     outline:none;
 }
@@ -40,15 +44,19 @@
     height: 40px;
     width: 40px;
     border-radius: 150px; 
-    background-size: contain;
     box-sizing: content-box;
+    color: #181d38;
+
+    background-color: #181d3848;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 .control:hover,
 .control-small:hover {
     background-color: #e4f9ff;
-    color: #181d38;
     cursor: pointer;
-    border-color:  #181d38;
+    border-color: #181d38;
     box-sizing: content-box;
 }
 
@@ -58,57 +66,40 @@
     box-sizing: content-box;
     border: 1px solid #e4f9ff; 
     background-color: #181d3855;
+    cursor: pointer;
 }
 .butt-left {
     bottom: 1.5rem;
     left: .5rem;
-    background: url(../assets/c-top.webp) center no-repeat;
-    background-size: contain;
+    background-image: url(../assets/c-top.webp);
     rotate: 270deg;
 }
 .butt-right {
     bottom: 1.5rem;
     left: 5rem;
-    background: url(../assets/c-top.webp) center no-repeat;
-    background-size: contain;
+    background-image: url(../assets/c-top.webp);
     rotate: 90deg;
 }
 .butt-front {
     bottom: 5.5rem;
     right: 1rem;
-    background: url(../assets/c-top.webp) center no-repeat;
-    background-size: contain;
+    background-image: url(../assets/c-top.webp);
 }
 .butt-back {
     bottom: 1.5rem;
     right: 1rem;
-    background: url(../assets/c-top.webp) center no-repeat;
-    background-size: contain;
+    background-image: url(../assets/c-top.webp);
     rotate: 180deg;
 }
 .butt-info {
-    background-color: none;
-    border: none;
     top: .5rem;
     left: 1rem;
-    background: url(../assets/c-i.webp) center no-repeat;
-    background-size: contain; 
+    background-image: url(../assets/c-i.webp);
 }
 .butt-lock {
-    background-color: none;
-    border: none;
+    background-image: url(../assets/mouse.webp);
     top: .5rem;
     right: 1rem; 
-    background: url(../assets/mouse.webp) center no-repeat; 
-    background-size: contain;
-}
-.ui button.butt-fullscreen:hover, 
-.ui button.butt-info:hover,
-.ui button.butt-sound:hover,
-.ui button.butt-sound-n:hover
-{
-    background-color: none;
-    border: none;
 }
 .count-energy {
     position: absolute;
